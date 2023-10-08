@@ -16,6 +16,12 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
-    "moment": "^2.29.4"
+    "express-jwt": "^8.4.1",
+    "highlight.js": "^11.8.0",
+    "markdown-it": "^13.0.2",
+    "markdown-it-github-headings": "^2.0.1",
+    "markdown-it-task-lists": "^2.1.1",
+    "moment": "^2.29.4",
+    "mongoose": "^7.6.0"
   }
 }
