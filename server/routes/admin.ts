@@ -434,18 +434,18 @@ router.get('/commentsAndGuestbookStats', async (_req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getComentsAndGuestbookStats();
-    let commentsStats = {};
-    let guestbookStats = {};
+    let commentsStats: { [key: string]: number }  = {};
+    let guestbookStats: { [key: string]: number }  = {};
     (stats.comments || []).forEach(item => {
-      commentsStats[item._id] = item.count;
+      commentsStats[item._id as string] = item.count;
     });
     (stats.guestbook || []).forEach(item => {
-      guestbookStats[item._id] = item.count;
+      guestbookStats[item._id as string] = item.count;
     });
 
     const days = 7;
-    const baseCommentsStats = {};
-    const baseGuestbookStats = {};
+    const baseCommentsStats: { [key: string]: number } = {};
+    const baseGuestbookStats: { [key: string]: number } = {};
     for (let i = days; i >= 0; i--) {
       const date = moment().subtract(i, 'days').format('YYYY-MM-DD');
       baseCommentsStats[date] = 0;

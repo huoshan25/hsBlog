@@ -143,7 +143,7 @@ export async function getArticle (params, user) {
     conditions.isDraft = false;
     conditions.isActive = true;
   }
-  const article = await Post.findOne(conditions)
+  const article = await Post.findOne(conditions as any)
     .populate('category')
     .exec();
   return article;
@@ -154,7 +154,7 @@ export async function getPostsCountByCate (category) {
     category,
     isDraft: false,
     isActive: true
-  } as IPost).exec();
+  } ).exec();
   return count;
 }
 
@@ -164,7 +164,7 @@ export async function increaseViews ({ postID, clientIP }) {
     clientIP,
     ext1: postID,
     ext2: 'viewCount'
-  } as ICache);
+  } );
 
   // 如果没看过
   if (!exists) {

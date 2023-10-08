@@ -16,12 +16,20 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
     "express-jwt": "^8.4.1",
+    "express-session": "^1.17.3",
     "highlight.js": "^11.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "lazysizes": "^5.3.2",
     "markdown-it": "^13.0.2",
     "markdown-it-github-headings": "^2.0.1",
     "markdown-it-task-lists": "^2.1.1",
     "moment": "^2.29.4",
-    "mongoose": "^7.6.0"
+    "mongoose": "^7.6.0",
+    "uslug": "^1.0.4",
+    "viewerjs": "^1.11.6"
   }
 }
