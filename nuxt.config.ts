@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  modules: ["nuxtjs-naive-ui"],
+  devtools: {enabled: true},
+  modules: ['nuxtjs-naive-ui', '@varlet/nuxt'],
   vite: {
     plugins: [
       AutoImport({

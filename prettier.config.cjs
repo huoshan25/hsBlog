@@ -24,7 +24,7 @@ module.exports = {
   // 是否打印分号, 默认 true
   semi: true,
   // 是否单引号, 默认 true
-  singleQuote: true,
+  singleQuote: false,
   // 对象中属性的引号包裹, 默认 "as-needed"
   // "as-needed" 在需要的时候添加
   // "consistent" 一直添加
