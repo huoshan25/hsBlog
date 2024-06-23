@@ -1,8 +1,9 @@
-import type { RouterConfig } from '@nuxt/schema';
+import type {RouterConfig} from '@nuxt/schema';
+import type {RouteRecordRaw, RouterOptions} from "vue-router";
 
 /*自定义路由*/
 export default <RouterConfig>{
-  routes: _routes => {
+  routes: ((_routes: RouterOptions["routes"]) => {
     let routesDirectory: string | null = null;
     const path = useState('path', () => '')
 
@@ -19,6 +20,7 @@ export default <RouterConfig>{
      * 清除未使用的目录的功能
      * @param route 路由
      * @param directory 需要删除的目录
+     * @returns 是否在目录下
      */
     function isUnderDirectory(route: any, directory: any) {
       const path = route?.path
@@ -26,9 +28,9 @@ export default <RouterConfig>{
     }
 
     /**过滤组件路由 */
-    let newRoutes: any = _routes.filter(route => !/\b\/components\b/.test(route.path))
+    let newRoutes: RouteRecordRaw[] = _routes.filter(route => !/\b\/components\b/.test(route.path))
 
-    /* 过滤非blog目录和admin目录下的pc和mobile目录*/
+    /* 过滤非admin目录和blog目录下的pc和mobile目录*/
     if (routesDirectory) {
       newRoutes = _routes.filter((route: any) => {
         const toRemove = routesDirectory === 'pc' ? 'mobile' : 'pc'
@@ -47,5 +49,6 @@ export default <RouterConfig>{
       })
       return newRoutes
     }
-  }
+    }
+  )
 };
