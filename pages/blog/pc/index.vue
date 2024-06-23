@@ -1,11 +1,13 @@
 <script setup lang="ts">
 
+definePageMeta({
+  layout: 'pc'
+});
+
 </script>
 
 <template>
-  <div>
-    <slot></slot>
-  </div>
+<!--  <div>222</div>-->
 </template>
 
 <style scoped>

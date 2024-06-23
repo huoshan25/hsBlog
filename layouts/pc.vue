@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import {type GlobalThemeOverrides} from 'naive-ui'
+
+/*定义一个主色*/
+const primaryColor = ref('#409eff')
+
+/*主题覆盖*/
+const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
 
 </script>
-
 <template>
-  <div>
+  <n-config-provider :theme-overrides="themeOverrides">
     <slot></slot>
-  </div>
+  </n-config-provider>
 </template>
 
 <style scoped>
