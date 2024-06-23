@@ -10,7 +10,10 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
 </script>
 <template>
   <n-config-provider :theme-overrides="themeOverrides">
-    <slot></slot>
+    <div>
+      <pc-navbar></pc-navbar>
+      <slot></slot>
+    </div>
   </n-config-provider>
 </template>
 

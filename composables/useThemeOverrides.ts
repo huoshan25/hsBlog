@@ -3,7 +3,7 @@ import type {Ref} from "vue";
 import type {GlobalThemeOverrides} from "naive-ui";
 
 /*主题色覆盖*/
-export function useThemeOverrides(mainColor: Ref<string>):GlobalThemeOverrides {
+export function useThemeOverrides(mainColor: Ref<string>): GlobalThemeOverrides {
   const generateColors = generate(mainColor.value)
   return {
     common: {
