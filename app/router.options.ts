@@ -3,7 +3,7 @@ import type {RouteRecordRaw, RouterOptions} from "vue-router";
 
 /*自定义路由*/
 export default <RouterConfig>{
-  routes: ((_routes: RouterOptions["routes"]) => {
+  routes: (_routes: RouterOptions["routes"]) => {
     let routesDirectory: string | null = null;
     const path = useState('path', () => '')
 
@@ -49,6 +49,5 @@ export default <RouterConfig>{
       })
       return newRoutes
     }
-    }
-  )
+  }
 };
