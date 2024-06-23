@@ -2,8 +2,13 @@ export interface DeviceTypeResult {
   type: string;
   env?: 'wechat' | 'weibo' | 'qq';
   masklayer?: boolean;
-  osVersion?: string; // 添加操作系统版本
-  browserInfo?: { name?: string, version?: string }; // 添加浏览器信息
+  /*操作系统版本*/
+  osVersion?: string;
+  /*浏览器信息*/
+  browserInfo?: {
+    name?: string,
+    version?: string
+  };
 }
 
 /*判断是否为微信环境*/
@@ -69,7 +74,9 @@ export function useDeviceType(): DeviceTypeResult {
     }
   }
 
+  /*操作系统版本*/
   const osVersion = getOSVersion(userAgent);
+  /*浏览器信息*/
   const browserInfo = getBrowserInfo(userAgent);
 
   if (isMobile(userAgent)) {
