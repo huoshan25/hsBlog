@@ -31,22 +31,27 @@ export default <RouterConfig>{
 
     /* 过滤非admin目录和blog目录下的pc和mobile目录*/
     if (routesDirectory) {
-      newRoutes = _routes.filter((route: RouteRecordRaw) => {
-        const toRemove = routesDirectory === 'pc' ? 'mobile' : 'pc'
-        /*保留admin目录和blog目录下的路由，并过滤掉blog下的另一个设备目录*/
-        return (isUnderDirectory(route, 'admin') || isUnderDirectory(route, 'blog')) && !isUnderDirectory(route, `blog/${toRemove}`)
-      }).map((route) => {
-        /*修改blog目录下的路径*/
-        if (isUnderDirectory(route, 'blog')) {
-          return {
-            ...route,
-            path: route?.path.replace(`/blog/${routesDirectory}`, '/blog'),
-            name: route.name || 'index'
+      const toRemove = routesDirectory === 'pc' ? 'mobile' : 'pc';
+
+      /*是否博客目录*/
+      const isBlogDirectory = (route: RouteRecordRaw) => isUnderDirectory(route, 'blog');
+      /*过滤另一个设备目录*/
+      const isUnderBlogToRemove = (route: RouteRecordRaw) => isUnderDirectory(route, `blog/${toRemove}`);
+
+      newRoutes = _routes
+        .filter(route => !isUnderBlogToRemove(route))
+        .map(route => {
+          if (isBlogDirectory(route)) {
+            return {
+              ...route,
+              path: route.path.replace(`/blog/${routesDirectory}`, '/blog'),
+              name: route.name || 'index'
+            };
           }
-        }
-        return route
-      })
-      return newRoutes
+          return route;
+        });
+
+      return newRoutes;
     }
   }
 };
