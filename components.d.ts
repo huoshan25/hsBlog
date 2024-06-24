@@ -7,6 +7,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    NAnchor: typeof import('naive-ui')['NAnchor']
+    NAnchorLink: typeof import('naive-ui')['NAnchorLink']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCol: typeof import('naive-ui')['NCol']
@@ -18,6 +20,7 @@ declare module 'vue' {
     NImage: typeof import('naive-ui')['NImage']
     NRow: typeof import('naive-ui')['NRow']
     NSpace: typeof import('naive-ui')['NSpace']
+    NSwitch: typeof import('naive-ui')['NSwitch']
     NThemeEditor: typeof import('naive-ui')['NThemeEditor']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

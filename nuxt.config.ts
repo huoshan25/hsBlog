@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 
   devtools: {enabled: true},
 
-  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt'],
+  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt'],
 
   css: ['~/assets/style/default.scss'],
 
