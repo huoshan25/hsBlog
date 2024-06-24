@@ -5,7 +5,7 @@ import type {RouteRecordRaw, RouterOptions} from "vue-router";
 export default <RouterConfig>{
   routes: (_routes: RouterOptions["routes"]) => {
     let routesDirectory: string | null = null;
-    const path = useState('path', () => '')
+    const path = useState<string>('path', () => '')
 
     if (import.meta.server) {
       path.value = useDeviceType().type
@@ -17,12 +17,11 @@ export default <RouterConfig>{
     }
 
     /**
-     * 清除未使用的目录的功能
      * @param route 路由
      * @param directory 需要删除的目录
      * @returns 是否在目录下
      */
-    function isUnderDirectory(route: any, directory: any) {
+    function isUnderDirectory(route: RouteRecordRaw, directory: string) {
       const path = route?.path
       return path === '/' + directory || path.startsWith('/' + directory + '/')
     }
@@ -32,7 +31,7 @@ export default <RouterConfig>{
 
     /* 过滤非admin目录和blog目录下的pc和mobile目录*/
     if (routesDirectory) {
-      newRoutes = _routes.filter((route: any) => {
+      newRoutes = _routes.filter((route: RouteRecordRaw) => {
         const toRemove = routesDirectory === 'pc' ? 'mobile' : 'pc'
         /*保留admin目录和blog目录下的路由，并过滤掉blog下的另一个设备目录*/
         return (isUnderDirectory(route, 'admin') || isUnderDirectory(route, 'blog')) && !isUnderDirectory(route, `blog/${toRemove}`)
