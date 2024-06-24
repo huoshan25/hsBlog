@@ -32,7 +32,7 @@ function isAndroid(UA: string): boolean {
 }
 
 /*解析操作系统版本*/
-function getOSVersion(UA: string): string {
+const getOSVersion = (UA: string): string => {
   if (isIOS(UA)) {
     const match = UA.match(/OS (\d+)_(\d+)_?(\d+)?/);
     if (match) {
@@ -48,7 +48,7 @@ function getOSVersion(UA: string): string {
 }
 
 /*解析浏览器信息*/
-function getBrowserInfo(UA: string): DeviceTypeResult['browserInfo'] {
+const getBrowserInfo = (UA: string): DeviceTypeResult['browserInfo'] => {
   const browserInfo: DeviceTypeResult['browserInfo'] = {};
   const browserMatches = UA.match(/(Chrome|Firefox|Safari|Edge|MSIE|Trident)/i);
   if (browserMatches) {
@@ -65,7 +65,7 @@ function getBrowserInfo(UA: string): DeviceTypeResult['browserInfo'] {
  * 根据userAgent判断设备类型
  * @returns {DeviceTypeResult} 设备类型
  */
-export function useDeviceType(): DeviceTypeResult {
+export const useDeviceType = (): DeviceTypeResult => {
   const headers = useRequestHeaders();
   const userAgent = headers['user-agent'] || '';
   if (userAgent === '') {
