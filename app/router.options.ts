@@ -35,7 +35,7 @@ export default <RouterConfig>{
 
       /*是否博客目录*/
       const isBlogDirectory = (route: RouteRecordRaw) => isUnderDirectory(route, 'blog');
-      /*过滤另一个设备目录*/
+      /*过滤blog目录下另一个设备目录*/
       const isUnderBlogToRemove = (route: RouteRecordRaw) => isUnderDirectory(route, `blog/${toRemove}`);
 
       newRoutes = _routes
