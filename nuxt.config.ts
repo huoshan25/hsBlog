@@ -6,7 +6,7 @@ import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
   app: {
     head: {
-      title: '火山博客',
+      title: 'nuxt',
       meta: [
         { charset: 'utf-8' },
         { name: 'description', content: '个人博客, 技术分享' },
