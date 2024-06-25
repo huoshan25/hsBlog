@@ -5,7 +5,7 @@ import type {RouteRecordRaw, RouterOptions} from "vue-router";
 export default <RouterConfig>{
   routes: (_routes: RouterOptions["routes"]) => {
     let routesDirectory: string | null = null;
-    const path = useState<string>('path', () => '')
+    const path = useState<string | null>('path', () => '')
 
     if (import.meta.server) {
       path.value = useDeviceType().type

@@ -1,6 +1,8 @@
 export interface DeviceTypeResult {
   /**设备类型*/
-  type: string;
+  type: string | null;
+  /*用户ip地址*/
+  ip?: string | null;
   env?: 'wechat' | 'weibo' | 'qq';
   masklayer?: boolean;
   /**操作系统版本*/
@@ -70,47 +72,31 @@ const getBrowserInfo = (UA: string): DeviceTypeResult['browserInfo'] => {
  */
 export const useDeviceType = (): DeviceTypeResult => {
   const headers = useRequestHeaders();
-  const userAgent = headers['user-agent'] || '';
-  if (userAgent === '') {
-    return {
-      type: '没有user-agent'
-    }
-  }
+  const userAgent = headers['user-agent'] || '没有user-agent';
+  const ip = headers['x-forwarded-for'] || null;
 
-  /**操作系统版本*/
-  const osVersion = getOSVersion(userAgent);
-  /**浏览器信息*/
-  const browserInfo = getBrowserInfo(userAgent);
+  /**设备信息对象*/
+  const deviceTypeResult: DeviceTypeResult = {
+    type: null,
+    ip,
+    osVersion: getOSVersion(userAgent),
+    browserInfo:  getBrowserInfo(userAgent)
+  };
 
   if (isMobile(userAgent)) {
     if (isIOS(userAgent)) {
-      return {
-        type: 'ios',
-        env: isWechat(userAgent) ? 'wechat' : undefined,
-        masklayer: isWechat(userAgent) ? true : undefined,
-        osVersion,
-        browserInfo
-      };
+      deviceTypeResult.type = 'ios'
+      deviceTypeResult.env = isWechat(userAgent) ? 'wechat' : undefined
+      deviceTypeResult.masklayer = isWechat(userAgent) ? true : undefined
+    } else if (isAndroid(userAgent)) {
+      deviceTypeResult.type = 'android'
+      deviceTypeResult.env = isWechat(userAgent) ? 'wechat' : undefined
+      deviceTypeResult.masklayer = isWechat(userAgent) ? true : undefined
     }
-    if (isAndroid(userAgent)) {
-      return {
-        type: 'android',
-        env: isWechat(userAgent) ? 'wechat' : undefined,
-        masklayer: isWechat(userAgent) ? true : undefined,
-        osVersion,
-        browserInfo
-      };
-    }
-    return {
-      type: 'mobile',
-      osVersion,
-      browserInfo
-    };
+    deviceTypeResult.type = 'mobile'
   } else {
-    return {
-      type: 'pc',
-      osVersion,
-      browserInfo
-    };
+    deviceTypeResult.type = 'pc'
   }
+
+  return {...deviceTypeResult};
 }
