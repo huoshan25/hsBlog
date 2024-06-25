@@ -1,37 +1,40 @@
 export interface DeviceTypeResult {
+  /**设备类型*/
   type: string;
   env?: 'wechat' | 'weibo' | 'qq';
   masklayer?: boolean;
-  /*操作系统版本*/
+  /**操作系统版本*/
   osVersion?: string;
-  /*浏览器信息*/
+  /**浏览器信息*/
   browserInfo?: {
+    /**浏览器name*/
     name?: string,
+    /**版本*/
     version?: string
   };
 }
 
-/*判断是否为微信环境*/
+/**判断是否为微信环境*/
 function isWechat(UA: string): boolean {
   return /MicroMessenger/i.test(UA);
 }
 
-/*判断是否为移动端*/
+/**判断是否为移动端*/
 function isMobile(UA: string): boolean {
   return /(Android|webOS|iPhone|iPod|tablet|BlackBerry|Mobile)/i.test(UA);
 }
 
-/*判断是否为iOS设备*/
+/**判断是否为iOS设备*/
 function isIOS(UA: string): boolean {
   return /iPhone|iPad|iPod/i.test(UA);
 }
 
-/*判断是否为Android设备*/
+/**判断是否为Android设备*/
 function isAndroid(UA: string): boolean {
   return /Android/i.test(UA);
 }
 
-/*解析操作系统版本*/
+/**解析操作系统版本*/
 const getOSVersion = (UA: string): string => {
   if (isIOS(UA)) {
     const match = UA.match(/OS (\d+)_(\d+)_?(\d+)?/);
@@ -47,7 +50,7 @@ const getOSVersion = (UA: string): string => {
   return '';
 }
 
-/*解析浏览器信息*/
+/**解析浏览器信息*/
 const getBrowserInfo = (UA: string): DeviceTypeResult['browserInfo'] => {
   const browserInfo: DeviceTypeResult['browserInfo'] = {};
   const browserMatches = UA.match(/(Chrome|Firefox|Safari|Edge|MSIE|Trident)/i);
@@ -74,9 +77,9 @@ export const useDeviceType = (): DeviceTypeResult => {
     }
   }
 
-  /*操作系统版本*/
+  /**操作系统版本*/
   const osVersion = getOSVersion(userAgent);
-  /*浏览器信息*/
+  /**浏览器信息*/
   const browserInfo = getBrowserInfo(userAgent);
 
   if (isMobile(userAgent)) {
