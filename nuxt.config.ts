@@ -6,13 +6,38 @@ import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 export default defineNuxtConfig({
   app: {
     head: {
-      title: 'nuxt',
+      title: '火山博客',
       meta: [
         { charset: 'utf-8' },
-        { name: 'description', content: '个人博客, 技术分享' },
-        { name: 'keywords', content: '前端, 后端, vue, react'}
+        { name: 'description', content: '火山博客, 技术分享' },
+        { name: 'keywords', content: '火山博客, 后端, vue, react, 技术分享'},
+        { name: 'viewport', content: 'width=device-width, initial-scale=1'},
+        { name: 'renderer', content: 'webkit' },
+        { name: 'author', content: '2633057734@qq.com' }
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    }
+  },
+
+  imports: {
+    dirs: [
+      // 扫描顶级模块
+      'composables',
+      // ... 或扫描带有特定名称和文件扩展名的一级嵌套模块
+      'composables/*/index.{ts,js,mjs,mts}',
+      // ... 或扫描给定目录中的所有模块
+      'composables/**'
+    ]
+  },
+
+  runtimeConfig: {
+    /**私有密钥仅在服务器端可用*/
+    apiSecret: '',
+
+    /**对客户端暴露的公共密钥*/
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1/',
+      // gtagId: G-XXXXXX,
     }
   },
 
@@ -22,10 +47,11 @@ export default defineNuxtConfig({
   },
 
   devtools: {enabled: true},
-
   modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt'],
 
   css: ['~/assets/style/default.scss'],
+
+  srcDir: 'src/',
 
   vite: {
     plugins: [
@@ -52,5 +78,7 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+
+  compatibilityDate: '2024-07-06'
 })

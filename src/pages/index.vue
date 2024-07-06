@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<n-button>222</n-button>
+  <div>这是神马页</div>
 </template>
 
 <style scoped>

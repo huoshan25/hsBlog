@@ -7,7 +7,7 @@ definePageMeta({
 <template>
     <n-card>
       <n-divider />
-      <n-space>
+      <n-space style="height: 1600px">
         <n-space>
           <n-button>Default</n-button>
           <n-button type="primary"> Primary </n-button>

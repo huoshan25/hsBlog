@@ -7,21 +7,17 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    NAnchor: typeof import('naive-ui')['NAnchor']
-    NAnchorLink: typeof import('naive-ui')['NAnchorLink']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
-    NCol: typeof import('naive-ui')['NCol']
-    NColorPicker: typeof import('naive-ui')['NColorPicker']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
-    NImage: typeof import('naive-ui')['NImage']
-    NRow: typeof import('naive-ui')['NRow']
+    NInput: typeof import('naive-ui')['NInput']
+    NMenu: typeof import('naive-ui')['NMenu']
+    NModal: typeof import('naive-ui')['NModal']
+    NModalProvider: typeof import('naive-ui')['NModalProvider']
     NSpace: typeof import('naive-ui')['NSpace']
-    NSwitch: typeof import('naive-ui')['NSwitch']
-    NThemeEditor: typeof import('naive-ui')['NThemeEditor']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
