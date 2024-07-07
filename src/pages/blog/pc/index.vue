@@ -11,10 +11,18 @@ import {
   EyeOutline,
   ThumbsUpOutline
 } from '@vicons/ionicons5'
+import {addDays} from "date-fns";
 
 definePageMeta({
   layout: 'pc'
 });
+
+onMounted(() => {
+  /**默认当前时间*/
+  calendar.value = new Date().getTime();
+  /**防止水合报错，在客户端时打开面板*/
+  panel.value = true
+})
 
 const showModal = ref(false);
 
@@ -54,7 +62,7 @@ const menuOptions: MenuOption[] = [
 ]
 
 /**左侧导航栏*/
-const navTbsIndex = ref('2')
+const navTbsIndex = ref('1')
 
 /**文章分类*/
 const entryClassification = ref('nuxt')
@@ -71,6 +79,17 @@ const personal = reactive({
   classification: 23,
   numberOfLabels: 22,
 })
+
+/**当前日历日期*/
+const calendar = ref<null | number>(null)
+
+const panel = ref(false)
+
+/** 选中日期的回调，month 从 1 开始*/
+const handleUpdateValue = (_: number, { year, month, date }: { year: number; month: number; date: number }) => {
+  console.log(`${year}-${month}-${date}`, '日历')
+}
+
 </script>
 
 <template>
@@ -119,7 +138,7 @@ const personal = reactive({
                   </div>
                 </div>
                 <div class="entry-list-bottom-right">
-                  <n-tag :bordered="false" color="#f2f3f5" style="margin-left: 6px" size="small">
+                  <n-tag :bordered="false" style="margin-left: 6px" size="small">
                     ssr
                   </n-tag>
                   <n-tag :bordered="false" style="margin-left: 6px" size="small">
@@ -131,6 +150,7 @@ const personal = reactive({
           </div>
         </div>
         <div class="contents-right">
+          <!-- 个人 -->
           <div class="personal">
             <div class="personal-contents">
               <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal.avatarBackgroundImage})`}"></div>
@@ -159,6 +179,19 @@ const personal = reactive({
                   <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels" />
                 </div>
               </div>
+            </div>
+          </div>
+          <!-- 博客日历 -->
+          <div class="blog-calendar-wrap">
+            <div class="blog-calendar-wrap-title">博客日历</div>
+            <div class="blog-calendar-wrap-contents">
+              <n-date-picker
+                  v-model:value="calendar"
+                  type="date"
+                  :panel="panel"
+                  format="yyyy-MM-dd"
+                  @update:value="handleUpdateValue"
+              />
             </div>
           </div>
         </div>
@@ -232,6 +265,7 @@ const personal = reactive({
   &-right {
     display: flex;
     flex-direction: column;
+    width: 300px;
   }
 }
 
@@ -280,8 +314,6 @@ const personal = reactive({
 
 .personal{
   border: 1px solid #dee2e6;
-  padding: 0;
-  width: 270px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -354,6 +386,25 @@ const personal = reactive({
       display: flex;
       flex-direction: column;
     }
+  }
+}
+
+.blog-calendar-wrap {
+  margin-top: 15px;
+  border: 1px solid #dee2e6;
+  padding: 0;
+  border-radius: 6px;
+
+  &-title {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+    border-bottom: 1px solid rgba(228,230,235,0.5);
+  }
+
+  &-contents {
+    display: flex;
   }
 }
 </style>
