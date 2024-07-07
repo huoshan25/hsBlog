@@ -12,6 +12,7 @@ import {
   ThumbsUpOutline
 } from '@vicons/ionicons5'
 import {addDays} from "date-fns";
+import CategoryList from "~/components/pc/categoryList.vue";
 
 definePageMeta({
   layout: 'pc'
@@ -94,14 +95,15 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 
 <template>
   <main class="container main-container">
-    <div style="margin-top: 30px; display: flex;">
-      <n-menu
-          class="nav-left"
-          v-model:value="activeKey"
-          :collapsed-width="64"
-          :collapsed-icon-size="22"
-          :options="menuOptions"
-      />
+    <div class="main-container-wrap" style="margin-top: 30px; display: flex;">
+<!--      <n-menu-->
+<!--          class="nav-left"-->
+<!--          v-model:value="activeKey"-->
+<!--          :collapsed-width="64"-->
+<!--          :collapsed-icon-size="22"-->
+<!--          :options="menuOptions"-->
+<!--      />-->
+      <category-list/>
       <div v-show="false">屏幕小的导航栏</div>
       <!-- 类目内容 -->
       <div class="contents">
@@ -243,6 +245,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 </template>
 
 <style scoped lang="scss">
+@include ajust-width('main-container-wrap');
 .nav-left {
   border: 1px solid red;
   width: 164px;
@@ -258,6 +261,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 .contents {
   display: flex;
   &-left {
+    background-color: white;
     display: flex;
     flex-direction: column;
     margin-right: 20px;
@@ -316,6 +320,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 }
 
 .personal{
+  background-color: white;
   border: 1px solid #dee2e6;
   border-radius: 6px;
   display: flex;
@@ -393,6 +398,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 }
 
 .blog-calendar-wrap {
+  background-color: white;
   margin-top: 15px;
   border: 1px solid #dee2e6;
   padding: 0;

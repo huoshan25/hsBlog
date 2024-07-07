@@ -1,6 +1,8 @@
 body {
   margin: 0;
   padding: 0;
+  //灰色
+  background-color: #f5f5f5;
 }
 
 a {
@@ -10,4 +12,11 @@ a {
 
 .router-link-active {
   color: #1e80ff;
+}
+
+ul,
+li {
+  list-style: none; /* 去掉列表样式 */
+  margin: 0;       /* 去掉外边距 */
+  padding: 0;      /* 去掉内边距 */
 }
