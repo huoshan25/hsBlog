@@ -2,12 +2,8 @@
 import {getLogin} from "~/api/user/indexFetch";
 import type {loginReq} from "~/api/user/type";
 import {NIcon} from "naive-ui";
-import type {MenuOption} from 'naive-ui'
 import {HttpStatus} from "~/enums/httpStatus";
-import type {Component} from 'vue';
 import {
-  PersonOutline,
-  WineOutline,
   EyeOutline,
   ThumbsUpOutline
 } from '@vicons/ionicons5'
@@ -51,18 +47,6 @@ const handleSubmit = async () => {
   }
 };
 
-const activeKey = ref(1);
-
-/**渲染自定义icon*/
-const renderIcon = (icon: Component) => {
-  return () => h(NIcon, null, {default: () => h(icon)})
-}
-const menuOptions: MenuOption[] = [
-  {label: 'nuxt', key: '1', icon: renderIcon(WineOutline)},
-  {label: 'nest', key: '2', icon: renderIcon(PersonOutline)}
-]
-
-/**左侧导航栏*/
 const navTbsIndex = ref('1')
 
 /**文章分类*/
@@ -96,13 +80,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 <template>
   <main class="container main-container">
     <div class="main-container-wrap" style="margin-top: 30px; display: flex;">
-<!--      <n-menu-->
-<!--          class="nav-left"-->
-<!--          v-model:value="activeKey"-->
-<!--          :collapsed-width="64"-->
-<!--          :collapsed-icon-size="22"-->
-<!--          :options="menuOptions"-->
-<!--      />-->
       <category-list/>
       <div v-show="false">屏幕小的导航栏</div>
       <!-- 类目内容 -->
@@ -255,18 +232,19 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 .container {
   margin: 0 auto;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px;
 }
 
 .contents {
   display: flex;
   &-left {
+    box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
     background-color: white;
     display: flex;
     flex-direction: column;
     margin-right: 20px;
     border: 1px solid #dee2e6;
-    border-radius: 6px;
+    border-radius: 0 6px 6px 6px;
   }
 
   &-right {

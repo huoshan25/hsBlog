@@ -20,7 +20,7 @@ const categories = ref<ICategory[]>([
   {
     id: '2',
     cateName: '友链',
-    alias: 'friendChains',
+    alias: '/blog/friendChains',
     img: '/svg/nuxt.svg',
   }
 ])
@@ -41,14 +41,12 @@ const categories = ref<ICategory[]>([
 
 <style scoped>
 .category-wrap {
-  width: 250px;
-  top: 103px;
-  left: 190px;
+  width: 200px;
+  top: 0;
+  left: 0;
   bottom: 0;
-  margin-left: 15px;
-  position: fixed;
+  position: relative;
   z-index: 1;
-  overflow: hidden;
 }
 
 .category-list li a {
@@ -60,7 +58,7 @@ const categories = ref<ICategory[]>([
   align-items: center;
   color: #4F6174;
   font-weight: 500;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
   border-radius: 5px 0 0 5px;
   transition: background .3s;
 }

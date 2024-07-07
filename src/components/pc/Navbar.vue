@@ -12,7 +12,7 @@ const inputWidth = ref('150px')
     <div class="header-container">
       <div style="display: flex; align-items: center">
         <div class="header-container-logo">
-          <img class="logo_img" src="~/assets/svg/logo.svg" alt="logo">
+          <img class="logo_img" src="/svg/logo.svg" alt="logo">
           <div style="margin-left: 5px; font-size: 21px; font-weight: 550;">火山博客</div>
         </div>
         <div class="header-container-item">
