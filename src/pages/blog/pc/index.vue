@@ -57,7 +57,7 @@ const numberOfLikes = ref(22)
 
 const personal = reactive({
   name: 'volcano',
-  avatar: 'https://cdn.duanx.cn/static/Cuteen/img/star/avatar.webp',
+  avatar: '/img/avatar.jpg',
   avatarBackgroundImage: 'https://cdn.duanx.cn/static/Cuteen/img/center-bg.svg',
   description: '“风很温柔 花很浪漫 你很特别 我很喜欢”',
   numberOfArticles: 22,
