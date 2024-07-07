@@ -364,7 +364,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
       font-size: 20px;
       font-weight: 900;
       color: #212529;
-      margin-top: 45px;
+      margin-top: 40px;
       margin-bottom: 5px;
       text-align: center;
     }
@@ -372,7 +372,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
       text-align: center;
       color: #a6a5a5;
       padding: 0 25px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
   }
 
