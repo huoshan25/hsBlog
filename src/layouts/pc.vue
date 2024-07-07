@@ -12,7 +12,7 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
 <!--    <n-notification-provider>-->
       <n-modal-provider>
-        <div>
+        <div style="width: 100%">
           <NuxtLoadingIndicator color="blue"/>
           <pc-navbar></pc-navbar>
           <slot></slot>

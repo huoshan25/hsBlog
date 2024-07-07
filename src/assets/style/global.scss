@@ -5,16 +5,13 @@ $design-width: 1680px;
   @media screen and (min-width: $design-width) {
     .#{$className} {
       max-width: $design-width;
-      padding: 0 78px;
-      color: red;
+      padding: 0 100px;
     }
   }
 
   @media screen and (max-width: $design-width) {
     .#{$className} {
       padding: 0 4vw;
-
-      color: green;
     }
   }
 }

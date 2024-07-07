@@ -3,3 +3,11 @@ body {
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.router-link-active {
+  color: #1e80ff;
+}
