@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {type GlobalThemeOverrides} from 'naive-ui'
-
+import { zhCN, dateZhCN } from 'naive-ui'
 /*定义一个主色*/
 const primaryColor = ref('#409eff')
 
@@ -9,7 +9,7 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
 
 </script>
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
 <!--    <n-notification-provider>-->
       <n-modal-provider>
         <div>
