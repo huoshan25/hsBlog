@@ -121,7 +121,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
               </div>
             </div>
             </div>
-          </div>
+        </div>
 
         <pc-footer/>
       </div>
@@ -193,14 +193,16 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 
 //主要内容
 .contents {
-  width: 100%;
   &-left {
+    height: 100vh;
     background-color: white;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     margin-right: 20px;
     //border: 1px solid #dee2e6;
     border-radius: 0 6px 6px 6px;
+    box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
     width: 720px;
   }
 
@@ -209,10 +211,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     flex-direction: column;
     width: 300px;
   }
-}
-
-.entry-list-wrap {
-  box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }
 
 //类目模块
