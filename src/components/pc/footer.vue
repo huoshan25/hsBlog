@@ -89,7 +89,7 @@ const toAdming = () => {
   display: flex;
   justify-content: center;
   background-color: #f5f5f5;
-  padding: 15px;
+  padding: 22px;
   bottom: 0;
 }
 </style>
