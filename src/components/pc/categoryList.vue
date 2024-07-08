@@ -13,14 +13,14 @@
 const categories = ref<ICategory[]>([
   {
     id: '1',
-    cateName: '首页',
+    cateName: '综合',
     alias: '/blog',
     img: '/svg/nest.svg',
   },
   {
     id: '2',
-    cateName: '友链',
-    alias: '/blog/friendChains',
+    cateName: '测试',
+    alias: '/blog/test2',
     img: '/svg/nuxt.svg',
   }
 ])
@@ -30,7 +30,7 @@ const categories = ref<ICategory[]>([
   <div class="category-wrap">
     <ul class="category-list">
       <li v-for="item in categories" :key="item.id">
-        <nuxt-link :to="item.alias" exact active-class="active">
+        <nuxt-link :to="item.alias" active-class="active">
           <img :src="item.img" alt="category">
           <span>{{ item.cateName }}</span>
         </nuxt-link>

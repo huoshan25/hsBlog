@@ -11,8 +11,34 @@ import {addDays} from "date-fns";
 import CategoryList from "~/components/pc/categoryList.vue";
 
 definePageMeta({
-  layout: 'pc'
+  layout: 'pc',
+  middleware: async (to, from) => {
+    const data = [
+      {
+        id: '1',
+        cateName: '',
+        alias: '/blog',
+        img: '/svg/nest.svg',
+      },
+      {
+        id: '2',
+        cateName: '测试',
+        alias: '/blog/test2',
+        img: '/svg/nuxt.svg',
+      }
+    ]
+
+    const getCategoryByAlias = (alias: string) =>
+        data.find((category) => category.alias === alias)?.cateName ?? undefined
+    useHead({
+      title: `${ getCategoryByAlias(to.path) }`,
+      titleTemplate: (titleChunk) => {
+        return titleChunk ? `${titleChunk} - 文章 - 火山博客` : '火山博客'
+      }
+    })
+  }
 });
+
 
 onMounted(() => {
   /**默认当前时间*/
@@ -90,15 +116,15 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     <!-- 类目内容 -->
     <div class="contents">
       <div class="contents-left">
-        <n-tabs
-            v-model:value="navTbsIndex"
-            type="line"
-            size="large"
-            :tabs-padding="20"
-        >
-          <n-tab name="1" tab="最新"/>
-          <n-tab name="2" tab="推荐"/>
-        </n-tabs>
+<!--        <n-tabs-->
+<!--            v-model:value="navTbsIndex"-->
+<!--            type="line"-->
+<!--            size="large"-->
+<!--            :tabs-padding="20"-->
+<!--        >-->
+<!--          <n-tab name="1" tab="最新"/>-->
+<!--          <n-tab name="2" tab="推荐"/>-->
+<!--        </n-tabs>-->
 
         <div class="entry-list-wrap">
           <div class="entry-list" v-for="(item, index) in 10" :key="index">

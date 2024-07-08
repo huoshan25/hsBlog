@@ -1,10 +1,10 @@
 <script setup lang="ts">
-
 import {SearchOutline} from "@vicons/ionicons5";
 
-const bodyRef = ref(null);
-
+/**搜索长度*/
 const inputWidth = ref('150px')
+/**默认首页路径*/
+const currentPath = ref('/blog')
 </script>
 
 <template>
@@ -16,10 +16,10 @@ const inputWidth = ref('150px')
           <div style="margin-left: 5px; font-size: 21px; font-weight: 550;">火山博客</div>
         </div>
         <div class="header-container-item">
-          <nuxt-link to="/blog">首页</nuxt-link>
+          <nuxt-link to="/blog" @click="currentPath = '/blog'" :class="{ active: currentPath === '/blog'}">首页</nuxt-link>
         </div>
         <div class="header-container-item">
-          <nuxt-link to="/blog/friendChains">友链</nuxt-link>
+          <nuxt-link to="/blog/friendChains" @click="currentPath = '/blog/friendChains'" :class="{ active: currentPath === '/blog/friendChains'}">友链</nuxt-link>
         </div>
       </div>
       <div style="display: flex; align-items: center">
@@ -44,23 +44,30 @@ const inputWidth = ref('150px')
 <style scoped lang="scss">
 .header {
   width: 100%;
-  padding: 0 4vw;
+  padding: 0 3vw;
   background-color: white;
-  //border: 1px solid #dee2e6;
+  display: flex;
+  justify-content: center;
   position: sticky;
   box-sizing: border-box;
   z-index: 999;
   top: 0;
 
   &-container {
+    width: 1440px;
     display: flex;
     justify-content: space-between;
     &-logo {
       display: flex;
       align-items: center;
-      padding: 15px 0;
+      padding: 10px 0;
       margin-right: 5px;
     }
+
+    &-item .active {
+      color: #1e80ff;
+    }
+
     &-item {
       padding: 15px;
       font-size: 16px;
@@ -73,7 +80,7 @@ const inputWidth = ref('150px')
             position: absolute;
             top: auto;
             right: 0;
-            bottom: -7px;
+            bottom: -4px;
             left: 1rem;
             height: 2px;
             background-color: #1e80ff;
