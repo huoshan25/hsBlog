@@ -49,12 +49,14 @@ const handleSubmit = async () => {
 
 const navTbsIndex = ref('1')
 
-/**文章分类*/
-const entryClassification = ref('nuxt')
+/**类目信息*/
+const entryInfo = reactive({
+  title: '记录nuxt的知识点',
+  content: '住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪',
+  tags: ['ssr', 'vue3']
+})
 
-const numberOfViews = ref(22)
-const numberOfLikes = ref(22)
-
+/**个人模块信息*/
 const personal = reactive({
   name: 'volcano',
   avatar: '/img/avatar.jpg',
@@ -64,6 +66,10 @@ const personal = reactive({
   classification: 23,
   numberOfLabels: 22,
 })
+/**文章分类*/
+const entryClassification = ref('nuxt')
+const numberOfViews = ref(22)
+const numberOfLikes = ref(22)
 
 /**当前日历日期*/
 const calendar = ref<null | number>(null)
@@ -78,100 +84,93 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 </script>
 
 <template>
-  <main class="container main-container">
-    <div class="main-container-wrap" style="margin-top: 30px; display: flex;">
-      <category-list/>
-      <div v-show="false">屏幕小的导航栏</div>
-      <!-- 类目内容 -->
-      <div class="contents">
-        <div class="contents-left">
-          <n-tabs
-              v-model:value="navTbsIndex"
-              type="line"
-              size="large"
-              :tabs-padding="20"
-          >
-            <n-tab name="1" tab="最新"/>
-            <n-tab name="2" tab="推荐"/>
-          </n-tabs>
+  <main class="main">
+    <category-list/>
+    <div v-show="false">屏幕小的导航栏</div>
+    <!-- 类目内容 -->
+    <div class="contents">
+      <div class="contents-left">
+        <n-tabs
+            v-model:value="navTbsIndex"
+            type="line"
+            size="large"
+            :tabs-padding="20"
+        >
+          <n-tab name="1" tab="最新"/>
+          <n-tab name="2" tab="推荐"/>
+        </n-tabs>
 
-          <div class="entry-list-wrap">
-            <div class="entry-list" v-for="(item, index) in 10" :key="index">
-              <n-ellipsis class="entry-list-title" :tooltip="false">
-                记录nuxt的知识点
-              </n-ellipsis>
-              <n-ellipsis class="entry-list-content" :tooltip="false">
-                住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
-                住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
-                住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
-              </n-ellipsis>
-              <div class="entry-list-bottom">
-                <div class="entry-list-bottom-left">
-                  {{ entryClassification }}
-                  <n-divider vertical/>
-                  <div class="entry-list-bottom-left-item">
-                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline" />{{numberOfViews}}
-                  </div>
-                  <div style="margin-left: 15px" class="entry-list-bottom-left-item">
-                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />{{numberOfLikes}}
-                  </div>
+        <div class="entry-list-wrap">
+          <div class="entry-list" v-for="(item, index) in 10" :key="index">
+            <n-ellipsis class="entry-list-title" :tooltip="false">
+              {{entryInfo.title}}
+            </n-ellipsis>
+            <n-ellipsis class="entry-list-content" :tooltip="false">
+              {{entryInfo.content }}
+            </n-ellipsis>
+            <div class="entry-list-bottom">
+              <div class="entry-list-bottom-left">
+                {{ entryClassification }}
+                <n-divider vertical/>
+                <div class="entry-list-bottom-left-item">
+                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline" />{{numberOfViews}}
                 </div>
-                <div class="entry-list-bottom-right">
-                  <n-tag :bordered="false" style="margin-left: 6px" size="small">
-                    ssr
-                  </n-tag>
-                  <n-tag :bordered="false" style="margin-left: 6px" size="small">
-                    vue3
-                  </n-tag>
+                <div style="margin-left: 15px" class="entry-list-bottom-left-item">
+                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />{{numberOfLikes}}
                 </div>
+              </div>
+              <div class="entry-list-bottom-right">
+                <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="(item, index) in entryInfo.tags" :key="index">
+                  {{item}}
+                </n-tag>
               </div>
             </div>
           </div>
         </div>
-        <div class="contents-right">
-          <!-- 个人 -->
-          <div class="personal">
-            <div class="personal-contents">
-              <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal.avatarBackgroundImage})`}"></div>
-              <div class="personal-introduced">
-                <img class="personal-introduced-avatar" :src="personal.avatar" alt="avatar">
-              </div>
-              <div class="personal-introduced-name">{{personal.name}}</div>
-              <div class="personal-introduced-description">{{personal.description}}</div>
+      </div>
+      <div class="contents-right">
+        <!-- 个人 -->
+        <div class="personal">
+          <div class="personal-contents">
+            <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal.avatarBackgroundImage})`}"></div>
+            <div class="personal-introduced">
+              <img class="personal-introduced-avatar" :src="personal.avatar" alt="avatar">
             </div>
-            <div class="personal-bottom">
-              <div class="personal-bottom-item">
-                <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
-                <div style="text-align: center; color: #212529;">
-                  <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfArticles" />
-                </div>
+            <div class="personal-introduced-name">{{personal.name}}</div>
+            <div class="personal-introduced-description">{{personal.description}}</div>
+          </div>
+          <div class="personal-bottom">
+            <div class="personal-bottom-item">
+              <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
+              <div style="text-align: center; color: #212529;">
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfArticles" />
               </div>
-              <div class="personal-bottom-item">
-                <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
-                <div style="text-align: center">
-                  <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.classification" />
-                </div>
+            </div>
+            <div class="personal-bottom-item">
+              <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
+              <div style="text-align: center">
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.classification" />
               </div>
-              <div class="personal-bottom-item">
-                <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
-                <div style="text-align: center">
-                  <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels" />
-                </div>
+            </div>
+            <div class="personal-bottom-item">
+              <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
+              <div style="text-align: center">
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels" />
               </div>
             </div>
           </div>
-          <!-- 博客日历 -->
-          <div class="blog-calendar-wrap">
-            <div class="blog-calendar-wrap-title">博客日历</div>
-            <div class="blog-calendar-wrap-contents">
-              <n-date-picker
-                  v-model:value="calendar"
-                  type="date"
-                  :panel="panel"
-                  format="yyyy-MM-dd"
-                  @update:value="handleUpdateValue"
-              />
-            </div>
+        </div>
+        <!-- 博客日历 -->
+        <div class="blog-calendar-wrap">
+          <div class="blog-calendar-wrap-title">博客日历</div>
+          <div class="blog-calendar-wrap-contents">
+            <n-date-picker
+                v-model:value="calendar"
+                type="date"
+                :panel="panel"
+                format="yyyy-MM-dd"
+                @update:value="handleUpdateValue"
+            />
           </div>
         </div>
       </div>
@@ -222,21 +221,22 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 </template>
 
 <style scoped lang="scss">
-@include ajust-width('main-container-wrap');
 .nav-left {
   border: 1px solid red;
   width: 164px;
   margin-right: 20px;
 }
 
-.container {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 1500px;
+.main {
+  padding: 0 4vw;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
+//主要内容
 .contents {
-  display: flex;
+  width: 100%;
   &-left {
     box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
     background-color: white;
@@ -245,6 +245,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     margin-right: 20px;
     border: 1px solid #dee2e6;
     border-radius: 0 6px 6px 6px;
+    width: 720px;
   }
 
   &-right {
@@ -254,8 +255,8 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   }
 }
 
+//类目模块
 .entry-list {
-  max-width: 720px;
   cursor: pointer;
   padding: 12px 20px;
   display: flex;
@@ -272,6 +273,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   }
 
   &-content {
+    width: 100%;
     font-size: 13px;
     line-height: 22px;
     margin-bottom: 4px;
@@ -297,6 +299,16 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   }
 }
 
+@media (max-width: 1145px) {
+  .contents-right {
+    display: none;
+  }
+  .contents-left {
+    width: 100%;
+  }
+}
+
+//个人模块
 .personal{
   background-color: white;
   border: 1px solid #dee2e6;
@@ -375,6 +387,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   }
 }
 
+//博客日历模块
 .blog-calendar-wrap {
   background-color: white;
   margin-top: 15px;

@@ -42,11 +42,15 @@ const inputWidth = ref('150px')
 </template>
 
 <style scoped lang="scss">
-@include ajust-width('header-container');
-
 .header {
+  width: 100%;
+  padding: 0 4vw;
   background-color: white;
   border: 1px solid #dee2e6;
+  position: sticky;
+  box-sizing: border-box;
+  z-index: 999;
+  top: 0;
 
   &-container {
     display: flex;

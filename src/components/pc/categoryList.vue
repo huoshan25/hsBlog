@@ -98,7 +98,7 @@ const categories = ref<ICategory[]>([
   transition: transform .3s;
 }
 
-@media (max-width: 840px) {
+@media (max-width: 1407px) {
   .category-wrap {
     display: none;
   }
