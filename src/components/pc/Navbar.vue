@@ -46,7 +46,7 @@ const inputWidth = ref('150px')
   width: 100%;
   padding: 0 4vw;
   background-color: white;
-  border: 1px solid #dee2e6;
+  //border: 1px solid #dee2e6;
   position: sticky;
   box-sizing: border-box;
   z-index: 999;

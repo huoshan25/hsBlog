@@ -243,7 +243,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     display: flex;
     flex-direction: column;
     margin-right: 20px;
-    border: 1px solid #dee2e6;
+    //border: 1px solid #dee2e6;
     border-radius: 0 6px 6px 6px;
     width: 720px;
   }
@@ -311,7 +311,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 //个人模块
 .personal{
   background-color: white;
-  border: 1px solid #dee2e6;
+  //border: 1px solid #dee2e6;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -391,7 +391,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 .blog-calendar-wrap {
   background-color: white;
   margin-top: 15px;
-  border: 1px solid #dee2e6;
+  //border: 1px solid #dee2e6;
   padding: 0;
   border-radius: 6px;
 

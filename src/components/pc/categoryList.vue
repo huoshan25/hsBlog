@@ -52,7 +52,7 @@ const categories = ref<ICategory[]>([
 .category-list li a {
   padding-left: 40px;
   font-size: 15px;
-  height: 54px;
+  height: 53px;
   position: relative;
   display: flex;
   align-items: center;
@@ -65,8 +65,8 @@ const categories = ref<ICategory[]>([
 
 .category-list li a.active,
 .category-list li a:hover {
-  background: #fff;
-  box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
+  background: white;
+  box-shadow: 0 6px 5px -5px rgba(234, 234, 234, 0.8);
 }
 
 .category-list li a.active img,
