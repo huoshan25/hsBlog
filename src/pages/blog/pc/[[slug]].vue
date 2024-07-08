@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import {getLogin} from "~/api/user/indexFetch";
-import type {loginReq} from "~/api/user/type";
 import {NIcon} from "naive-ui";
-import {HttpStatus} from "~/enums/httpStatus";
 import {
   EyeOutline,
   ThumbsUpOutline
 } from '@vicons/ionicons5'
-import {addDays} from "date-fns";
 import CategoryList from "~/components/pc/categoryList.vue";
 
 definePageMeta({
   layout: 'pc',
-  middleware: async (to, from) => {
+  middleware: async (to) => {
     const data = [
       {
         id: '1',
@@ -39,39 +35,12 @@ definePageMeta({
   }
 });
 
-
 onMounted(() => {
   /**默认当前时间*/
   calendar.value = new Date().getTime();
   /**防止水合报错，在客户端时打开面板*/
   panel.value = true
 })
-
-const showModal = ref(false);
-
-const form = ref<loginReq>({
-  username: '',
-  password: ''
-});
-
-const rules = {
-  username: {
-    required: true,
-    message: '请输入用户名',
-    trigger: 'blur'
-  },
-  password: {
-    required: true,
-    message: '请输入密码',
-    trigger: 'blur'
-  }
-};
-
-const handleSubmit = async () => {
-  const res = await getLogin(form.value);
-  if (res.code === HttpStatus.OK) {
-  }
-};
 
 const navTbsIndex = ref('1')
 
@@ -151,8 +120,10 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
                 </n-tag>
               </div>
             </div>
+            </div>
           </div>
-        </div>
+
+        <pc-footer/>
       </div>
       <div class="contents-right">
         <!-- 个人 -->
@@ -204,46 +175,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   </main>
 
   <n-back-top :right="100" />
-
-  <n-button @click="showModal = !showModal">
-    来吧
-  </n-button>
-  <n-modal v-model:show="showModal" :auto-focus="false">
-    <n-card
-        style="width: 400px"
-        title="登录"
-        :bordered="false"
-        size="huge"
-        require-mark-placement="right-hanging"
-        role="dialog"
-        aria-modal="true"
-        :style="{
-            maxWidth: '640px'
-          }"
-    >
-      <n-form
-          ref="formRef"
-          :inline="false"
-          label-placement="left"
-          :model="form"
-          :rules="rules"
-          size="small"
-      >
-        <n-form-item label="姓名" path="username">
-          <n-input v-model:value="form.username" placeholder="请输入账户"/>
-        </n-form-item>
-        <n-form-item label="密码" path="password">
-          <n-input v-model:value="form.password" placeholder="请输入密码" show-password-on="click" type="password"
-                   @keydown.enter.prevent/>
-        </n-form-item>
-        <n-form-item>
-          <n-button attr-type="button" @click="handleSubmit()">
-            提交
-          </n-button>
-        </n-form-item>
-      </n-form>
-    </n-card>
-  </n-modal>
 </template>
 
 <style scoped lang="scss">
@@ -264,7 +195,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 .contents {
   width: 100%;
   &-left {
-    box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -279,6 +209,10 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     flex-direction: column;
     width: 300px;
   }
+}
+
+.entry-list-wrap {
+  box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }
 
 //类目模块
