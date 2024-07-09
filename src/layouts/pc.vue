@@ -12,12 +12,12 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
       <n-modal-provider>
-        <div style="width: 100%">
-          <pc-navbar></pc-navbar>
+        <pc-navbar></pc-navbar>
+        <div>
           <slot></slot>
-          <pc-footer/>
         </div>
-        </n-modal-provider>
+        <pc-footer/>
+      </n-modal-provider>
     </n-notification-provider>
   </n-config-provider>
 </template>

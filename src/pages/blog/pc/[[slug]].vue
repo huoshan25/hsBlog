@@ -36,8 +36,6 @@ definePageMeta({
 });
 
 onMounted(() => {
-  /**默认当前时间*/
-  calendar.value = new Date().getTime();
   /**防止水合报错，在客户端时打开面板*/
   panel.value = true
 })
@@ -72,8 +70,7 @@ const calendar = ref<null | number>(null)
 const panel = ref(false)
 
 /** 选中日期的回调，month 从 1 开始*/
-const handleUpdateValue = (_: number, { year, month, date }: { year: number; month: number; date: number }) => {
-  console.log(`${year}-${month}-${date}`, '日历')
+const handleUpdateValue = () => {
 }
 
 </script>
@@ -160,6 +157,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
           <div class="blog-calendar-wrap-title">博客日历</div>
           <div class="blog-calendar-wrap-contents">
             <n-date-picker
+                clearable
                 v-model:value="calendar"
                 type="date"
                 :panel="panel"
@@ -176,12 +174,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 </template>
 
 <style scoped lang="scss">
-.nav-left {
-  border: 1px solid red;
-  width: 164px;
-  margin-right: 20px;
-}
-
 .main {
   padding: 0 4vw;
   margin-top: 20px;
@@ -194,8 +186,8 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
   &-left {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 720px;
+    min-height: 100vh;
   }
 
   &-right {
@@ -207,6 +199,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 }
 
 .entry-list-wrap {
+  flex-grow: 1;
   background-color: white;
   border-radius: 0 6px 6px 6px;
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
