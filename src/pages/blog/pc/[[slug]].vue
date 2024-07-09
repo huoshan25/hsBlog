@@ -122,8 +122,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
             </div>
             </div>
         </div>
-
-        <pc-footer/>
       </div>
       <div class="contents-right">
         <!-- 个人 -->
@@ -210,7 +208,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 
 .entry-list-wrap {
   background-color: white;
-  height: 100vh;
   border-radius: 0 6px 6px 6px;
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }

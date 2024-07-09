@@ -10,7 +10,7 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
 </script>
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
-<!--    <n-notification-provider>-->
+    <n-notification-provider>
       <n-modal-provider>
         <div style="width: 100%">
           <NuxtLoadingIndicator color="blue"/>
@@ -18,7 +18,8 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
           <slot></slot>
         </div>
         </n-modal-provider>
-<!--    </n-notification-provider>-->
+        <pc-footer/>
+    </n-notification-provider>
   </n-config-provider>
 </template>
 
