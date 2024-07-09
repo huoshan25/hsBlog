@@ -13,12 +13,11 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
     <n-notification-provider>
       <n-modal-provider>
         <div style="width: 100%">
-          <NuxtLoadingIndicator color="blue"/>
           <pc-navbar></pc-navbar>
           <slot></slot>
+          <pc-footer/>
         </div>
         </n-modal-provider>
-        <pc-footer/>
     </n-notification-provider>
   </n-config-provider>
 </template>
