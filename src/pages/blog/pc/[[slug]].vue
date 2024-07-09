@@ -197,7 +197,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-right: 20px;
     width: 720px;
   }
 
@@ -205,6 +204,7 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     display: flex;
     flex-direction: column;
     width: 300px;
+    margin-left: 20px;
   }
 }
 
