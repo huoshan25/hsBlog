@@ -1,19 +1,47 @@
 <script setup lang="ts">
 import {SearchOutline} from "@vicons/ionicons5";
 
-/**搜索长度*/
-const inputWidth = ref('150px')
+/**搜索样式*/
+const inputStyle = ref({
+  width: '150px',
+  btColor: '#f2f3f5',
+  iconColor: '#515767'
+})
+
 /**默认首页路径*/
 const currentPath = ref('/blog')
 
+/**聚焦*/
 const onFocusInput = () => {
-  inputWidth.value = '300px'
+  inputStyle.value.width = '300px'
+  inputStyle.value.btColor = '#e8f0fd'
+  inputStyle.value.iconColor = '#1e80ff'
 }
 
+/**失焦*/
 const onBlurInput = () => {
-  inputWidth.value = '150px'
+  inputStyle.value.width = '150px'
+  inputStyle.value.btColor = '#f2f3f5'
+  inputStyle.value.iconColor = '#515767'
 }
-</script>
+
+/**输入框事件*/
+const handleInput = () => {
+  console.log(222)
+}
+
+/**键盘事件*/
+const handleKeyUp = (e: KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    console.log(111)
+  }
+}
+
+/**搜索*/
+const handleSearch = () => {
+  console.log(32)
+}
+</script>0
 
 <template>
   <header class="header">
@@ -33,14 +61,17 @@ const onBlurInput = () => {
       <div style="display: flex; align-items: center">
         <n-input-group>
           <n-input
+              maxlength="64"
               :on-focus="onFocusInput"
-              :on-blur="() => inputWidth = '150px'"
-              :style="{ width: inputWidth , transition: 'width 0.2s ease-in-out' }"
+              :on-blur="onBlurInput"
+              :style="{ width: inputStyle.width , transition: 'width .1s linear 0s' }"
               placeholder="搜索火山博客"
+              @input="handleInput"
+              @keyup="handleKeyUp"
           />
-          <n-button color="#f2f3f5">
+          <n-button :color="inputStyle.btColor" @click="handleSearch">
             <template #icon>
-              <n-icon color="black"><SearchOutline /></n-icon>
+              <n-icon :color="inputStyle.iconColor"><SearchOutline /></n-icon>
             </template>
           </n-button>
         </n-input-group>
