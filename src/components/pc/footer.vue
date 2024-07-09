@@ -88,7 +88,6 @@ const toAdming = () => {
 .footer {
   display: flex;
   justify-content: center;
-  background-color: #f5f5f5;
   padding: 22px;
   bottom: 0;
 }

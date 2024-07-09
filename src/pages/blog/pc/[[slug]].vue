@@ -194,15 +194,10 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 //主要内容
 .contents {
   &-left {
-    height: 100vh;
-    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-right: 20px;
-    //border: 1px solid #dee2e6;
-    border-radius: 0 6px 6px 6px;
-    box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
     width: 720px;
   }
 
@@ -211,6 +206,13 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
     flex-direction: column;
     width: 300px;
   }
+}
+
+.entry-list-wrap {
+  background-color: white;
+  height: 100vh;
+  border-radius: 0 6px 6px 6px;
+  box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }
 
 //类目模块
@@ -269,7 +271,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 //个人模块
 .personal{
   background-color: white;
-  //border: 1px solid #dee2e6;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -349,7 +350,6 @@ const handleUpdateValue = (_: number, { year, month, date }: { year: number; mon
 .blog-calendar-wrap {
   background-color: white;
   margin-top: 15px;
-  //border: 1px solid #dee2e6;
   padding: 0;
   border-radius: 6px;
 

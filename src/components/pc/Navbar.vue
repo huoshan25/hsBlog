@@ -5,6 +5,14 @@ import {SearchOutline} from "@vicons/ionicons5";
 const inputWidth = ref('150px')
 /**默认首页路径*/
 const currentPath = ref('/blog')
+
+const onFocusInput = () => {
+  inputWidth.value = '300px'
+}
+
+const onBlurInput = () => {
+  inputWidth.value = '150px'
+}
 </script>
 
 <template>
@@ -25,7 +33,7 @@ const currentPath = ref('/blog')
       <div style="display: flex; align-items: center">
         <n-input-group>
           <n-input
-              :on-focus="() => inputWidth = '300px'"
+              :on-focus="onFocusInput"
               :on-blur="() => inputWidth = '150px'"
               :style="{ width: inputWidth , transition: 'width 0.2s ease-in-out' }"
               placeholder="搜索火山博客"
