@@ -19,3 +19,27 @@ li {
   margin: 0;
   padding: 0;
 }
+
+/**滚动条样式*/
+.scrollBar {
+  /* 自定义滚动条宽度 */
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  /* 滚动条轨道样式 */
+  ::-webkit-scrollbar-track {
+    background: #F8F8F8;
+  }
+
+  /* 滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb {
+    background: #DDDDDD;
+    border-radius: 5px;
+  }
+
+  /* 鼠标悬停时滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #BBBBBB;
+  }
+}

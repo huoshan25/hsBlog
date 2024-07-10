@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.2",
+    "@nuxt/image": "^1.7.0",
     "@stripe/stripe-js": "^3.4.1",
     "@types/node": "^20.12.9",
     "@varlet/import-resolver": "^3.2.9",

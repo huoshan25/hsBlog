@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: 'admin',
+})
 
 </script>
 
@@ -6,6 +9,5 @@
   <div>后台管理</div>
 </template>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>
