@@ -65,6 +65,12 @@ const handleFoldMenu = () => {
   collapsed.value = !collapsed.value
 }
 
+/**面包屑路径*/
+const breadcrumbList = ref<string[]>([])
+
+/**用于存储菜单树结构的扁平化数组 - 面包屑菜单*/
+const dropdownOptions = ref<Record<number, MenuOption[]>>({})
+
 /**
  * 处理菜单项选中事件
  * @param key 菜单项
@@ -135,11 +141,11 @@ const findDropdownOptions = (options: MenuOption[], path: string[]): Record<numb
   return dropdowns
 }
 
-/**面包屑路径*/
-const breadcrumbList = ref<string[]>([])
-
-/**用于存储菜单树结构的扁平化数组 - 面包屑菜单*/
-const dropdownOptions = ref<Record<number, MenuOption[]>>({})
+/**面包屑首页数据 - 一级菜单*/
+const homeDropdownOptions: MenuOption[] = menuOptions.map((option) => ({
+  label: option.label as string,
+  key: option.key as number | string,
+}))
 
 </script>
 
@@ -172,6 +178,13 @@ const dropdownOptions = ref<Record<number, MenuOption[]>>({})
         <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="20" @click="handleFoldMenu"/>
 
         <n-breadcrumb style="margin-left: 6px">
+          <n-breadcrumb-item>
+            <n-dropdown :options="homeDropdownOptions">
+              <div class="trigger">
+                首页
+              </div>
+            </n-dropdown>
+          </n-breadcrumb-item>
           <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="index">
             <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]">
               <div class="trigger">
