@@ -4,6 +4,8 @@ import {NIcon} from 'naive-ui'
 import type {MenuOption} from 'naive-ui'
 import {CreateOutline, SpeedometerOutline} from "@vicons/ionicons5";
 const img = useImage()
+const router = useRouter()
+import { useStorage } from '@vueuse/core'
 
 onMounted( () => {
   renewalCrumbs(menuOptions, activeKey.value)
@@ -15,7 +17,7 @@ const renderIcon = (icon: Component) => {
 }
 
 /**选中菜单项*/
-const activeKey = ref<string>('instrumentPanel')
+const activeKey = useStorage('activeKey', '/admin')
 
 /**菜单是否折叠*/
 const collapsed = ref(false)
@@ -24,23 +26,13 @@ const collapsed = ref(false)
 const menuOptions: MenuOption[] = [
   {
     label: '仪表盘',
-    key: 'instrumentPanel',
+    key: '/admin',
     icon: renderIcon(SpeedometerOutline),
   },
   {
     label: '文章管理',
-    key: 'article',
+    key: '/admin/articleEditor',
     icon: renderIcon(CreateOutline),
-    children: [
-      {
-        label: '文章管理-二级菜单',
-        key: 'article2-1',
-      },
-      {
-        label: '文章管理-二级菜单2',
-        key: 'article2-2',
-      },
-    ]
   },
 ]
 
@@ -71,6 +63,7 @@ const handleUpdateMenu = (key: string, item: MenuOption) => {
  * @param key 菜单项
  */
 const renewalCrumbs = (menuOptions: MenuOption[], key: string) => {
+  router.push(key)
   const path = findMenuPath(menuOptions, key)
   if (path) {
     breadcrumbList.value = path
