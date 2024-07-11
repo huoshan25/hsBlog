@@ -4,6 +4,11 @@ import Components from 'unplugin-vue-components/vite'
 import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 
 export default defineNuxtConfig({
+  devServer: {
+    host: '0.0.0.0', // 项目运行的ip
+    port: 8800 // 项目运行的端口号
+  },
+
   app: {
     head: {
       title: '火山博客',
@@ -62,7 +67,7 @@ export default defineNuxtConfig({
   },
 
   devtools: {enabled: true},
-  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt', '@nuxt/image'],
+  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt', '@nuxt/image', '@unocss/nuxt'],
 
   css: ['~/assets/style/default.scss'],
 

@@ -26,22 +26,6 @@ const menuOptions: MenuOption[] = [
     label: '仪表盘',
     key: 'instrumentPanel',
     icon: renderIcon(SpeedometerOutline),
-    children: [
-      {
-        label: '二级菜单',
-        key: 'menu2',
-        children: [
-          {
-            label: '三级菜单',
-            key: 'menu3',
-          },
-        ]
-      },
-      {
-        label: '二级菜单2',
-        key: 'menu2-1',
-      },
-    ]
   },
   {
     label: '文章管理',
@@ -160,7 +144,7 @@ const homeDropdownOptions: MenuOption[] = menuOptions.map((option) => ({
         :collapsed="collapsed"
     >
       <div class="wrap-title">
-        <nuxt-img src="/svg/logo.svg" height="40" :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
+        <nuxt-img src="/svg/logo.svg" h-40 :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
         <div v-show="!collapsed" class="text">后台管理</div>
       </div>
       <n-menu
@@ -177,7 +161,7 @@ const homeDropdownOptions: MenuOption[] = menuOptions.map((option) => ({
         <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="20" @click="handleFoldMenu"/>
         <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="20" @click="handleFoldMenu"/>
 
-        <n-breadcrumb style="margin-left: 6px">
+        <n-breadcrumb m-l-7>
           <n-breadcrumb-item>
             <n-dropdown :options="homeDropdownOptions">
               <div class="trigger">
@@ -198,8 +182,8 @@ const homeDropdownOptions: MenuOption[] = menuOptions.map((option) => ({
         </n-breadcrumb>
       </div>
       <main class="content">
-        <n-card style="border-radius: 7px">
-          <div style="height: 500px;"></div>
+        <n-card border-rd-7>
+          <div h-600></div>
           <slot></slot>
         </n-card>
       </main>
