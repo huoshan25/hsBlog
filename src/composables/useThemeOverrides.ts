@@ -2,8 +2,10 @@ import {generate} from '@ant-design/colors'
 import type {Ref} from "vue";
 import type {GlobalThemeOverrides} from "naive-ui";
 
+type MainColor = Ref<string>;
+
 /*主题色覆盖*/
-export function useThemeOverrides(mainColor: Ref<string>): GlobalThemeOverrides {
+export function useThemeOverrides(mainColor: MainColor): GlobalThemeOverrides {
   const generateColors = generate(mainColor.value)
   return {
     common: {

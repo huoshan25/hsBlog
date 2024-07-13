@@ -24,9 +24,9 @@ export default defineConfig({
     presetTypography(), //为文本提供排版样式。
     presetWebFonts({ //为项目引入自定义网络字体。
       fonts: {
-        sans: 'DM Sans',
-        serif: 'DM Serif Display',
-        mono: 'DM Mono',
+        // sans: 'DM Sans',
+        // serif: 'DM Serif Display',
+        // mono: 'DM Mono',
       },
     }),
   ],

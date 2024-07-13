@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {type GlobalThemeOverrides} from 'naive-ui'
 import { zhCN, dateZhCN } from 'naive-ui'
-/*定义一个主色*/
-const primaryColor = ref('#409eff')
+
+/**获取主题颜色*/
+const { themeColor} = useThemeColor()
 
 /*主题覆盖*/
-const themeOverrides: GlobalThemeOverrides = useThemeOverrides(primaryColor)
+const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor)
 
 </script>
 <template>
