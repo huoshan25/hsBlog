@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import {SearchOutline} from "@vicons/ionicons5";
 
+const router = useRouter()
+
+onMounted(() => {
+  currentPath.value = router.currentRoute.value.path
+})
+
 /**搜索样式*/
 const inputStyle = ref({
   width: '150px',
@@ -9,7 +15,7 @@ const inputStyle = ref({
 })
 
 /**默认首页路径*/
-const currentPath = ref('/blog')
+const currentPath = ref('')
 
 /**聚焦*/
 const onFocusInput = () => {
@@ -39,26 +45,45 @@ const handleKeyUp = (e: KeyboardEvent) => {
 
 /**搜索*/
 const handleSearch = () => {
-  console.log(32)
 }
+
+type NavigationMenu = Array<{
+  title: string
+  url: string
+}>
+
+/**导航栏菜单项*/
+const navigationMenu = ref<NavigationMenu>([
+  {
+    title: '首页',
+    url: '/blog'
+  },
+  {
+    title: '关于',
+    url: '/blog/profile'
+  },
+  {
+    title: '友链',
+    url: '/blog/friendChains'
+  },
+])
 </script>
 
 <template>
   <header class="header">
     <div class="header-container">
-      <div style="display: flex; align-items: center">
+      <div flex items-center>
         <div class="header-container-logo">
           <img class="logo_img" src="/svg/logo.svg" alt="logo">
-          <div style="margin-left: 5px; font-size: 21px; font-weight: 550;">火山博客</div>
+          <div m-l-5 text-size-21 font-550>火山博客</div>
         </div>
-        <div class="header-container-item">
-          <nuxt-link to="/blog" @click="currentPath = '/blog'" :class="{ active: currentPath === '/blog'}">首页</nuxt-link>
-        </div>
-        <div class="header-container-item">
-          <nuxt-link to="/blog/friendChains" @click="currentPath = '/blog/friendChains'" :class="{ active: currentPath === '/blog/friendChains'}">友链</nuxt-link>
+        <div class="header-container-item" v-for="{title, url} in navigationMenu" :key="url">
+          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}">
+            {{ title }}
+          </nuxt-link>
         </div>
       </div>
-      <div style="display: flex; align-items: center">
+      <div flex items-center>
         <n-input-group>
           <n-input
               maxlength="64"
