@@ -10,6 +10,8 @@ const form = ref<loginReq>({
   password: ''
 });
 
+const formRef = ref()
+
 const rules = {
   username: {
     required: true,
@@ -24,6 +26,7 @@ const rules = {
 };
 
 const handleSubmit = async () => {
+  await formRef.value?.validate()
   const res = await getLogin(form.value);
   if (res.code === HttpStatus.OK) {
   }
