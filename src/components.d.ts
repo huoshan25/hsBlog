@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    NAlert: typeof import('naive-ui')['NAlert']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NBackTop: typeof import('naive-ui')['NBackTop']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
@@ -14,11 +15,13 @@ declare module 'vue' {
     NButton: typeof import('naive-ui')['NButton']
     NCalendar: typeof import('naive-ui')['NCalendar']
     NCard: typeof import('naive-ui')['NCard']
+    NCheckbox: typeof import('naive-ui')['NCheckbox']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDatePicker: typeof import('naive-ui')['NDatePicker']
     NDivider: typeof import('naive-ui')['NDivider']
     NDropdown: typeof import('naive-ui')['NDropdown']
     NEllipsis: typeof import('naive-ui')['NEllipsis']
+    NFloatButton: typeof import('naive-ui')['NFloatButton']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NIcon: typeof import('naive-ui')['NIcon']
@@ -34,6 +37,8 @@ declare module 'vue' {
     NModalProvider: typeof import('naive-ui')['NModalProvider']
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
     NNumberAnimation: typeof import('naive-ui')['NNumberAnimation']
+    NOption: typeof import('naive-ui')['NOption']
+    NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTab: typeof import('naive-ui')['NTab']
