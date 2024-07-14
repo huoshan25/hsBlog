@@ -120,61 +120,63 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
-      <n-modal-provider>
-        <n-layout has-sider class="layout">
-          <n-layout-sider
-              bordered
-              collapse-mode="width"
-              :collapsed-width="64"
-              :width="220"
-              :collapsed="collapsed"
-          >
-            <div class="wrap-title">
-              <nuxt-img src="/svg/logo.svg" h-40 :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
-              <div v-show="!collapsed" class="text">后台管理</div>
-            </div>
-            <n-menu
-                @update:value="handleUpdateMenu"
-                v-model:value="activeKey"
-                :collapsed="collapsed"
+      <n-message-provider>
+        <n-modal-provider>
+          <n-layout has-sider class="layout">
+            <n-layout-sider
+                bordered
+                collapse-mode="width"
                 :collapsed-width="64"
-                :collapsed-icon-size="22"
-                :options="menuOptions"
-            />
-          </n-layout-sider>
-          <div class="wrap scrollBar">
-            <div class="header">
-              <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="20" @click="handleFoldMenu"/>
-              <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="20" @click="handleFoldMenu"/>
+                :width="220"
+                :collapsed="collapsed"
+            >
+              <div class="wrap-title">
+                <nuxt-img src="/svg/logo.svg" h-40 :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
+                <div v-show="!collapsed" class="text">后台管理</div>
+              </div>
+              <n-menu
+                  @update:value="handleUpdateMenu"
+                  v-model:value="activeKey"
+                  :collapsed="collapsed"
+                  :collapsed-width="64"
+                  :collapsed-icon-size="22"
+                  :options="menuOptions"
+              />
+            </n-layout-sider>
+            <div class="wrap scrollBar">
+              <div class="header">
+                <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="20" @click="handleFoldMenu"/>
+                <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="20" @click="handleFoldMenu"/>
 
-              <n-breadcrumb m-l-7>
-                <n-breadcrumb-item>
-                  <n-dropdown :options="homeDropdownOptions">
-                    <div class="trigger">
-                      首页
-                    </div>
-                  </n-dropdown>
-                </n-breadcrumb-item>
-                <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="index">
-                  <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]">
-                    <div class="trigger">
+                <n-breadcrumb m-l-7>
+                  <n-breadcrumb-item>
+                    <n-dropdown :options="homeDropdownOptions">
+                      <div class="trigger">
+                        首页
+                      </div>
+                    </n-dropdown>
+                  </n-breadcrumb-item>
+                  <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="index">
+                    <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]">
+                      <div class="trigger">
+                        {{ item }}
+                      </div>
+                    </n-dropdown>
+                    <template v-else>
                       {{ item }}
-                    </div>
-                  </n-dropdown>
-                  <template v-else>
-                    {{ item }}
-                  </template>
-                </n-breadcrumb-item>
-              </n-breadcrumb>
+                    </template>
+                  </n-breadcrumb-item>
+                </n-breadcrumb>
+              </div>
+              <main class="content">
+                <n-card border-rd-7>
+                  <slot></slot>
+                </n-card>
+              </main>
             </div>
-            <main class="content">
-              <n-card border-rd-7>
-                <slot></slot>
-              </n-card>
-            </main>
-          </div>
-        </n-layout>
-      </n-modal-provider>
+          </n-layout>
+        </n-modal-provider>
+      </n-message-provider>
     </n-notification-provider>
   </n-config-provider>
 </template>
