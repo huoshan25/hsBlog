@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type {Component, Ref} from 'vue'
-import {dateZhCN, type GlobalThemeOverrides, NIcon, zhCN} from 'naive-ui'
+import {dateZhCN, type GlobalThemeOverrides, zhCN} from 'naive-ui'
 import type {MenuOption} from 'naive-ui'
-import {CreateOutline, SpeedometerOutline} from "@vicons/ionicons5";
 const img = useImage()
 const router = useRouter()
-import { useStorage } from '@vueuse/core'
+import {useMenus} from "~/composables/store/useMenus";
+
 
 onMounted( () => {
-  renewalCrumbs(menuOptions, activeKey.value)
+  /**获取当前路由路径*/
+  activeKey.value = router.currentRoute.value.path
+  renewalCrumbs(menuOptions.value, activeKey.value)
 })
 
 /**获取主题颜色*/
@@ -17,30 +18,14 @@ const { themeColor} = useThemeColor()
 /*主题覆盖*/
 const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor)
 
-/**转换图标*/
-const renderIcon = (icon: Component) => {
-  return () => h(NIcon, null, {default: () => h(icon)})
-}
 
 /**选中菜单项*/
-const activeKey = useStorage('activeKey', '/admin')
+const activeKey = ref<string>('')
 
 /**菜单是否折叠*/
 const collapsed = ref(false)
 
-/**菜单项*/
-const menuOptions: MenuOption[] = [
-  {
-    label: '仪表盘',
-    key: '/admin',
-    icon: renderIcon(SpeedometerOutline),
-  },
-  {
-    label: '文章管理',
-    key: '/admin/articleEditor',
-    icon: renderIcon(CreateOutline),
-  },
-]
+const { menuOptions } = useMenus()
 
 /**菜单折叠事件*/
 const handleFoldMenu = () => {
@@ -60,7 +45,7 @@ const dropdownOptions = ref<Record<number, MenuOption[]>>({})
  */
 const handleUpdateMenu = (key: string, item: MenuOption) => {
   activeKey.value = key
-  renewalCrumbs(menuOptions, key)
+  renewalCrumbs(menuOptions.value, key)
 }
 
 /**
@@ -125,7 +110,7 @@ const findDropdownOptions = (options: MenuOption[], path: string[]): Record<numb
 }
 
 /**面包屑首页数据 - 一级菜单*/
-const homeDropdownOptions: MenuOption[] = menuOptions.map((option) => ({
+const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
   label: option.label as string,
   key: option.key as number | string,
 }))
