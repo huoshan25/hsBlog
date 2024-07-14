@@ -1,4 +1,4 @@
-import {CreateOutline, SpeedometerOutline} from "@vicons/ionicons5";
+import {CreateOutline, SpeedometerOutline, GitNetwork} from "@vicons/ionicons5";
 import {type MenuOption, NIcon} from "naive-ui";
 import type {Component} from "vue";
 
@@ -24,6 +24,11 @@ export const useMenus = () => {
         label: '文章管理',
         key: '/admin/articleEditor',
         icon: renderIcon(CreateOutline),
+      },
+      {
+        label: '分类管理',
+        key: '/admin/categoryManage',
+        icon: renderIcon(GitNetwork),
       },
     ]
   })
