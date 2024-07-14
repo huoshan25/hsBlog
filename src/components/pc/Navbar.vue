@@ -41,7 +41,7 @@ const handleKeyUp = (e: KeyboardEvent) => {
 const handleSearch = () => {
   console.log(32)
 }
-</script>0
+</script>
 
 <template>
   <header class="header">
