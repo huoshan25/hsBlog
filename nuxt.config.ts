@@ -5,7 +5,7 @@ import {NaiveUiResolver} from 'unplugin-vue-components/resolvers'
 
 export default defineNuxtConfig({
   devServer: {
-    host: '0.0.0.0', // 项目运行的ip
+    host: '127.0.0.1', // 项目运行的ip
     port: 8800 // 项目运行的端口号
   },
 
@@ -67,9 +67,24 @@ export default defineNuxtConfig({
   },
 
   devtools: {enabled: true},
-  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt', '@nuxt/image', '@unocss/nuxt'],
 
-  css: ['~/assets/style/default.scss'],
+  modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt', '@nuxt/image', '@unocss/nuxt', '@nuxt/content'],
+
+  content: {
+    // ... options
+    highlight: {
+      langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml']
+    }
+  },
+
+  plugins: [
+  ],
+
+  css: [
+    '~/assets/style/default.scss',
+    'highlight.js/styles/atom-one-dark.css',
+    'mavon-editor/dist/css/index.css',
+  ],
 
   srcDir: 'src/',
 

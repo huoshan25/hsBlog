@@ -8,6 +8,7 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
+import presetRemToPx from "@unocss/preset-rem-to-px";
 
 export default defineConfig({
   // 自定义类名
@@ -28,6 +29,9 @@ export default defineConfig({
         // serif: 'DM Serif Display',
         // mono: 'DM Mono',
       },
+    }),
+    presetRemToPx({
+      baseFontSize: 4, //unocss计算：1单位 = 0.25rem = 1px
     }),
   ],
   transformers: [ //转换器用于处理特殊的CSS语法：
