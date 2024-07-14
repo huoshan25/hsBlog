@@ -36,8 +36,6 @@ definePageMeta({
 });
 
 onMounted(() => {
-  /**防止水合报错，在客户端时打开面板*/
-  panel.value = true
 })
 
 const navTbsIndex = ref('1')
@@ -66,8 +64,6 @@ const numberOfLikes = ref(22)
 
 /**当前日历日期*/
 const calendar = ref<null | number>(null)
-
-const panel = ref(false)
 
 /** 选中日期的回调，month 从 1 开始*/
 const handleUpdateValue = () => {
@@ -153,19 +149,21 @@ const handleUpdateValue = () => {
           </div>
         </div>
         <!-- 博客日历 -->
-        <div class="blog-calendar-wrap">
+        <ClientOnly>
+          <div class="blog-calendar-wrap">
           <div class="blog-calendar-wrap-title">博客日历</div>
           <div class="blog-calendar-wrap-contents">
             <n-date-picker
                 clearable
                 v-model:value="calendar"
                 type="date"
-                :panel="panel"
+                :panel="true"
                 format="yyyy-MM-dd"
                 @update:value="handleUpdateValue"
             />
           </div>
         </div>
+        </ClientOnly>
       </div>
     </div>
   </main>
