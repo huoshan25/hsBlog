@@ -5,12 +5,14 @@ const img = useImage()
 const router = useRouter()
 import {useMenus} from "~/composables/store/useMenus";
 
-
 onMounted( () => {
   /**获取当前路由路径*/
   activeKey.value = router.currentRoute.value.path
   renewalCrumbs(menuOptions.value, activeKey.value)
 })
+
+/**是否反转*/
+const inverted = ref(true)
 
 /**获取主题颜色*/
 const { themeColor} = useThemeColor()
@@ -43,7 +45,7 @@ const dropdownOptions = ref<Record<number, MenuOption[]>>({})
  * @param key 菜单项
  * @param item 菜单项原始数据
  */
-const handleUpdateMenu = (key: string, item: MenuOption) => {
+const handleUpdateMenu = (key: string, item?: MenuOption) => {
   activeKey.value = key
   renewalCrumbs(menuOptions.value, key)
 }
@@ -115,6 +117,97 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
   key: option.key as number | string,
 }))
 
+/**
+ * 处理面包屑点击事件
+ * @param index 面包屑项索引
+ */
+const handleBreadcrumbClick = (index: number) => {
+  const path = breadcrumbList.value.slice(0, index + 1)
+  const menuPath = findMenuPathByBreadcrumb(path, menuOptions.value)
+  if (menuPath) {
+    updateMenuAndBreadcrumb(menuPath)
+    router.push(menuPath)
+  }
+}
+
+/**
+ * 根据面包屑路径查找菜单项路径
+ * @param breadcrumbs 面包屑路径
+ * @param options 菜单项
+ * @returns 菜单项路径或 null
+ */
+const findMenuPathByBreadcrumb = (breadcrumbs: string[], options: MenuOption[]): string | null => {
+  let currentOptions = options
+  for (const breadcrumb of breadcrumbs) {
+    const option = currentOptions.find(opt => opt.label === breadcrumb)
+    if (option) {
+      if (option.children) {
+        currentOptions = option.children
+      } else {
+        return option.key as string
+      }
+    } else {
+      return null
+    }
+  }
+  return null
+}
+
+/**
+ * 查找菜单项路径
+ * @param key 菜单项 key
+ * @param options 菜单项数组
+ * @returns 菜单项或 null
+ */
+const findMenuPathByKey = (key: string | number, options: MenuOption[]): MenuOption | null => {
+  for (const option of options) {
+    if (option.key === key) {
+      return option
+    }
+    if (option.children) {
+      const result = findMenuPathByKey(key, option.children)
+      if (result) {
+        return result
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * 查找菜单项的第一个子菜单项 key
+ * @param option 菜单项
+ * @returns 子菜单项 key 或 null
+ */
+const findFirstChildKey = (option: MenuOption): string | number | null => {
+  if (option.children && option.children.length > 0) {
+    return option.children[0].key ?? null
+  }
+  return null
+}
+
+/**
+ * 处理下拉菜单选择事件
+ * @param key 菜单项 key
+ */
+const handleDropdownSelect = (key: string) => {
+  const menuPath = findMenuPathByKey(key, menuOptions.value)
+  if (menuPath) {
+    const firstChildKey = findFirstChildKey(menuPath)
+    const navigateKey = firstChildKey || key
+    router.push(navigateKey as string)
+    updateMenuAndBreadcrumb(navigateKey as string)
+  }
+}
+
+/**
+ * 更新菜单和面包屑
+ * @param key 菜单项 key
+ */
+const updateMenuAndBreadcrumb = (key: string) => {
+  activeKey.value = key
+  renewalCrumbs(menuOptions.value, key)
+}
 </script>
 
 <template>
@@ -125,6 +218,7 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
           <n-layout has-sider class="layout">
             <n-layout-sider
                 bordered
+                :inverted="inverted"
                 collapse-mode="width"
                 :collapsed-width="64"
                 :width="220"
@@ -135,6 +229,7 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
                 <div v-show="!collapsed" class="text">后台管理</div>
               </div>
               <n-menu
+                  :inverted="inverted"
                   @update:value="handleUpdateMenu"
                   v-model:value="activeKey"
                   :collapsed="collapsed"
@@ -145,19 +240,19 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
             </n-layout-sider>
             <div class="wrap scrollBar">
               <div class="header">
-                <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="20" @click="handleFoldMenu"/>
-                <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="20" @click="handleFoldMenu"/>
+                <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="25" p-15 @click="handleFoldMenu"/>
+                <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="25" p-15 @click="handleFoldMenu"/>
 
-                <n-breadcrumb m-l-7>
+                <n-breadcrumb m-l-25>
                   <n-breadcrumb-item>
-                    <n-dropdown :options="homeDropdownOptions">
+                    <n-dropdown :options="homeDropdownOptions"  @select="handleDropdownSelect">
                       <div class="trigger">
                         首页
                       </div>
                     </n-dropdown>
                   </n-breadcrumb-item>
-                  <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="index">
-                    <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]">
+                  <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item" @click="handleBreadcrumbClick(index)">
+                    <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]" @select="handleDropdownSelect">
                       <div class="trigger">
                         {{ item }}
                       </div>
@@ -172,6 +267,7 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
                 <n-card border-rd-7>
                   <slot></slot>
                 </n-card>
+                <admin-footer />
               </main>
             </div>
           </n-layout>
@@ -200,7 +296,11 @@ const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
 
     .content {
       overflow-y: auto;
-      padding: 20px 14px 0
+      padding: 20px 14px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
     }
   }
 }
