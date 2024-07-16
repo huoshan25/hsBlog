@@ -240,9 +240,7 @@ const updateMenuAndBreadcrumb = (key: string) => {
             </n-layout-sider>
             <div class="wrap scrollBar">
               <div class="header">
-                <nuxt-img v-show="!collapsed" style="cursor: pointer" src="/svg/shrink.svg" height="25" p-15 @click="handleFoldMenu"/>
-                <nuxt-img v-show="collapsed" style="cursor: pointer" src="/svg/unfold.svg" height="25" p-15 @click="handleFoldMenu"/>
-
+                <nuxt-img style="cursor: pointer" :src=" collapsed ? '/svg/unfold.svg': '/svg/shrink.svg'" height="25" p-15 @click="handleFoldMenu"/>
                 <n-breadcrumb m-l-25>
                   <n-breadcrumb-item>
                     <n-dropdown :options="homeDropdownOptions"  @select="handleDropdownSelect">
