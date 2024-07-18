@@ -1,4 +1,4 @@
-import {CreateOutline, SpeedometerOutline, GitNetwork} from "@vicons/ionicons5";
+import {CreateOutline, SpeedometerOutline, GitNetwork, PersonSharp} from "@vicons/ionicons5";
 import {type MenuOption, NIcon} from "naive-ui";
 import type {Component} from "vue";
 
@@ -29,6 +29,11 @@ export const useMenus = () => {
         label: '分类管理',
         key: '/admin/categoryManage',
         icon: renderIcon(GitNetwork),
+      },
+      {
+        label: '关于管理',
+        key: '/admin/profileManage',
+        icon: renderIcon(PersonSharp),
       },
     ]
   })

@@ -112,9 +112,9 @@ const findDropdownOptions = (options: MenuOption[], path: string[]): Record<numb
 }
 
 /**面包屑首页数据 - 一级菜单*/
-const homeDropdownOptions: MenuOption[] = menuOptions.value.map((option) => ({
-  label: option.label as string,
-  key: option.key as number | string,
+const homeDropdownOptions: { label: any; key: string | number | undefined }[] = menuOptions.value.map((option) => ({
+  label: option.label,
+  key: option.key,
 }))
 
 /**
@@ -193,10 +193,10 @@ const findFirstChildKey = (option: MenuOption): string | number | null => {
 const handleDropdownSelect = (key: string) => {
   const menuPath = findMenuPathByKey(key, menuOptions.value)
   if (menuPath) {
-    const firstChildKey = findFirstChildKey(menuPath)
+    const firstChildKey = findFirstChildKey(menuPath) as string
     const navigateKey = firstChildKey || key
-    router.push(navigateKey as string)
-    updateMenuAndBreadcrumb(navigateKey as string)
+    router.push(navigateKey)
+    updateMenuAndBreadcrumb(navigateKey)
   }
 }
 
@@ -224,7 +224,7 @@ const updateMenuAndBreadcrumb = (key: string) => {
                 :width="220"
                 :collapsed="collapsed"
             >
-              <div class="wrap-title">
+              <div class="wrap-title" @click="handleDropdownSelect( '/admin')">
                 <nuxt-img src="/svg/logo.svg" h-40 :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
                 <div v-show="!collapsed" class="text">后台管理</div>
               </div>
@@ -240,7 +240,7 @@ const updateMenuAndBreadcrumb = (key: string) => {
             </n-layout-sider>
             <div class="wrap scrollBar">
               <div class="header">
-                <nuxt-img style="cursor: pointer" :src=" collapsed ? '/svg/unfold.svg': '/svg/shrink.svg'" height="25" p-15 @click="handleFoldMenu"/>
+                <nuxt-img cursor-pointer :src=" collapsed ? '/svg/unfold.svg': '/svg/shrink.svg'" height="25" p-15 @click="handleFoldMenu"/>
                 <n-breadcrumb m-l-25>
                   <n-breadcrumb-item>
                     <n-dropdown :options="homeDropdownOptions"  @select="handleDropdownSelect">
@@ -308,6 +308,7 @@ const updateMenuAndBreadcrumb = (key: string) => {
   padding: 14px 14px;
   align-content: center;
   white-space: nowrap;
+  cursor: pointer;
 
   .text {
     margin-left: 10px;
