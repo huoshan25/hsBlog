@@ -40,7 +40,7 @@ const toAdming = () => {
 <template>
   <n-modal v-model:show="showModal" :auto-focus="false">
     <n-card
-        style="width: 400px"
+        w-400
         title="登录"
         :bordered="false"
         size="huge"
@@ -75,22 +75,17 @@ const toAdming = () => {
     </n-card>
   </n-modal>
 
-  <footer class="footer">
+  <footer flex justify-center p-22>
     2024 © Powered by
     <div style="color: #1e80ff; margin: 0 5px; cursor: pointer">
       hsBlog
     </div>
     |
-    <div style="color: #1e80ff; cursor: pointer; margin-left: 5px" @click="toAdming">
+    <nuxt-link style="color: #1e80ff;" m-l-5 to="/admin">
       后台管理
-    </div>
+    </nuxt-link>
   </footer>
 </template>
 
 <style scoped lang="scss">
-.footer {
-  display: flex;
-  justify-content: center;
-  padding: 22px;
-}
 </style>
