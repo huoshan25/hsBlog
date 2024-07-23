@@ -17,6 +17,8 @@ definePageMeta({
 
 /**文章分类*/
 const categoryList = ref()
+/**文章列表骨架屏*/
+const entryListSkeleton = ref(false)
 
 interface EntryInfo {
   title: string;
@@ -54,6 +56,7 @@ const handleUpdateValue = () => {
 
 /**列表*/
 const getList = async () => {
+  entryListSkeleton.value = true
   const params = {
     categoryId: aliasList.value?.id
   }
@@ -67,6 +70,7 @@ const getList = async () => {
         tags: item.tags
       }
     })
+    entryListSkeleton.value = false
   }
 }
 
@@ -102,7 +106,13 @@ onMounted(async () => {
     <div class="contents">
       <div class="contents-left">
         <div class="entry-list-wrap">
-          <div class="entry-list" v-for="(item, index) in entryInfo" :key="index">
+          <n-space v-show="entryListSkeleton" p15 vertical>
+            <n-skeleton height="15px" width="40%" />
+            <n-skeleton height="15px" width="100%" />
+            <n-skeleton height="15px" width="70%"/>
+            <n-skeleton height="15px" width="50%"/>
+          </n-space>
+          <div v-show="!entryListSkeleton" class="entry-list" v-for="(item, index) in entryInfo" :key="index">
             <n-ellipsis class="entry-list-title" :tooltip="false">
               {{ item.title }}
             </n-ellipsis>
