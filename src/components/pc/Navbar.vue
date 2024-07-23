@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import {SearchOutline} from "@vicons/ionicons5";
 
-const router = useRouter()
-
-onMounted(() => {
-  currentPath.value = router.currentRoute.value.path
-})
-
 /**搜索样式*/
 const inputStyle = ref({
   width: '150px',
@@ -67,6 +61,10 @@ const navigationMenu = ref<NavigationMenu>([
     url: '/blog/friendChains'
   },
 ])
+
+onMounted(() => {
+  currentPath.value = '/blog'
+})
 </script>
 
 <template>

@@ -45,13 +45,19 @@ const numberOfLikes = ref(22)
 /**当前日历日期*/
 const calendar = ref<null | number>(null)
 
+/**当前分类数据*/
+const aliasList = ref<ICategory>({})
+
 /** 选中日期的回调，month 从 1 开始*/
 const handleUpdateValue = () => {
 }
 
 /**列表*/
 const getList = async () => {
-  const res = await getArticle()
+  const params = {
+    categoryId: aliasList.value?.id
+  }
+  const res = await getArticle(params)
   if (res.code === HttpStatus.OK) {
     entryInfo.value = res.data.list.map((item: EntryInfo) => {
       return {
@@ -69,19 +75,19 @@ onMounted(async () => {
   if (categoryRes.code === HttpStatus.OK) {
     categoryList.value = categoryRes.data.map((item: ICategory) => {
       return {
-        value: item.id,
+        id: item.id,
         alias: `/blog/${item.alias}`,
         name: item.name,
         icon: item.icon,
       }
     })
   }
-  const aliasList: ICategory = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
-  if(!aliasList) {
+  aliasList.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
+  if(!aliasList.value) {
     navigateTo('/blog');
   }
   useHead({
-      title: aliasList?.name,
+      title: aliasList.value?.name,
       titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
     })
   await getList()
@@ -90,7 +96,7 @@ onMounted(async () => {
 
 <template>
   <main class="main">
-    <category-list  :currentRow="categoryList"/>
+    <category-list :currentRow="categoryList" @toCategoryl=""/>
     <div v-show="false">屏幕小的导航栏</div>
     <!-- 类目内容 -->
     <div class="contents">

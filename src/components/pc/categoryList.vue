@@ -9,12 +9,12 @@ const props = defineProps({
   },
 });
 export interface ICategory {
-  id: string;
-  alias: string;
+  id?: number;
+  alias?: string;
   /**分类名称*/
-  name: string;
+  name?: string;
   /**分类图片*/
-  icon: string;
+  icon?: string;
 }
 
 /**分类路径*/
