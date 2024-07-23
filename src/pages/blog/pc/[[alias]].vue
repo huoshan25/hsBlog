@@ -4,48 +4,29 @@ import {
   EyeOutline,
   ThumbsUpOutline
 } from '@vicons/ionicons5'
-import CategoryList from "~/components/pc/categoryList.vue";
+import CategoryList, {type ICategory} from "~/components/pc/categoryList.vue";
+import {getArticle} from "~/api/article";
+import {HttpStatus} from "~/enums/httpStatus";
+import {getAllCategories} from "~/api/categories";
+
+const route = useRoute()
 
 definePageMeta({
   layout: 'pc',
-  middleware: async (to) => {
-    const data = [
-      {
-        id: '1',
-        cateName: '',
-        alias: '/blog',
-        img: '/svg/nest.svg',
-      },
-      {
-        id: '2',
-        cateName: '测试',
-        alias: '/blog/test2',
-        img: '/svg/nuxt.svg',
-      }
-    ]
-
-    const getCategoryByAlias = (alias: string) =>
-        data.find((category) => category.alias === alias)?.cateName ?? undefined
-    useHead({
-      title: `${ getCategoryByAlias(to.path) }`,
-      titleTemplate: (titleChunk) => {
-        return titleChunk ? `${titleChunk} - 文章 - 火山博客` : '火山博客'
-      }
-    })
-  }
 });
 
-onMounted(() => {
-})
+/**文章分类*/
+const categoryList = ref()
 
-const navTbsIndex = ref('1')
+interface EntryInfo {
+  title: string;
+  content: string;
+  category_name: string;
+  tags: { id: number; name: string }[];
+}
 
 /**类目信息*/
-const entryInfo = reactive({
-  title: '记录nuxt的知识点',
-  content: '住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪',
-  tags: ['ssr', 'vue3']
-})
+const entryInfo = ref<EntryInfo[]>([])
 
 /**个人模块信息*/
 const personal = reactive({
@@ -57,8 +38,7 @@ const personal = reactive({
   classification: 23,
   numberOfLabels: 22,
 })
-/**文章分类*/
-const entryClassification = ref('nuxt')
+
 const numberOfViews = ref(22)
 const numberOfLikes = ref(22)
 
@@ -69,51 +49,80 @@ const calendar = ref<null | number>(null)
 const handleUpdateValue = () => {
 }
 
+/**列表*/
+const getList = async () => {
+  const res = await getArticle()
+  if (res.code === HttpStatus.OK) {
+    entryInfo.value = res.data.list.map((item: EntryInfo) => {
+      return {
+        title: item.title,
+        category_name: item.category_name,
+        content: item.content,
+        tags: item.tags
+      }
+    })
+  }
+}
+
+onMounted(async () => {
+  const categoryRes = await getAllCategories()
+  if (categoryRes.code === HttpStatus.OK) {
+    categoryList.value = categoryRes.data.map((item: ICategory) => {
+      return {
+        value: item.id,
+        alias: `/blog/${item.alias}`,
+        name: item.name,
+        icon: item.icon,
+      }
+    })
+  }
+  const aliasList: ICategory = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
+  if(!aliasList) {
+    navigateTo('/blog');
+  }
+  useHead({
+      title: aliasList?.name,
+      titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
+    })
+  await getList()
+})
 </script>
 
 <template>
   <main class="main">
-    <category-list/>
+    <category-list  :currentRow="categoryList"/>
     <div v-show="false">屏幕小的导航栏</div>
     <!-- 类目内容 -->
     <div class="contents">
       <div class="contents-left">
-<!--        <n-tabs-->
-<!--            v-model:value="navTbsIndex"-->
-<!--            type="line"-->
-<!--            size="large"-->
-<!--            :tabs-padding="20"-->
-<!--        >-->
-<!--          <n-tab name="1" tab="最新"/>-->
-<!--          <n-tab name="2" tab="推荐"/>-->
-<!--        </n-tabs>-->
-
         <div class="entry-list-wrap">
-          <div class="entry-list" v-for="(item, index) in 10" :key="index">
+          <div class="entry-list" v-for="(item, index) in entryInfo" :key="index">
             <n-ellipsis class="entry-list-title" :tooltip="false">
-              {{entryInfo.title}}
+              {{ item.title }}
             </n-ellipsis>
             <n-ellipsis class="entry-list-content" :tooltip="false">
-              {{entryInfo.content }}
+              {{ item.content }}
             </n-ellipsis>
             <div class="entry-list-bottom">
               <div class="entry-list-bottom-left">
-                {{ entryClassification }}
+                {{ item.category_name }}
                 <n-divider vertical/>
                 <div class="entry-list-bottom-left-item">
-                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline" />{{numberOfViews}}
+                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
+                  {{ numberOfViews }}
                 </div>
                 <div style="margin-left: 15px" class="entry-list-bottom-left-item">
-                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />{{numberOfLikes}}
+                  <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
+                  {{ numberOfLikes }}
                 </div>
               </div>
               <div class="entry-list-bottom-right">
-                <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="(item, index) in entryInfo.tags" :key="index">
-                  {{item}}
+                <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="index">
+                  {{ tag }}
                 </n-tag>
               </div>
             </div>
-            </div>
+          </div>
         </div>
       </div>
       <div class="contents-right">
@@ -124,26 +133,26 @@ const handleUpdateValue = () => {
             <div class="personal-introduced">
               <img class="personal-introduced-avatar" :src="personal.avatar" alt="avatar">
             </div>
-            <div class="personal-introduced-name">{{personal.name}}</div>
-            <div class="personal-introduced-description">{{personal.description}}</div>
+            <div class="personal-introduced-name">{{ personal.name }}</div>
+            <div class="personal-introduced-description">{{ personal.description }}</div>
           </div>
           <div class="personal-bottom">
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
               <div style="text-align: center; color: #212529;">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfArticles" />
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfArticles"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.classification" />
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.classification"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels" />
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels"/>
               </div>
             </div>
           </div>
@@ -151,30 +160,29 @@ const handleUpdateValue = () => {
         <!-- 博客日历 -->
         <ClientOnly>
           <div class="blog-calendar-wrap">
-          <div class="blog-calendar-wrap-title">博客日历</div>
-          <div class="blog-calendar-wrap-contents">
-            <n-date-picker
-                clearable
-                v-model:value="calendar"
-                type="date"
-                :panel="true"
-                format="yyyy-MM-dd"
-                @update:value="handleUpdateValue"
-            />
+            <div class="blog-calendar-wrap-title">博客日历</div>
+            <div class="blog-calendar-wrap-contents">
+              <n-date-picker
+                  clearable
+                  v-model:value="calendar"
+                  type="date"
+                  :panel="true"
+                  format="yyyy-MM-dd"
+                  @update:value="handleUpdateValue"
+              />
+            </div>
           </div>
-        </div>
         </ClientOnly>
       </div>
     </div>
   </main>
 
-  <n-back-top :right="100" />
+  <n-back-top :right="100"/>
 </template>
 
 <style scoped lang="scss">
 .main {
   padding: 0 4vw;
-  margin-top: 20px;
   display: flex;
   justify-content: center;
 }
@@ -206,11 +214,11 @@ const handleUpdateValue = () => {
 //类目模块
 .entry-list {
   cursor: pointer;
-  padding: 12px 20px;
+  padding: 17px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border-bottom: 1px solid rgba(228,230,235,0.5);
+  border-bottom: 1px solid rgba(228, 230, 235, 0.5);
 
   &-title {
     font-weight: 700;
@@ -232,13 +240,14 @@ const handleUpdateValue = () => {
     width: 100%;
     display: flex;
     justify-content: space-between;
+
     &-left {
       display: flex;
       align-items: center;
       justify-content: center;
       color: #8a919f;
 
-      &-item  {
+      &-item {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -257,7 +266,7 @@ const handleUpdateValue = () => {
 }
 
 //个人模块
-.personal{
+.personal {
   background-color: white;
   border-radius: 6px;
   display: flex;
@@ -268,7 +277,8 @@ const handleUpdateValue = () => {
   &-contents {
     width: 100%;
     flex-grow: 1;
-    .top-backgroundImage{
+
+    .top-backgroundImage {
       object-fit: cover;
       background-position-x: center;
       background-position-y: center;
@@ -291,7 +301,7 @@ const handleUpdateValue = () => {
       }
     }
 
-    .personal-introduced{
+    .personal-introduced {
       text-align: center;
 
       &-avatar {
@@ -313,6 +323,7 @@ const handleUpdateValue = () => {
       margin-bottom: 5px;
       text-align: center;
     }
+
     .personal-introduced-description {
       text-align: center;
       color: #a6a5a5;
@@ -325,6 +336,7 @@ const handleUpdateValue = () => {
     display: flex;
     justify-content: center;
     border-top: 1px solid #dee2e6;
+
     &-item {
       padding: 9px;
       flex: 1;
@@ -346,7 +358,7 @@ const handleUpdateValue = () => {
     font-size: 14px;
     font-weight: 600;
     color: #212529;
-    border-bottom: 1px solid rgba(228,230,235,0.5);
+    border-bottom: 1px solid rgba(228, 230, 235, 0.5);
   }
 
   &-contents {

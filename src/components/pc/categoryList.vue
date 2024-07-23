@@ -1,38 +1,38 @@
 <script setup lang="ts">
-
- interface ICategory {
-   id: string;
-  /**分类名称*/
-  cateName: string;
-  /**分类Alias*/
+const router = useRouter()
+const props = defineProps({
+  currentRow: {
+    type: Object,
+    default() {
+      return {};
+    },
+  },
+});
+export interface ICategory {
+  id: string;
   alias: string;
+  /**分类名称*/
+  name: string;
   /**分类图片*/
-  img: string;
+  icon: string;
 }
 
-const categories = ref<ICategory[]>([
-  {
-    id: '1',
-    cateName: '综合',
-    alias: '/blog',
-    img: '/svg/nest.svg',
-  },
-  {
-    id: '2',
-    cateName: '测试',
-    alias: '/blog/test2',
-    img: '/svg/nuxt.svg',
-  }
-])
+/**分类路径*/
+const currentPath = ref('')
+
+onMounted(async () => {
+  currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
+})
+
 </script>
 
 <template>
   <div class="category-wrap">
     <ul class="category-list">
-      <li v-for="item in categories" :key="item.id">
-        <nuxt-link :to="item.alias" active-class="active">
-          <img :src="item.img" alt="category">
-          <span>{{ item.cateName }}</span>
+      <li v-for="item in props.currentRow" :key="item.id">
+        <nuxt-link :to="item.alias" active-class="active" :class="{ active: currentPath === item.alias }">
+          <nuxt-img :src="item.icon" h70 alt="category"/>
+          <span>{{ item.name }}</span>
         </nuxt-link>
       </li>
     </ul>
