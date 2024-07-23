@@ -116,6 +116,7 @@ const navigationMenu = ref<NavigationMenu>([
   box-sizing: border-box;
   z-index: 999;
   top: 0;
+  margin-bottom: 20px;
 
   &-container {
     width: 1440px;
