@@ -1,24 +1,52 @@
 import type {HttpRes} from "~/api/type";
-import type {ArticleReq} from "~/api/article/type";
+import type {ArticleReq, CreateArticleReq, UpdateArticle} from "~/api/article/type";
 import {fetchRequest} from "~/composables/http/useFetchRequest";
+import {ArticleStatus} from "~/api/article/type";
 
-enum API {
-  ADD_ARTICLE = '/post/add_article',
-  GET_ARTICLE = '/post/get_article',
+/**
+ * 文章查询
+ * @param params
+ */
+export async function getArticle(params?: ArticleReq) {
+  return await fetchRequest.get<HttpRes>('/article/list', params);
 }
 
 /**
- * 添加文章
+ * 文章详情
  * @param params
  */
-export async function getAddArticle(params?: ArticleReq) {
-  return await fetchRequest.post<HttpRes>(API.ADD_ARTICLE, params);
+export async function getArticleDetails(params?: { id: number }) {
+  return await fetchRequest.get<HttpRes>('/article/details', params);
 }
 
 /**
- * 查询文章
+ * 创建文章
  * @param params
  */
-export async function getArticleList(params?: { id: number }) {
-  return await fetchRequest.get<HttpRes>(API.GET_ARTICLE, params);
+export async function createArticle(params?: CreateArticleReq) {
+  return await fetchRequest.post<HttpRes>('/article', params);
+}
+
+/**
+ * 删除文章
+ * @param params
+ */
+export async function deleteArticle(params?: { id: number }) {
+  return await fetchRequest.delete<HttpRes>('/article', params);
+}
+
+/**
+ * 更改文章状态
+ * @param params
+ */
+export async function editArticleStatus(params?: { ids: number[], status: ArticleStatus }) {
+  return await fetchRequest.put<HttpRes>('/article/status', params);
+}
+
+/**
+ * 更新文章信息
+ * @param params
+ */
+export async function updateArticle(params?: UpdateArticle) {
+  return await fetchRequest.put<HttpRes>('/article', params);
 }

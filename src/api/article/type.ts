@@ -9,10 +9,35 @@ export enum ArticleStatus {
 }
 
 export interface ArticleReq {
+  search?: string | null,
+  page?: number,
+  limit?: number,
   /**标题*/
-  title: string
+  title?: string
   /**内容*/
-  content: string
+  content?: string
   /**发布状态*/
-  status: ArticleStatus
+  status?: ArticleStatus | null
+  /**分类id*/
+  categoryId?: number | null
+}
+
+export interface CreateArticleReq {
+  /**分类id*/
+  category_id: number;
+  /**内容*/
+  content: string;
+  /**状态*/
+  status: ArticleStatus;
+  /**文章的标签*/
+  tagNames: string[];
+  /**标题*/
+  title: string;
+  /**文章摘要*/
+  brief_content: string;
+}
+
+export interface UpdateArticle extends CreateArticleReq {
+  /**文章id*/
+  id: string;
 }

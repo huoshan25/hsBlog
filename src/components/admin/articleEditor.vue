@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import {getAddArticle, getArticleList} from "~/api/article";
-import {type ArticleReq, ArticleStatus} from "~/api/article/type";
+import {createArticle, getArticleDetails, updateArticle} from "~/api/article";
+import {ArticleStatus, type CreateArticleReq} from "~/api/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
-import {SaveOutline, ReturnDownBackOutline} from '@vicons/ionicons5'
-const props = defineProps({
-  visible: Boolean,
-  type: String,
-});
+import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
+import type {ModelRef} from "vue";
+import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
 
+const props = defineProps(['currentRow']);
+const message = useMessage()
 const emits = defineEmits(['close']);
 
 /**markdown内容*/
-const mdContent = defineModel({ type: String })
+const content: ModelRef<string | undefined, string> = defineModel({type: String})
 
 /**markdown工具栏配置*/
 const toolbarsConfig = {
@@ -51,80 +51,94 @@ const toolbarsConfig = {
   preview: true, // 预览
 }
 
-/**发布文章*/
-const handlePublish = async () => {
-  await formRef.value?.validate
-
-  const params:ArticleReq = {
-    title: form.value.title,
-    content: mdContent.value as any,
-    status: ArticleStatus.PUBLISH
-  }
-
-  console.log(params,'params')
-  const res = await getAddArticle(params)
-  if(res.code === HttpStatus.OK) {
-    console.log(res,'res')
-  }
-}
-
 const formRef = ref()
 
-const rules = {
-
-}
+const rules = {}
 
 const form = ref({
   title: '',
+  category_id: 2,
 })
 
-/**
- * 文章查询
- */
-const handleRequer = async () => {
-  const res = await getArticleList({id: 1})
-  if(res.code === HttpStatus.OK) {
-    console.log(res,'res')
+/**发布文章*/
+const handlePublish = async (status: ArticleStatus) => {
+  await formRef.value?.validate
+  const {briefContent} = useMarkdownAbstract(<string>content.value)
+  const params: CreateArticleReq = {
+    title: form.value.title,
+    category_id: form.value.category_id,
+    content: content.value as string,
+    status,
+    tagNames: [],
+    /**裁减摘要内容到指定长度（默认长度：255）*/
+    brief_content: briefContent.value.substring(0, 255),
+  }
+
+  const res = props.currentRow.type === 'edit'
+      ? await updateArticle({...params, id: props.currentRow.id})
+      : await createArticle(params)
+  if (res.code === HttpStatus.OK) {
+    message.success(res.message)
+    emits('close')
   }
 }
 
-/**存为草稿*/
-const handleDraft = () => {
-
-}
-
+onMounted(async () => {
+  if (props.currentRow.type === 'edit') {
+    const res = await getArticleDetails({id: props.currentRow.id})
+    if (res.code === HttpStatus.OK) {
+      form.value.title = res.data.title
+      form.value.category_id = res.data.category_id
+      content.value = res.data.content
+    }
+  }
+})
 </script>
 
 <template>
   <div>
     <n-form
         ref="formRef"
-        inline
-        label-placement="left"
-        label-align="left"
+        label-placement="top"
         :model="form"
         :rules="rules"
         size="small"
     >
-      <n-form-item label="标题" path="title">
-        <n-input v-model:value="form.title" placeholder="请输入标题" />
-      </n-form-item>
+      <div flex>
+        <n-form-item label="标题" path="title" m-r-10 style="width: 100%">
+          <n-input v-model:value="form.title" placeholder="请输入标题"/>
+        </n-form-item>
+        <n-form-item label="分类">
+          <n-select
+              w-130
+              filterable
+              placeholder="请选择"
+              v-model:value="form.category_id"
+              :options="props.currentRow.categoryOption"
+          />
+        </n-form-item>
+      </div>
+
       <n-form-item>
-        <n-button type="primary" @click="handlePublish" m-r-10>
+        <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" m-r-10>
           <template #icon>
             <nuxt-img src="/svg/publish.svg" h-15></nuxt-img>
           </template>
           发布文章
         </n-button>
-        <n-button strong type="tertiary" @click="handleDraft" m-r-10>
+        <n-button strong type="tertiary" @click="handlePublish(ArticleStatus.DRAFT)" m-r-10>
           <template #icon>
-            <n-icon><SaveOutline/></n-icon>
+            <n-icon>
+              <SaveOutline/>
+            </n-icon>
           </template>
           存为草稿
         </n-button>
         <n-button strong type="tertiary" @click="emits('close')">
           <template #icon>
-            <n-icon><ReturnDownBackOutline/></n-icon>
+            <n-icon>
+              <ReturnDownBackOutline/>
+            </n-icon>
           </template>
           返回
         </n-button>
@@ -133,7 +147,7 @@ const handleDraft = () => {
 
 
     <ClientOnly>
-      <mavon-editor v-model="mdContent" w-full h-730px :toolbars="toolbarsConfig"/>
+      <mavon-editor v-model="content" w-full h-730px :toolbars="toolbarsConfig"/>
     </ClientOnly>
   </div>
 </template>

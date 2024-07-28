@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {dateZhCN, type GlobalThemeOverrides, zhCN} from 'naive-ui'
 import type {MenuOption} from 'naive-ui'
+
 const img = useImage()
 const router = useRouter()
 import {useMenus} from "~/composables/store/useMenus";
 
-onMounted( () => {
+onMounted(() => {
   /**获取当前路由路径*/
   activeKey.value = router.currentRoute.value.path
   renewalCrumbs(menuOptions.value, activeKey.value)
@@ -15,7 +16,7 @@ onMounted( () => {
 const inverted = ref(true)
 
 /**获取主题颜色*/
-const { themeColor} = useThemeColor()
+const {themeColor} = useThemeColor()
 
 /*主题覆盖*/
 const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor)
@@ -27,7 +28,7 @@ const activeKey = ref<string>('')
 /**菜单是否折叠*/
 const collapsed = ref(false)
 
-const { menuOptions } = useMenus()
+const {menuOptions} = useMenus()
 
 /**菜单折叠事件*/
 const handleFoldMenu = () => {
@@ -213,64 +214,70 @@ const updateMenuAndBreadcrumb = (key: string) => {
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
-      <n-message-provider>
-        <n-modal-provider>
-          <n-layout has-sider class="layout">
-            <n-layout-sider
-                bordered
-                :inverted="inverted"
-                collapse-mode="width"
-                :collapsed-width="64"
-                :width="220"
-                :collapsed="collapsed"
-            >
-              <div class="wrap-title" @click="handleDropdownSelect( '/admin')">
-                <nuxt-img src="/svg/logo.svg" h-40 :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
-                <div v-show="!collapsed" class="text">后台管理</div>
-              </div>
-              <n-menu
+      <n-dialog-provider>
+        <n-message-provider>
+          <n-modal-provider>
+            <n-layout has-sider class="layout">
+              <n-layout-sider
+                  bordered
                   :inverted="inverted"
-                  @update:value="handleUpdateMenu"
-                  v-model:value="activeKey"
-                  :collapsed="collapsed"
+                  collapse-mode="width"
                   :collapsed-width="64"
-                  :collapsed-icon-size="22"
-                  :options="menuOptions"
-              />
-            </n-layout-sider>
-            <div class="wrap scrollBar">
-              <div class="header">
-                <nuxt-img cursor-pointer :src=" collapsed ? '/svg/unfold.svg': '/svg/shrink.svg'" height="25" p-15 @click="handleFoldMenu"/>
-                <n-breadcrumb m-l-25>
-                  <n-breadcrumb-item>
-                    <n-dropdown :options="homeDropdownOptions"  @select="handleDropdownSelect">
-                      <div class="trigger">
-                        首页
-                      </div>
-                    </n-dropdown>
-                  </n-breadcrumb-item>
-                  <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item" @click="handleBreadcrumbClick(index)">
-                    <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]" @select="handleDropdownSelect">
-                      <div class="trigger">
+                  :width="220"
+                  :collapsed="collapsed"
+              >
+                <div class="wrap-title" @click="handleDropdownSelect( '/admin')">
+                  <nuxt-img src="/svg/logo.svg" h-40
+                            :placeholder="img(`/svg/logo.svg`, { h: 10, f: 'png', blur: 2, q: 50 })"/>
+                  <div v-show="!collapsed" class="text">后台管理</div>
+                </div>
+                <n-menu
+                    :inverted="inverted"
+                    @update:value="handleUpdateMenu"
+                    v-model:value="activeKey"
+                    :collapsed="collapsed"
+                    :collapsed-width="64"
+                    :collapsed-icon-size="22"
+                    :options="menuOptions"
+                />
+              </n-layout-sider>
+              <div class="wrap scrollBar">
+                <div class="header">
+                  <nuxt-img cursor-pointer :src=" collapsed ? '/svg/unfold.svg': '/svg/shrink.svg'" height="25" p-15
+                            @click="handleFoldMenu"/>
+                  <n-breadcrumb m-l-25>
+                    <n-breadcrumb-item>
+                      <n-dropdown :options="homeDropdownOptions" @select="handleDropdownSelect">
+                        <div class="trigger">
+                          首页
+                        </div>
+                      </n-dropdown>
+                    </n-breadcrumb-item>
+                    <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="item"
+                                       @click="handleBreadcrumbClick(index)">
+                      <n-dropdown v-if="dropdownOptions[index]" :options="dropdownOptions[index]"
+                                  @select="handleDropdownSelect">
+                        <div class="trigger">
+                          {{ item }}
+                        </div>
+                      </n-dropdown>
+                      <template v-else>
                         {{ item }}
-                      </div>
-                    </n-dropdown>
-                    <template v-else>
-                      {{ item }}
-                    </template>
-                  </n-breadcrumb-item>
-                </n-breadcrumb>
+                      </template>
+                    </n-breadcrumb-item>
+                  </n-breadcrumb>
+                </div>
+                <main class="content">
+                  <n-card border-rd-7>
+                    <slot></slot>
+                  </n-card>
+                  <admin-footer/>
+                </main>
               </div>
-              <main class="content">
-                <n-card border-rd-7>
-                  <slot></slot>
-                </n-card>
-                <admin-footer />
-              </main>
-            </div>
-          </n-layout>
-        </n-modal-provider>
-      </n-message-provider>
+            </n-layout>
+          </n-modal-provider>
+        </n-message-provider>
+      </n-dialog-provider>
     </n-notification-provider>
   </n-config-provider>
 </template>
