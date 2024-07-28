@@ -8,6 +8,7 @@ import CategoryList, {type ICategory} from "~/components/pc/categoryList.vue";
 import {getArticle} from "~/api/article";
 import {HttpStatus} from "~/enums/httpStatus";
 import {getAllCategories} from "~/api/categories";
+import {ArticleStatus} from "~/api/article/type";
 
 const route = useRoute()
 
@@ -58,7 +59,8 @@ const handleUpdateValue = () => {
 const getList = async () => {
   entryListSkeleton.value = true
   const params = {
-    categoryId: aliasList.value?.id
+    categoryId: aliasList.value?.id,
+    status: ArticleStatus.PUBLISH
   }
   const res = await getArticle(params)
   if (res.code === HttpStatus.OK) {
