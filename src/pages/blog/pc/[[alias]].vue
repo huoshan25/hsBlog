@@ -5,7 +5,7 @@ import {
   ThumbsUpOutline
 } from '@vicons/ionicons5'
 import CategoryList, {type ICategory} from "~/components/pc/categoryList.vue";
-import {getArticle} from "~/api/article";
+import {getArticle, getTagsList} from "~/api/article";
 import {HttpStatus} from "~/enums/httpStatus";
 import {getAllCategories} from "~/api/categories";
 import {ArticleStatus} from "~/api/article/type";
@@ -37,9 +37,9 @@ const personal = reactive({
   avatar: '/img/avatar.jpg',
   avatarBackgroundImage: 'https://cdn.duanx.cn/static/Cuteen/img/center-bg.svg',
   description: '“风很温柔 花很浪漫 你很特别 我很喜欢”',
-  numberOfArticles: 22,
-  classification: 23,
-  numberOfLabels: 22,
+  articlesTotal: 0,
+  categoriesTotal: 0,
+  tagTotal: 0,
 })
 
 const numberOfViews = ref(22)
@@ -77,6 +77,11 @@ const getList = async () => {
 }
 
 onMounted(async () => {
+  const tagsRes = await getTagsList()
+  if (tagsRes.code === HttpStatus.OK) {
+    personal.tagTotal = tagsRes.data.tagTotal
+    personal.articlesTotal = tagsRes.data.articleTotal
+  }
   const categoryRes = await getAllCategories()
   if (categoryRes.code === HttpStatus.OK) {
     categoryList.value = categoryRes.data.map((item: ICategory) => {
@@ -87,6 +92,7 @@ onMounted(async () => {
         icon: item.icon,
       }
     })
+    personal.categoriesTotal = categoryRes.data.length
   }
   aliasList.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
   if(!aliasList.value) {
@@ -158,19 +164,19 @@ onMounted(async () => {
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
               <div style="text-align: center; color: #212529;">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfArticles"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.articlesTotal"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.classification"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.categoriesTotal"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.numberOfLabels"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.tagTotal"/>
               </div>
             </div>
           </div>
