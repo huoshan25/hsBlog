@@ -6,16 +6,6 @@ import {CloseSharp, Pencil, Reload, TrashSharp} from "@vicons/ionicons5";
 import type {Row} from "~/pages/admin/articleEditor/index.vue";
 
 
-type StatusMap = {
-  [key in ArticleStatus]: { type: 'info' | 'warning' | 'error', text: string };
-}
-/**文章状态映射*/
-const statusMap: StatusMap = {
-  [ArticleStatus.PUBLISH]: { type: 'info', text: '发布' },
-  [ArticleStatus.DRAFT]: { type: 'warning', text: '草稿' },
-  [ArticleStatus.DELETE]: { type: 'error', text: '删除' }
-};
-
 type Methods = {
   handlePositiveClick: (id: number, status: ArticleStatus) => void;
   handleDeleteArticle: (id: number) => void;
@@ -43,8 +33,14 @@ export const createColumns = (
       show: true,
       align: 'center',
       render(row: Row) {
-        const statusInfo = statusMap[row.status as ArticleStatus];
-        return statusInfo ? <NTag type={statusInfo.type}>{statusInfo.text}</NTag> : <div>错误状态值</div>;
+        switch (row.status) {
+          case ArticleStatus.PUBLISH:
+            return <NTag type="info">发布</NTag>;
+          case ArticleStatus.DRAFT:
+            return <NTag type="warning">草稿</NTag>;
+          case ArticleStatus.DELETE:
+            return <NTag type="error">删除</NTag>;
+        }
       }
     },
 
@@ -59,7 +55,11 @@ export const createColumns = (
       title: '标题',
       key: 'title',
       show: true,
-      align: 'center'
+      align: 'center',
+      minWidth: 350,
+      ellipsis: {
+        tooltip: true
+      }
     },
 
     {
