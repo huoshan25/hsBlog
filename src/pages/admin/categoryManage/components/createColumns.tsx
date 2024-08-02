@@ -53,13 +53,6 @@ export const createColumns = (
     },
 
     {
-      title: '分类名称',
-      key: 'alias',
-      show: true,
-      align: 'center',
-    },
-
-    {
       title: 'Alias',
       key: 'alias',
       show: true,
