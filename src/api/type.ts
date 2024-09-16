@@ -1,5 +1,5 @@
-export interface HttpRes {
+export interface HttpRes<T> {
   code: number
-  data?: any,
+  data: T,
   message: string
 }

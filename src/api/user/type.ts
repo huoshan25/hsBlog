@@ -6,8 +6,8 @@ export interface loginReq {
 }
 
 export interface loginReqRes {
-  code: number
-  message: string
+  token: string
+  refresh_token: string
 }
 
 export interface registerReq extends loginReq{
