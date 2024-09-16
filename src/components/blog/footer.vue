@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type {loginReq} from "~/api/user/type";
-import {getLogin} from "~/api/user/indexFetch";
+import {getLogin} from "~/api/user";
 import {HttpStatus} from "~/enums/httpStatus";
+import { useStorage } from '@vueuse/core'
 
-const showModal = ref(false);
+const loginShow = ref(false);
+
+const router = useRouter();
 
 const form = ref<loginReq>({
   username: '',
@@ -11,6 +14,9 @@ const form = ref<loginReq>({
 });
 
 const formRef = ref()
+
+const token = useStorage('token', '');
+const refreshToken = useStorage('refreshToken', '');
 
 const rules = {
   username: {
@@ -29,16 +35,23 @@ const handleSubmit = async () => {
   await formRef.value?.validate()
   const res = await getLogin(form.value);
   if (res.code === HttpStatus.OK) {
+    token.value = res.data.token
+    refreshToken.value = res.data.refresh_token
+    await router.push('/admin')
   }
 };
 
-const toAdming = () => {
-  showModal.value = !showModal.value
+const toAdmin = async () => {
+  // if(!token.value) {
+    loginShow.value = !loginShow.value
+  // } else {
+    // await router.push('/admin')
+  // }
 }
 </script>
 
 <template>
-  <n-modal v-model:show="showModal" :auto-focus="false">
+  <n-modal v-model:show="loginShow" :auto-focus="false">
     <n-card
         w-400
         title="登录"
@@ -81,7 +94,7 @@ const toAdming = () => {
       hsBlog
     </div>
     |
-    <nuxt-link style="color: #1e80ff;" m-l-5 to="/admin">
+    <nuxt-link class="color-#1e80ff cursor-pointer" m-l-5 @click="toAdmin">
       后台管理
     </nuxt-link>
   </footer>

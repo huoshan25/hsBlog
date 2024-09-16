@@ -6,19 +6,20 @@ import { zhCN, dateZhCN } from 'naive-ui'
 const { themeColor} = useThemeColor()
 
 /*主题覆盖*/
-const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor)
-
+const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor);
 </script>
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
-      <n-modal-provider>
-        <pc-navbar></pc-navbar>
-        <div>
-          <slot></slot>
-        </div>
-        <pc-footer/>
-      </n-modal-provider>
+      <n-message-provider>
+        <n-modal-provider>
+          <blog-navbar></blog-navbar>
+          <div>
+            <slot></slot>
+          </div>
+          <blog-footer/>
+        </n-modal-provider>
+      </n-message-provider>
     </n-notification-provider>
   </n-config-provider>
 </template>
