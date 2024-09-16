@@ -1,22 +1,11 @@
 import type { FetchResponse, SearchParameters } from 'ofetch'
 import { HttpStatus } from "~/enums/httpStatus"
 import { useStorage } from '@vueuse/core'
+import {ErrorStatus} from "~/enums/ErrorStatus";
+import { createDiscreteApi } from 'naive-ui'
+import type {FetchApiFn, RefreshTokenResponse} from "~/composables/http/type";
 
-interface RefreshTokenResponse {
-  code: number
-  message: string
-  data: {
-    token: string
-    refresh_token: string
-  };
-}
-
-interface FetchApiFn {
-  get: <T>(url: string, params?: SearchParameters) => Promise<T>
-  post: <T>(url: string, body?: SearchParameters) => Promise<T>
-  put: <T>(url: string, body?: SearchParameters) => Promise<T>
-  delete: <T>(url: string, body?: SearchParameters) => Promise<T>
-}
+const { message } = createDiscreteApi(['message'])
 
 /*参数序列化*/
 const paramsSerializer = (params?: SearchParameters): SearchParameters | undefined => {
@@ -48,7 +37,6 @@ class FetchApi implements FetchApiFn {
     })
   }
 
-  /*验证token*/
   private async onRequest({ options }: { options: any }) {
     options.params = paramsSerializer(options.params)
     const { apiBaseUrl } = useRuntimeConfig().public
@@ -63,15 +51,32 @@ class FetchApi implements FetchApiFn {
   /*返回响应结果*/
   private async onResponse({ response }: { response: FetchResponse<any> }) {
     const data = response._data
-    if (data.code !== HttpStatus.OK) {
-      return this.handleTokenRefresh(response)
+
+    if(data.code === ErrorStatus.EXPIRE_TOKEN) {
+      await this.handleTokenRefresh(response)
+      return
     }
-    return data
+
+    if(data.code !== HttpStatus.OK) {
+      message.error(`${data.code} - ${data.message}`)
+      throw new Error(data.message)
+    }
+
+    if(data.code === HttpStatus.OK) {
+      return data
+    }
   }
 
   /*错误响应*/
-  private async onResponseError({ response }: { response: FetchResponse<any> }) {
-    // 处理错误
+  private onResponseError({ response }: { response: FetchResponse<any> }) {
+    const data = response._data
+    // 如果 data.code 存在且不等于200，说明这是一个被捕获的业务逻辑错误, 已经在 onResponse 中处理过了，所以这里不需要再显示错误消息
+    if (data && data.code !== undefined && data.code !== HttpStatus.OK) {
+      return
+    }
+
+    // 处理 HTTP 错误状态码
+    message.error(`${response.status} - ${response.statusText || '未知错误'}`)
   }
 
   /*处理token刷新*/
