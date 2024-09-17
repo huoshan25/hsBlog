@@ -15,3 +15,11 @@ export interface FetchApiFn {
   put: <T>(url: string, body?: SearchParameters) => Promise<T>
   delete: <T>(url: string, body?: SearchParameters) => Promise<T>
 }
+
+export interface RefreshTokenResponse {
+  code: number
+  data: {
+    token: string
+    refresh_token: string
+  }
+}

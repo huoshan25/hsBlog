@@ -26,8 +26,7 @@ class FetchApi implements FetchApiFn {
   private readonly fetch: typeof $fetch
   private token = useStorage('token', '')
   private refreshToken = useStorage('refreshToken', '')
-  private isRefreshing: boolean = false
-  private refreshSubscribers: Array<(token: string) => void> = []
+  private pending: Promise<RefreshTokenResponse> | null = null
 
   constructor() {
     this.fetch = $fetch.create({
@@ -37,34 +36,59 @@ class FetchApi implements FetchApiFn {
     })
   }
 
-  private async onRequest({ options }: { options: any }) {
+  private async onRequest({ options, request }: { options: any, request: any }) {
     options.params = paramsSerializer(options.params)
     const { apiBaseUrl } = useRuntimeConfig().public
     options.baseURL = apiBaseUrl as string
 
-    if (this.token.value) {
+    const isRefreshTokenRequest = request === '/user/refresh-token'
+
+    if (isRefreshTokenRequest && this.refreshToken.value) {
+      options.headers = new Headers(options.headers)
+      options.headers.set('Authorization', `Bearer ${this.refreshToken.value}`)
+    } else if (this.token.value) {
       options.headers = new Headers(options.headers)
       options.headers.set('Authorization', `Bearer ${this.token.value}`)
     }
   }
 
   /*返回响应结果*/
-  private async onResponse({ response }: { response: FetchResponse<any> }) {
+  private async onResponse({ request, response, options }: { request: Request, response: FetchResponse<any>, options: any }) {
     const data = response._data
 
-    if(data.code === ErrorStatus.EXPIRE_TOKEN) {
-      await this.handleTokenRefresh(response)
-      return
+    if (data.code === ErrorStatus.EXPIRE_TOKEN) {
+      if (this.pending === null) {
+        this.pending = this.handleTokenRefresh()
+      }
+
+      try {
+        const refreshResult = await this.pending
+
+        if (refreshResult.code === HttpStatus.OK) {
+          this.token.value = refreshResult.data.token
+          this.refreshToken.value = refreshResult.data.refresh_token
+
+          // 继续请求原来的数据
+          const newResponse: any = await this.fetch(request, {
+            ...options,
+            headers: { ...options.headers }
+          })
+
+          // 返回新的响应数据
+          return newResponse._data
+        } else {
+          throw new Error('刷新令牌失败')
+        }
+      } catch (error) {
+        this.pending = null
+        this.token.value = ''
+        this.refreshToken.value = ''
+        navigateTo('/blog')
+        return Promise.reject(error)
+      }
     }
 
-    if(data.code !== HttpStatus.OK) {
-      message.error(`${data.code} - ${data.message}`)
-      throw new Error(data.message)
-    }
-
-    if(data.code === HttpStatus.OK) {
-      return data
-    }
+    return data
   }
 
   /*错误响应*/
@@ -72,6 +96,7 @@ class FetchApi implements FetchApiFn {
     const data = response._data
     // 如果 data.code 存在且不等于200，说明这是一个被捕获的业务逻辑错误, 已经在 onResponse 中处理过了，所以这里不需要再显示错误消息
     if (data && data.code !== undefined && data.code !== HttpStatus.OK) {
+      // 其他业务逻辑错误
       return
     }
 
@@ -80,50 +105,12 @@ class FetchApi implements FetchApiFn {
   }
 
   /*处理token刷新*/
-  private async handleTokenRefresh(response: FetchResponse<any>) {
-    if (!this.refreshToken.value) {
-      // 处理没有刷新token的情况
-      return Promise.reject(response._data)
-    }
-
-    if (!this.isRefreshing) {
-      this.isRefreshing = true
-
-      try {
-        const result = await this.fetch<RefreshTokenResponse>('/refresh-token', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${this.refreshToken.value}` }
-        })
-
-        if (result.code === HttpStatus.OK) {
-          this.token.value = result.data.token
-          this.refreshToken.value = result.data.refresh_token
-          this.onRefreshSuccess(result.data.token)
-        } else {
-          this.onRefreshFailure(result)
-        }
-      } catch (error) {
-        this.onRefreshFailure(error)
-      } finally {
-        this.isRefreshing = false
-      }
-    }
-  }
-
-  /*刷新token成功*/
-  private onRefreshSuccess(token: string) {
-    this.refreshSubscribers.forEach((callback) => callback(token))
-    this.refreshSubscribers = []
-  }
-
-  /*刷新token失败*/
-  private onRefreshFailure(error: any) {
-    this.refreshSubscribers.forEach((callback) => callback(''))
-    this.refreshSubscribers = []
-    this.token.value = ''
-    this.refreshToken.value = ''
-    // 处理刷新失败的情况，清除所有token并重定向到登录页面
-    navigateTo('/blog')
+  private handleTokenRefresh(): Promise<RefreshTokenResponse> {
+    return this.fetch<RefreshTokenResponse>('/user/refresh-token', {
+      method: 'POST',
+    }).finally(() => {
+      this.pending = null
+    })
   }
 
   get<T>(url: string, params?: SearchParameters): Promise<T> {
