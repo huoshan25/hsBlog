@@ -25,6 +25,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/': { redirect: '/blog' },
     // 主页在构建时预渲染
     '/blog': { prerender: true },
     // 产品页面按需生成，后台自动重新验证
