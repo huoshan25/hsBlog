@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import MarkdownEditor from "~/components/admin/markdownEditor.vue";
-import {Pencil, Search, TrashSharp, CloseSharp, Reload} from '@vicons/ionicons5'
+import {Search} from '@vicons/ionicons5'
 import {type ArticleReq, ArticleStatus} from "~/api/article/type";
 import {deleteArticle, editArticleStatus, getArticle} from "~/api/article";
 import {getAllCategories} from "~/api/categories";
 import {HttpStatus} from "~/enums/httpStatus";
-import {useTimeFormat} from "~/composables/tools/useTimeFormat";
-import {type DataTableColumns, type DataTableRowKey, NButton, NIcon, NTag} from 'naive-ui'
+import { NButton, NIcon} from 'naive-ui'
 import {createColumns} from "~/pages/admin/articleEditor/components/createColumns";
-import type {ComponentPublicInstance} from "vue";
 
 definePageMeta({
   layout: 'admin'
@@ -26,26 +24,43 @@ export interface Row {
   update_time: string;
 }
 
+const total = ref(0)
+
 /**是否新增或编辑文章*/
 const articleEditorVisibility = ref(false)
 /**选中文章id*/
 const checkedRowKeysRef = ref<number[]>([])
 /**选中数据过滤*/
 const rowKey = (row: Row) => row.id
-const handleCheck = (rowKeys: number[]) => {
-  checkedRowKeysRef.value = rowKeys
+const handleCheck = (rowKeys: (string | number)[]) => {
+  checkedRowKeysRef.value = rowKeys as number[]
 }
+
 const form = ref<ArticleReq>({
-  page: 1,
-  limit: 10,
   search: null,
   title: '',
   categoryId: null,
   status: null,
 })
-const pagination = {
-  pageSize: 5
-}
+
+const pagination = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  pageSizes: [10, 20, 30],
+  prefix() {
+    return `共 ${total.value} 条`
+  },
+  onChange: (page: number) => {
+    pagination.page = page
+    getList()
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize
+    pagination.page = 1
+    getList()
+  }
+})
 
 const handleQuery = () => {
   getList()
@@ -76,9 +91,15 @@ const tableData = ref<Row[]>([]);
 /**列表数据*/
 const getList = async () => {
   loading.value = true
-  const res = await getArticle(form.value)
+  const params = {
+    ...form.value,
+    page: pagination.page,
+    limit: pagination.pageSize
+  }
+  const res = await getArticle(params)
   if (res.code === HttpStatus.OK) {
     tableData.value = res.data.list
+    total.value = res.data.total
     loading.value = false
   }
 }
@@ -169,7 +190,7 @@ const columns = ref(createColumns(
 onMounted(async () => {
   const res = await getAllCategories()
   if (res.code === HttpStatus.OK) {
-    categoryOption.value = res.data.map((item: { id: number | string, name: string }, index: number) => {
+    categoryOption.value = res.data.map((item: { id: number | string, name: string }) => {
       return {
         value: item.id,
         label: item.name
@@ -285,13 +306,5 @@ onMounted(async () => {
   .form-row {
     flex-direction: column;
   }
-}
-
-th {
-  text-align: center;
-}
-
-td {
-  text-align: center;
 }
 </style>
