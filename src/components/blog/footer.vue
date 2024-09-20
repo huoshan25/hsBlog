@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import type {loginReq} from "~/api/user/type";
-import {getLogin} from "~/api/user";
-import {HttpStatus} from "~/enums/httpStatus";
+import type { loginReq, registerReq } from "~/api/user/type";
+import {getLogin, getRegister} from "~/api/user";
+import { HttpStatus } from "~/enums/httpStatus";
 import { useStorage } from '@vueuse/core'
+import type {FormItemRule} from "naive-ui";
 
 const loginShow = ref(false);
+const isLogin = ref(true);
 
 const router = useRouter();
 
-const form = ref<loginReq>({
+const loginForm = ref<loginReq>({
   username: '',
   password: ''
+});
+
+const registerForm = ref<registerReq>({
+  username: '',
+  password: '',
+  confirmPassword: ''
 });
 
 const formRef = ref()
@@ -18,7 +26,7 @@ const formRef = ref()
 const token = useStorage('token', '');
 const refreshToken = useStorage('refreshToken', '');
 
-const rules = {
+const loginRules = {
   username: {
     required: true,
     message: '请输入用户名',
@@ -31,9 +39,33 @@ const rules = {
   }
 };
 
-const handleSubmit = async () => {
+const registerRules = {
+  username: {
+    required: true,
+    message: '请输入用户名',
+    trigger: 'blur'
+  },
+  password: {
+    required: true,
+    message: '请输入密码',
+    trigger: 'blur'
+  },
+  confirmPassword: {
+    required: true,
+    message: '请确认密码',
+    trigger: 'blur',
+    validator: (rule: FormItemRule, value: string) => {
+      if (value !== registerForm.value.password) {
+        return new Error('两次输入的密码不一致');
+      }
+      return true;
+    }
+  }
+};
+
+const handleLogin = async () => {
   await formRef.value?.validate()
-  const res = await getLogin(form.value);
+  const res = await getLogin(loginForm.value);
   if (res.code === HttpStatus.OK) {
     token.value = res.data.token
     refreshToken.value = res.data.refresh_token
@@ -41,12 +73,33 @@ const handleSubmit = async () => {
   }
 };
 
+const handleRegister = async () => {
+  await formRef.value?.validate()
+  const res = await getRegister(registerForm.value);
+  if (res.code === HttpStatus.OK) {
+    // 注册成功后切换到登录页面
+    isLogin.value = true;
+  }
+};
+
 const toAdmin = async () => {
-  // if(!token.value) {
+  if(!token.value) {
     loginShow.value = !loginShow.value
-  // } else {
-    // await router.push('/admin')
-  // }
+  } else {
+    await router.push('/admin')
+  }
+}
+
+const switchMode = () => {
+  isLogin.value = !isLogin.value;
+  nextTick(() => {
+    formRef.value?.restoreValidation()
+    if (isLogin.value) {
+      loginForm.value = { username: '', password: '' }
+    } else {
+      registerForm.value = { username: '', password: '', confirmPassword: '' }
+    }
+  })
 }
 </script>
 
@@ -54,7 +107,7 @@ const toAdmin = async () => {
   <n-modal v-model:show="loginShow" :auto-focus="false">
     <n-card
         w-400
-        title="登录"
+        :title="isLogin ? '登录' : '注册'"
         :bordered="false"
         size="huge"
         require-mark-placement="right-hanging"
@@ -68,21 +121,31 @@ const toAdmin = async () => {
           ref="formRef"
           :inline="false"
           label-placement="left"
-          :model="form"
-          :rules="rules"
+          label-width="auto"
+          :model="isLogin ? loginForm : registerForm"
+          :rules="isLogin ? loginRules : registerRules"
           size="small"
       >
-        <n-form-item label="姓名" path="username">
-          <n-input v-model:value="form.username" placeholder="请输入账户"/>
+        <n-form-item label="用户名" path="username">
+          <n-input v-if="isLogin" v-model:value="loginForm.username" placeholder="请输入用户名"/>
+          <n-input v-else v-model:value="registerForm.username" placeholder="请输入用户名"/>
         </n-form-item>
         <n-form-item label="密码" path="password">
-          <n-input v-model:value="form.password" placeholder="请输入密码" show-password-on="click" type="password" @keydown.enter.prevent/>
+          <n-input v-if="isLogin" v-model:value="loginForm.password" placeholder="请输入密码" show-password-on="click" type="password" @keydown.enter.prevent/>
+          <n-input v-else v-model:value="registerForm.password" placeholder="请输入密码" show-password-on="click" type="password" @keydown.enter.prevent/>        </n-form-item>
+        <n-form-item v-if="!isLogin" label="确认密码" path="confirmPassword">
+          <n-input v-model:value="registerForm.confirmPassword" placeholder="请确认密码" show-password-on="click" type="password" @keydown.enter.prevent/>
         </n-form-item>
       </n-form>
 
       <div style="text-align: right">
-        <n-button attr-type="button" @click="handleSubmit()">
-          提交
+        <n-button attr-type="button" @click="isLogin ? handleLogin() : handleRegister()">
+          {{ isLogin ? '登录' : '注册' }}
+        </n-button>
+      </div>
+      <div style="text-align: center; margin-top: 10px">
+        <n-button text @click="switchMode">
+          {{ isLogin ? '没有账号？点击注册' : '已有账号？点击登录' }}
         </n-button>
       </div>
     </n-card>
