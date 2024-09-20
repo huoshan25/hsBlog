@@ -1,6 +1,4 @@
 <script setup lang="ts">
-
-import Footer from "~/components/pc/footer.vue";
 </script>
 
 <template>
