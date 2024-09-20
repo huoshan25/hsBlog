@@ -92,18 +92,24 @@ export const createColumns = (
       show: true,
       align: 'center',
       render(row: Row) {
-        return <>
-          <NButton size="small" class="mr10" onClick={() => handleCategory(row.id, 'edit')}>
-            <NIcon size="19">
-              <Pencil/>
-            </NIcon>
-          </NButton>
-          <NButton size="small" onClick={() => handleDeleteCategory(row.id)}>
-            <NIcon size="19">
-              <TrashSharp/>
-            </NIcon>
-          </NButton>
-        </>
+        const isSpecialCategory = row.alias === 'all' || row.alias === 'uncategorized';
+        if (isSpecialCategory) {
+          return <>--</>;
+        }
+        return (
+          <>
+            <NButton size="small" class="mr10" onClick={() => handleCategory(row.id, 'edit')}>
+              <NIcon size="19">
+                <Pencil/>
+              </NIcon>
+            </NButton>
+            <NButton size="small" onClick={() => handleDeleteCategory(row.id)}>
+              <NIcon size="19">
+                <TrashSharp/>
+              </NIcon>
+            </NButton>
+          </>
+        );
       }
     },
 

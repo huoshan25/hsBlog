@@ -22,16 +22,20 @@ export interface Row {
   isEdit: boolean;
 }
 
+const total = ref(0)
+
 /**分页*/
 const pagination = {
-  pageSize: 5
+  prefix() {
+    return `共 ${total.value} 条`
+  },
 }
 /**选中分类id*/
 const checkedRowKeysRef = ref<number[]>([])
 /**选中数据过滤*/
 const rowKey = (row: Row) => row.id
-const handleCheck = (rowKeys: number[]) => {
-  checkedRowKeysRef.value = rowKeys
+const handleCheck = (rowKeys: (string | number)[]) => {
+  checkedRowKeysRef.value = rowKeys as number[]
 }
 
 /**表格数据*/
@@ -109,6 +113,7 @@ const getList = async () => {
   const res = await getAllCategories()
   if (res.code === HttpStatus.OK) {
     tableData.value = res.data
+    total.value = res.data.length
     loading.value = false
   }
 }
