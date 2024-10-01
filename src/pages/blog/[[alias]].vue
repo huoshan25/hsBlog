@@ -4,7 +4,7 @@ import {
   EyeOutline,
   ThumbsUpOutline
 } from '@vicons/ionicons5'
-import CategoryList, {type ICategory} from "~/components/pc/categoryList.vue";
+import CategoryList, {type ICategory} from "~/components/blog/categoryList.vue";
 import {getArticle, getTagsList} from "~/api/article";
 import {HttpStatus} from "~/enums/httpStatus";
 import {getAllCategories} from "~/api/categories";
@@ -13,7 +13,7 @@ import {ArticleStatus} from "~/api/article/type";
 const route = useRoute()
 
 definePageMeta({
-  layout: 'pc',
+  layout: 'blog',
 });
 
 /**文章分类*/
@@ -22,6 +22,7 @@ const categoryList = ref()
 const entryListSkeleton = ref(false)
 
 interface EntryInfo {
+  id: number;
   title: string;
   content: string;
   category_name: string;
@@ -66,6 +67,7 @@ const getList = async () => {
   if (res.code === HttpStatus.OK) {
     entryInfo.value = res.data.list.map((item: EntryInfo) => {
       return {
+        id: item.id,
         title: item.title,
         category_name: item.category_name,
         content: item.content,
@@ -74,6 +76,11 @@ const getList = async () => {
     })
     entryListSkeleton.value = false
   }
+}
+
+/**文章详情*/
+const goDetails = (id: number) => {
+  navigateTo(`/blog/post/${id}`)
 }
 
 onMounted(async () => {
@@ -120,7 +127,7 @@ onMounted(async () => {
             <n-skeleton height="15px" width="70%"/>
             <n-skeleton height="15px" width="50%"/>
           </n-space>
-          <div v-show="!entryListSkeleton" class="entry-list" v-for="(item, index) in entryInfo" :key="index">
+          <div v-show="!entryListSkeleton" class="entry-list" v-for="(item, index) in entryInfo" :key="index" @click="goDetails(item.id)">
             <n-ellipsis class="entry-list-title" :tooltip="false">
               {{ item.title }}
             </n-ellipsis>
