@@ -88,6 +88,9 @@ class FetchApi implements FetchApiFn {
       }
     }
 
+    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
+      message.error(data.message)
+    }
     return data
   }
 
@@ -97,6 +100,7 @@ class FetchApi implements FetchApiFn {
     // 如果 data.code 存在且不等于200，说明这是一个被捕获的业务逻辑错误, 已经在 onResponse 中处理过了，所以这里不需要再显示错误消息
     if (data && data.code !== undefined && data.code !== HttpStatus.OK) {
       // 其他业务逻辑错误
+      message.error(`${data.code} - ${data.message || '未知错误'}`)
       return
     }
 
