@@ -1,55 +1,17 @@
 <script setup lang="ts">
-import {createArticle, getArticleDetails, updateArticle} from "~/api/article";
-import {ArticleStatus, type CreateArticleReq} from "~/api/article/type";
+import {createArticle, deletePicture, getArticleDetails, updateArticle} from "~/api/article";
+import {ArticleStatus} from "~/api/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
 import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
-import type {ModelRef} from "vue";
 import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
+import {toolbarsConfig} from "~/components/admin/markdownEditor/config/toolbarsConfig";
 
 const props = defineProps(['currentRow']);
 const message = useMessage()
 const emits = defineEmits(['close']);
 
 /**markdown内容*/
-const content: ModelRef<string | undefined, string> = defineModel({type: String})
-
-/**markdown工具栏配置*/
-const toolbarsConfig = {
-  // ... toolbars config
-  bold: true, // 粗体
-  italic: true, // 斜体
-  header: true, // 标题
-  underline: true, // 下划线
-  strikethrough: true, // 中划线
-  mark: true, // 标记
-  superscript: true, // 上角标
-  subscript: true, // 下角标
-  quote: true, // 引用
-  ol: true, // 有序列表
-  ul: true, // 无序列表
-  link: true, // 链接
-  imagelink: true, // 图片链接
-  code: true, // code
-  table: true, // 表格
-  fullscreen: true, // 全屏编辑
-  readmodel: true, // 沉浸式阅读
-  htmlcode: true, // 展示html源码
-  help: true, // 帮助
-  /* 1.3.5 */
-  undo: true, // 上一步
-  redo: true, // 下一步
-  trash: true, // 清空
-  save: true, // 保存（触发events中的save事件）
-  /* 1.4.2 */
-  navigation: true, // 导航目录
-  /* 2.1.8 */
-  alignleft: true, // 左对齐
-  aligncenter: true, // 居中
-  alignright: true, // 右对齐
-  /* 2.2.1 */
-  subfield: true, // 单双栏模式
-  preview: true, // 预览
-}
+const content = ref<any>()
 
 const formRef = ref()
 
@@ -57,17 +19,47 @@ const rules = {}
 
 const form = ref({
   title: '',
-  category_id: 2,
+  category_id: '',
+  articleUUID: '',
 })
+
+const editorRef = ref()
+
+/*删除图片*/
+const handleEditorImgDel = async (pos:any) => {
+  try {
+    const res = await deletePicture({path: pos[0]})
+    if(res.code === HttpStatus.OK) {
+      message.error(res.message)
+    }
+  } catch (error) {
+    console.error('删除图片失败：', error);
+  }
+}
+
+/*图片上传*/
+const handleImageUpload = async (pos: any, file: File) => {
+  const fileUrl = await useUploadImage(file, form.value.articleUUID)
+  if (fileUrl) {
+    editorRef.value.$img2Url(pos, fileUrl)
+  }
+}
+
+// let html = reactive<any>(null)
+//
+// /*编辑区发送变化的回调*/
+const change = (value: any, render: any) => {
+  // html = render;
+}
 
 /**发布文章*/
 const handlePublish = async (status: ArticleStatus) => {
   await formRef.value?.validate
-  const {briefContent} = useMarkdownAbstract(<string>content.value)
-  const params: CreateArticleReq = {
+  const {briefContent} = useMarkdownAbstract(content.value)
+  const commonParams = {
     title: form.value.title,
     category_id: form.value.category_id,
-    content: content.value as string,
+    content: content.value,
     status,
     tagNames: [],
     /**裁减摘要内容到指定长度（默认长度：255）*/
@@ -75,8 +67,8 @@ const handlePublish = async (status: ArticleStatus) => {
   }
 
   const res = props.currentRow.type === 'edit'
-      ? await updateArticle({...params, id: props.currentRow.id})
-      : await createArticle(params)
+      ? await updateArticle({...commonParams , id: props.currentRow.id})
+      : await createArticle({...commonParams , articleUUID: form.value.articleUUID,})
   if (res.code === HttpStatus.OK) {
     message.success(res.message)
     emits('close')
@@ -91,6 +83,9 @@ onMounted(async () => {
       form.value.category_id = res.data.category_id
       content.value = res.data.content
     }
+  } else if(props.currentRow.type === 'add') {
+    const { generateUUID } = useUUID();
+    form.value.articleUUID = generateUUID();
   }
 })
 </script>
@@ -104,8 +99,8 @@ onMounted(async () => {
         :rules="rules"
         size="small"
     >
-      <div flex>
-        <n-form-item label="标题" path="title" m-r-10 style="width: 100%">
+      <div class="flex">
+        <n-form-item label="标题" path="title" class="mr10 w100%">
           <n-input v-model:value="form.title" placeholder="请输入标题"/>
         </n-form-item>
         <n-form-item label="分类">
@@ -120,13 +115,13 @@ onMounted(async () => {
       </div>
 
       <n-form-item>
-        <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" m-r-10>
+        <n-button type="primary" @click="handleEditorImgDel(1)" class="mr10">
           <template #icon>
-            <nuxt-img src="/svg/publish.svg" h-15></nuxt-img>
+            <nuxt-img src="/svg/publish.svg" class="h15"></nuxt-img>
           </template>
           发布文章
         </n-button>
-        <n-button strong type="tertiary" @click="handlePublish(ArticleStatus.DRAFT)" m-r-10>
+        <n-button strong type="tertiary" @click="handlePublish(ArticleStatus.DRAFT)" class="mr10">
           <template #icon>
             <n-icon>
               <SaveOutline/>
@@ -147,7 +142,15 @@ onMounted(async () => {
 
 
     <ClientOnly>
-      <mavon-editor v-model="content" w-full h-730px :toolbars="toolbarsConfig"/>
+      <mavon-editor
+          ref="editorRef"
+          v-model="content"
+          class="w-full h-730px"
+          :toolbars="toolbarsConfig"
+          @imgAdd="handleImageUpload"
+          @imgDel="handleEditorImgDel"
+          @change="change"
+      />
     </ClientOnly>
   </div>
 </template>

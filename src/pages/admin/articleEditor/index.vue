@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import MarkdownEditor from "~/components/admin/markdownEditor.vue";
 import {Search} from '@vicons/ionicons5'
 import {type ArticleReq, ArticleStatus} from "~/api/article/type";
 import {deleteArticle, editArticleStatus, getArticle} from "~/api/article";
@@ -282,7 +281,7 @@ onMounted(async () => {
   </div>
 
   <!-- 新增/编辑文章 -->
-  <MarkdownEditor
+  <admin-markdown-editor
       v-if="articleEditorVisibility"
       :visible="articleEditorVisibility"
       :type="editorType"

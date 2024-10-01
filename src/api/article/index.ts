@@ -1,14 +1,14 @@
 import type {HttpRes} from "~/api/type";
 import type {ArticleReq, CreateArticleReq, UpdateArticle} from "~/api/article/type";
-import {fetchRequest} from "~/composables/http/useFetchRequest";
 import {ArticleStatus} from "~/api/article/type";
+import {fetchRequest} from "~/composables/http/useFetchRequest";
 
 /**
  * 文章查询
  * @param params
  */
 export async function getArticle(params?: ArticleReq) {
-  return await fetchRequest.get<HttpRes>('/article/list', params);
+  return await fetchRequest.get<any>('/article/list', params);
 }
 
 /**
@@ -16,7 +16,7 @@ export async function getArticle(params?: ArticleReq) {
  * @param params
  */
 export async function getArticleDetails(params?: { id: number }) {
-  return await fetchRequest.get<HttpRes>('/article/details', params);
+  return await fetchRequest.get<any>('/article/details', params);
 }
 
 /**
@@ -24,7 +24,7 @@ export async function getArticleDetails(params?: { id: number }) {
  * @param params
  */
 export async function createArticle(params?: CreateArticleReq) {
-  return await fetchRequest.post<HttpRes>('/article', params);
+  return await fetchRequest.post<any>('/article', params);
 }
 
 /**
@@ -32,7 +32,7 @@ export async function createArticle(params?: CreateArticleReq) {
  * @param params
  */
 export async function deleteArticle(params?: { id: number }) {
-  return await fetchRequest.delete<HttpRes>('/article', params);
+  return await fetchRequest.delete<any>('/article', params);
 }
 
 /**
@@ -40,7 +40,7 @@ export async function deleteArticle(params?: { id: number }) {
  * @param params
  */
 export async function editArticleStatus(params?: { ids: number[], status: ArticleStatus }) {
-  return await fetchRequest.put<HttpRes>('/article/status', params);
+  return await fetchRequest.put<any>('/article/status', params);
 }
 
 /**
@@ -48,5 +48,19 @@ export async function editArticleStatus(params?: { ids: number[], status: Articl
  * @param params
  */
 export async function updateArticle(params?: UpdateArticle) {
-  return await fetchRequest.put<HttpRes>('/article', params);
+  return await fetchRequest.put<any>('/article', params);
+}
+
+/**
+ * 文章标签
+ */
+export async function getTagsList() {
+  return await fetchRequest.get<any>('/article/tags');
+}
+
+/**
+ * 删除图片
+ */
+export async function deletePicture(params: any) {
+  return await fetchRequest.delete<any>('/oss/ali/article-img', params);
 }

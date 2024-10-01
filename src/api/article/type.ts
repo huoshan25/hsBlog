@@ -24,7 +24,7 @@ export interface ArticleReq {
 
 export interface CreateArticleReq {
   /**分类id*/
-  category_id: number;
+  category_id: number | null | string;
   /**内容*/
   content: string;
   /**状态*/
@@ -35,9 +35,11 @@ export interface CreateArticleReq {
   title: string;
   /**文章摘要*/
   brief_content: string;
+  /*文章UUID*/
+  articleUUID: string;
 }
 
-export interface UpdateArticle extends CreateArticleReq {
+export interface UpdateArticle extends Omit<CreateArticleReq, 'articleUUID'> {
   /**文章id*/
   id: string;
 }
