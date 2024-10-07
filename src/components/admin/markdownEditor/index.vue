@@ -170,7 +170,7 @@ onMounted(async () => {
       </n-form-item>
 
       <n-form-item>
-        <n-button type="primary" @click="handleEditorImgDel(1)" class="mr10">
+        <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" class="mr10">
           <template #icon>
             <nuxt-img src="/svg/publish.svg" class="h15"></nuxt-img>
           </template>

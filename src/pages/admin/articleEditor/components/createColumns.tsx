@@ -1,25 +1,80 @@
-import type {DataTableColumns} from "naive-ui";
-import {NButton, NIcon, NTag} from "naive-ui";
+import {createDiscreteApi, type DataTableColumns, dateZhCN, NSpace, zhCN} from "naive-ui";
+import {NButton, NIcon, NTag, NDatePicker, NConfigProvider } from "naive-ui";
 import {ArticleStatus} from "~/api/admin/article/type";
 import {useTimeFormat} from "~/composables/tools/useTimeFormat";
 import {CloseSharp, Pencil, Reload, TrashSharp} from "@vicons/ionicons5";
 import type {Row} from "~/pages/admin/articleEditor/index.vue";
+import {ClientOnly} from "#components";
+import {updatedArticleReleaseTime} from "~/api/admin/article";
+import {HttpStatus} from "~/enums/httpStatus";
 
+const { modal, message } = createDiscreteApi(['modal', 'message'])
 
 type Methods = {
   handlePositiveClick: (id: number, status: ArticleStatus) => void;
   handleDeleteArticle: (id: number) => void;
   handleRecover: (id: number[]) => void;
   newArticle: (type: 'add' | 'edit', row?: Row) => void;
+  getList: () => void;
 }
+
 
 /**
  * @description: 创建表格列
  * @param methods
  */
 export const createColumns = (
-  {handleDeleteArticle, handlePositiveClick, handleRecover, newArticle}: Methods
+  {handleDeleteArticle, handlePositiveClick, handleRecover, newArticle, getList}: Methods
 ): DataTableColumns<Row> => {
+
+  const timestamp = ref()
+
+  /*自定义发布时间弹窗*/
+  const showUpdateReleaseTime = (row: Row) => {
+    const m = modal.create({
+      title: 'Card 预设',
+      preset: 'card',
+      style: {
+        width: '400px'
+      },
+      content() {
+        /*提交修改发布时间*/
+        const submitUpdateTime = async () => {
+          const params = {
+            id: row.id,
+            publish_time: new Date(timestamp.value)
+          }
+          const res = await updatedArticleReleaseTime(params)
+          if(res.code === HttpStatus.OK) {
+            message.success(res.message)
+            getList()
+            m.destroy()
+          }
+        }
+        return <NSpace vertical>
+          <NConfigProvider locale={zhCN} dateLocale={dateZhCN}>
+            <NDatePicker
+              value={timestamp.value}
+              type="datetime"
+              clearable
+              onUpdateValue={(value) => {
+                timestamp.value = value
+              }}
+            />
+          </NConfigProvider>
+          <div class={'flex justify-end mt10'}>
+            <NButton onClick={() => submitUpdateTime()}>
+              确定
+            </NButton>
+          </div>
+        </NSpace>
+       },
+      onClose: () => {
+        console.log('Modal closed')
+      }
+    })
+  }
+
   const columnsConfig = [
     {
       type: 'selection',
@@ -86,6 +141,29 @@ export const createColumns = (
       align: 'center',
       render(row: Row) {
         return useTimeFormat(row.update_time)
+      }
+    },
+
+    {
+      title: '发布时间',
+      key: 'publish_time',
+      width: 170,
+      show: true,
+      align: 'center',
+      render(row: Row) {
+        return (
+          <>
+            <div v-show={row.status === ArticleStatus.PUBLISH }>
+              <p>{row.publish_time ? useTimeFormat(row.publish_time) : '--'}</p>
+              <div onClick={() => showUpdateReleaseTime(row) }>
+                <NIcon class={'cursor-pointer'} size="19">
+                  <Pencil/>
+                </NIcon>
+              </div>
+            </div>
+            <div v-show={row.status !== ArticleStatus.PUBLISH }>--</div>
+          </>
+        )
       }
     },
 

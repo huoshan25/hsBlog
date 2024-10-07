@@ -21,6 +21,7 @@ export interface Row {
   title: string;
   create_time: string;
   update_time: string;
+  publish_time: string;
 }
 
 const total = ref(0)
@@ -184,7 +185,7 @@ const handleRecover = (ids: number[]) => {
 
 const columns = ref(createColumns(
     {
-     handleDeleteArticle, handlePositiveClick, handleRecover, newArticle
+     handleDeleteArticle, handlePositiveClick, handleRecover, newArticle, getList
     }
 ))
 onMounted(async () => {

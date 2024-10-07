@@ -63,3 +63,10 @@ export async function getTagsList() {
 export async function deletePicture(params: any) {
   return await fetchRequest.delete<any>('/oss/ali/article-img', params);
 }
+
+/**
+ * 更新文章时间
+ */
+export async function updatedArticleReleaseTime(params: any) {
+  return await fetchRequest.post<any>('/admin/article/update-publish-time', params);
+}
