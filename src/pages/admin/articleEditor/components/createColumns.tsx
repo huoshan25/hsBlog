@@ -1,6 +1,6 @@
 import type {DataTableColumns} from "naive-ui";
 import {NButton, NIcon, NTag} from "naive-ui";
-import {ArticleStatus} from "~/api/article/type";
+import {ArticleStatus} from "~/api/admin/article/type";
 import {useTimeFormat} from "~/composables/tools/useTimeFormat";
 import {CloseSharp, Pencil, Reload, TrashSharp} from "@vicons/ionicons5";
 import type {Row} from "~/pages/admin/articleEditor/index.vue";

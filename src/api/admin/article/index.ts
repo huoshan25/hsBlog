@@ -1,6 +1,5 @@
 import type {HttpRes} from "~/api/type";
-import type {ArticleReq, CreateArticleReq, UpdateArticle} from "~/api/article/type";
-import {ArticleStatus} from "~/api/article/type";
+import type {ArticleReq, CreateArticleReq, UpdateArticle, ArticleStatus} from "~/api/admin/article/type";
 import {fetchRequest} from "~/composables/http/useFetchRequest";
 
 /**
@@ -8,7 +7,7 @@ import {fetchRequest} from "~/composables/http/useFetchRequest";
  * @param params
  */
 export async function getArticle(params?: ArticleReq) {
-  return await fetchRequest.get<any>('/article/list', params);
+  return await fetchRequest.get<any>('/admin/article/list', params);
 }
 
 /**
@@ -16,7 +15,7 @@ export async function getArticle(params?: ArticleReq) {
  * @param params
  */
 export async function getArticleDetails(params?: { id: number }) {
-  return await fetchRequest.get<any>('/article/details', params);
+  return await fetchRequest.get<any>('/admin/article/details', params);
 }
 
 /**
@@ -24,7 +23,7 @@ export async function getArticleDetails(params?: { id: number }) {
  * @param params
  */
 export async function createArticle(params?: CreateArticleReq) {
-  return await fetchRequest.post<any>('/article', params);
+  return await fetchRequest.post<any>('/admin/article', params);
 }
 
 /**
@@ -32,7 +31,7 @@ export async function createArticle(params?: CreateArticleReq) {
  * @param params
  */
 export async function deleteArticle(params?: { id: number }) {
-  return await fetchRequest.delete<any>('/article', params);
+  return await fetchRequest.delete<any>('/admin/article', params);
 }
 
 /**
@@ -40,7 +39,7 @@ export async function deleteArticle(params?: { id: number }) {
  * @param params
  */
 export async function editArticleStatus(params?: { ids: number[], status: ArticleStatus }) {
-  return await fetchRequest.put<any>('/article/status', params);
+  return await fetchRequest.put<any>('/admin/article/status', params);
 }
 
 /**
@@ -48,14 +47,14 @@ export async function editArticleStatus(params?: { ids: number[], status: Articl
  * @param params
  */
 export async function updateArticle(params?: UpdateArticle) {
-  return await fetchRequest.put<any>('/article', params);
+  return await fetchRequest.put<any>('/admin/article', params);
 }
 
 /**
  * 文章标签
  */
 export async function getTagsList() {
-  return await fetchRequest.get<any>('/article/tags');
+  return await fetchRequest.get<any>('/admin/article/tags');
 }
 
 /**

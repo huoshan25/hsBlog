@@ -5,10 +5,10 @@ import {
   ThumbsUpOutline
 } from '@vicons/ionicons5'
 import CategoryList, {type ICategory} from "~/components/blog/categoryList.vue";
-import {getArticle, getTagsList} from "~/api/article";
+import {getArticle, getTagsList} from "~/api/admin/article";
 import {HttpStatus} from "~/enums/httpStatus";
 import {getAllCategories} from "~/api/categories";
-import {ArticleStatus} from "~/api/article/type";
+import {ArticleStatus} from "~/api/admin/article/type";
 
 const route = useRoute()
 
