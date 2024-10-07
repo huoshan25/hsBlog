@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Search} from '@vicons/ionicons5'
-import {type ArticleReq, ArticleStatus} from "~/api/article/type";
-import {deleteArticle, editArticleStatus, getArticle} from "~/api/article";
+import {type ArticleReq, ArticleStatus} from "~/api/admin/article/type";
+import {deleteArticle, editArticleStatus, getArticle} from "~/api/admin/article";
 import {getAllCategories} from "~/api/categories";
 import {HttpStatus} from "~/enums/httpStatus";
 import { NButton, NIcon} from 'naive-ui'
@@ -50,7 +50,8 @@ const pagination = reactive({
   prefix() {
     return `共 ${total.value} 条`
   },
-  onChange: (page: number) => {
+  itemCount: computed(() => total.value),
+  onChange(page: number) {
     pagination.page = page
     getList()
   },
@@ -276,6 +277,7 @@ onMounted(async () => {
           @update:checked-row-keys="handleCheck"
           :bordered="false"
           size="medium"
+          remote
       />
     </n-spin>
   </div>
