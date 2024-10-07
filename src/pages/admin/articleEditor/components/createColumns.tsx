@@ -4,7 +4,6 @@ import {ArticleStatus} from "~/api/admin/article/type";
 import {useTimeFormat} from "~/composables/tools/useTimeFormat";
 import {CloseSharp, Pencil, Reload, TrashSharp} from "@vicons/ionicons5";
 import type {Row} from "~/pages/admin/articleEditor/index.vue";
-import {ClientOnly} from "#components";
 import {updatedArticleReleaseTime} from "~/api/admin/article";
 import {HttpStatus} from "~/enums/httpStatus";
 
@@ -42,7 +41,7 @@ export const createColumns = (
         const submitUpdateTime = async () => {
           const params = {
             id: row.id,
-            publish_time: new Date(timestamp.value)
+            publish_time: new Date(timestamp.value).toISOString()
           }
           const res = await updatedArticleReleaseTime(params)
           if(res.code === HttpStatus.OK) {
