@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import {createArticle, deletePicture, getArticleDetails, updateArticle} from "~/api/article";
-import {ArticleStatus} from "~/api/article/type";
+import {
+  createArticle,
+  deletePicture,
+  getArticleDetails,
+  getTagsList,
+  updateArticle
+} from "~/api/admin/article";
+import {ArticleStatus} from "~/api/admin/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
 import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
 import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
 import {toolbarsConfig} from "~/components/admin/markdownEditor/config/toolbarsConfig";
+import {computed} from "vue";
 
 const props = defineProps(['currentRow']);
 const message = useMessage()
@@ -24,6 +31,27 @@ const form = ref({
 })
 
 const editorRef = ref()
+
+
+interface Tag {
+  id: number | string;
+  name: string;
+}
+
+/*标签*/
+const selectedTags = ref<string[]>([])
+const tagList = ref<Tag[]>([])
+const tagOptions = computed(() => {
+  return tagList.value.map(tag => ({label: tag.name, value: tag.name}))
+})
+
+/*获取标签*/
+const getTags = async () => {
+  const res = await getTagsList()
+  if (res.code === HttpStatus.OK) {
+    tagList.value = res.data.tag_list
+  }
+}
 
 /*删除图片*/
 const handleEditorImgDel = async (pos:any) => {
@@ -82,11 +110,14 @@ onMounted(async () => {
       form.value.title = res.data.title
       form.value.category_id = res.data.category_id
       content.value = res.data.content
+      selectedTags.value = res.data.tags.map((item: Tag) => item.name)
     }
   } else if(props.currentRow.type === 'add') {
     const { generateUUID } = useUUID();
     form.value.articleUUID = generateUUID();
   }
+  await getTags()
+
 })
 </script>
 
@@ -113,6 +144,30 @@ onMounted(async () => {
           />
         </n-form-item>
       </div>
+
+      <ClientOnly>
+        <mavon-editor
+            ref="editorRef"
+            v-model="content"
+            class="w-full h-730px"
+            :toolbars="toolbarsConfig"
+            @imgAdd="handleImageUpload"
+            @imgDel="handleEditorImgDel"
+            @change="change"
+        />
+      </ClientOnly>
+
+      <n-form-item>
+        <n-select
+            v-model:value="selectedTags"
+            filterable
+            multiple
+            tag
+            placeholder="回车新增"
+            :options="tagOptions"
+            :show-arrow="false"
+        />
+      </n-form-item>
 
       <n-form-item>
         <n-button type="primary" @click="handleEditorImgDel(1)" class="mr10">
@@ -141,17 +196,7 @@ onMounted(async () => {
     </n-form>
 
 
-    <ClientOnly>
-      <mavon-editor
-          ref="editorRef"
-          v-model="content"
-          class="w-full h-730px"
-          :toolbars="toolbarsConfig"
-          @imgAdd="handleImageUpload"
-          @imgDel="handleEditorImgDel"
-          @change="change"
-      />
-    </ClientOnly>
+
   </div>
 </template>
 

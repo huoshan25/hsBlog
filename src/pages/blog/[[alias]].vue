@@ -86,8 +86,8 @@ const goDetails = (id: number) => {
 onMounted(async () => {
   const tagsRes = await getTagsList()
   if (tagsRes.code === HttpStatus.OK) {
-    personal.tagTotal = tagsRes.data.tagTotal
-    personal.articlesTotal = tagsRes.data.articleTotal
+    personal.tagTotal = tagsRes.data.tag_total
+    personal.articlesTotal = tagsRes.data.article_total
   }
   const categoryRes = await getAllCategories()
   if (categoryRes.code === HttpStatus.OK) {
@@ -149,7 +149,7 @@ onMounted(async () => {
               </div>
               <div class="entry-list-bottom-right">
                 <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="index">
-                  {{ tag }}
+                  {{ tag.name }}
                 </n-tag>
               </div>
             </div>

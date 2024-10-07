@@ -30,6 +30,7 @@ export const createColumns = (
     {
       title: '状态',
       key: 'status',
+      width: 80,
       show: true,
       align: 'center',
       render(row: Row) {
@@ -46,8 +47,12 @@ export const createColumns = (
 
     {
       title: '分类',
+      width: 160,
       key: 'category_name',
       show: true,
+      ellipsis: {
+        tooltip: true
+      },
       align: 'center'
     },
 
@@ -55,7 +60,7 @@ export const createColumns = (
       title: '标题',
       key: 'title',
       show: true,
-      align: 'center',
+      align: 'left',
       minWidth: 350,
       ellipsis: {
         tooltip: true
@@ -65,6 +70,7 @@ export const createColumns = (
     {
       title: '创建时间',
       key: 'create_time',
+      width: 170,
       show: true,
       align: 'center',
       render(row: Row) {
@@ -75,6 +81,7 @@ export const createColumns = (
     {
       title: '修改时间',
       key: 'update_time',
+      width: 170,
       show: true,
       align: 'center',
       render(row: Row) {
