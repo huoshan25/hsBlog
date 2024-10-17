@@ -26,7 +26,7 @@ export const useUploadImage = async (file: File, articleUUID: string,): Promise<
       body: formData,
     })
 
-    if (res.code === HttpStatus.OK) {
+    if (res.code === HttpStatus.CREATED) {
       message.success(res.message)
       return res.data.fileUrl
     } else {
