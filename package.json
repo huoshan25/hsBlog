@@ -1,7 +1,8 @@
 {
-  "name": "nuxt-app",
+  "name": "hs-blog",
   "private": true,
   "type": "module",
+  "author": "HuoShan",
   "scripts": {
     "build": "nuxt build --dotenv .env.production",
     "dev": "nuxt dev --dotenv .env.development",
@@ -31,6 +32,7 @@
     "nuxt": "^3.11.2",
     "nuxtjs-naive-ui": "^1.0.2",
     "ohash": "^1.1.3",
+    "ts-node": "^10.9.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.27.0",
     "vue": "^3.4.21",
