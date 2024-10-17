@@ -1,9 +1,9 @@
 import type { FetchResponse, SearchParameters } from 'ofetch'
 import { HttpStatus } from "~/enums/httpStatus"
 import { useStorage } from '@vueuse/core'
-import {ErrorStatus} from "~/enums/ErrorStatus";
+import { ErrorStatus } from "~/enums/ErrorStatus"
 import { createDiscreteApi } from 'naive-ui'
-import type {FetchApiFn, RefreshTokenResponse} from "~/composables/http/type";
+import type { FetchApiFn, RefreshTokenResponse } from "~/composables/http/type"
 
 const { message } = createDiscreteApi(['message'])
 
@@ -77,7 +77,7 @@ class FetchApi implements FetchApiFn {
           // 返回新的响应数据
           return newResponse._data
         } else {
-          throw new Error('刷新令牌失败')
+          return message.error(`刷新令牌失败`)
         }
       } catch (error) {
         this.pending = null
@@ -88,24 +88,21 @@ class FetchApi implements FetchApiFn {
       }
     }
 
-    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
-      message.error(data.message)
-    }
     return data
   }
 
   /*错误响应*/
   private onResponseError({ response }: { response: FetchResponse<any> }) {
     const data = response._data
-    // 如果 data.code 存在且不等于200，说明这是一个被捕获的业务逻辑错误, 已经在 onResponse 中处理过了，所以这里不需要再显示错误消息
-    if (data && data.code !== undefined && data.code !== HttpStatus.OK) {
-      // 其他业务逻辑错误
-      message.error(`${data.code} - ${data.message || '未知错误'}`)
-      return
-    }
 
-    // 处理 HTTP 错误状态码
-    message.error(`${response.status} - ${response.statusText || '未知错误'}`)
+    if (data && typeof data.code === 'number' && typeof data.message === 'string') {
+      // 服务器的结构化错误响应
+      if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
+        message.error(`${data.code} - ${data.message}`)
+      }
+    } else {
+      message.error(`${response.status} - ${response.statusText || '未知错误'}`)
+    }
   }
 
   /*处理token刷新*/
