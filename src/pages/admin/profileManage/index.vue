@@ -1,15 +1,13 @@
 <script setup lang="ts">
-
 definePageMeta({
-  layout: 'pc'
-});
-
+  layout: 'admin'
+})
 </script>
 
 <template>
-  <div>友链</div>
+  <div>关于</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
