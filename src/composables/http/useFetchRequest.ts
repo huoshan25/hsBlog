@@ -4,6 +4,7 @@ import { useStorage } from '@vueuse/core'
 import { ErrorStatus } from "~/enums/ErrorStatus"
 import { createDiscreteApi } from 'naive-ui'
 import type { FetchApiFn, RefreshTokenResponse } from "~/composables/http/type"
+import type {HttpRes} from "~/api/type";
 
 const { message } = createDiscreteApi(['message'])
 
@@ -26,7 +27,7 @@ class FetchApi implements FetchApiFn {
   private readonly fetch: typeof $fetch
   private token = useStorage('token', '')
   private refreshToken = useStorage('refreshToken', '')
-  private pending: Promise<RefreshTokenResponse> | null = null
+  private pending: Promise<HttpRes<RefreshTokenResponse>> | null = null
 
   constructor() {
     this.fetch = $fetch.create({
@@ -106,8 +107,8 @@ class FetchApi implements FetchApiFn {
   }
 
   /*处理token刷新*/
-  private handleTokenRefresh(): Promise<RefreshTokenResponse> {
-    return this.fetch<RefreshTokenResponse>('/user/refresh-token', {
+  private handleTokenRefresh(): Promise<HttpRes<RefreshTokenResponse>> {
+    return this.fetch<HttpRes<RefreshTokenResponse>>('/user/refresh-token', {
       method: 'POST',
     }).finally(() => {
       this.pending = null

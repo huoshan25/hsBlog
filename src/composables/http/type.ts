@@ -1,12 +1,8 @@
 import type {SearchParameters} from "ofetch";
 
 export interface RefreshTokenResponse {
-  code: number
-  message: string
-  data: {
-    token: string
-    refresh_token: string
-  };
+  token: string
+  refresh_token: string
 }
 
 export interface FetchApiFn {
@@ -14,12 +10,4 @@ export interface FetchApiFn {
   post: <T>(url: string, body?: SearchParameters) => Promise<T>
   put: <T>(url: string, body?: SearchParameters) => Promise<T>
   delete: <T>(url: string, body?: SearchParameters) => Promise<T>
-}
-
-export interface RefreshTokenResponse {
-  code: number
-  data: {
-    token: string
-    refresh_token: string
-  }
 }
