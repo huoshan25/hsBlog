@@ -7,7 +7,7 @@ import {
 import CategoryList, {type ICategory} from "~/components/blog/categoryList.vue";
 import {getArticle, getTagsList} from "~/api/admin/article";
 import {HttpStatus} from "~/enums/httpStatus";
-import {getAllCategories} from "~/api/categories";
+import {getAllCategories} from "~/api/admin/categories";
 import {ArticleStatus} from "~/api/admin/article/type";
 
 const route = useRoute()
