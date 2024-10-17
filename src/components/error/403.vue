@@ -1,7 +1,5 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'error',
-})
+
 const router = useRouter()
 
 const emit = defineEmits(['retry'])
