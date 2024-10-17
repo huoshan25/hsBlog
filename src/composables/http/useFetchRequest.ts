@@ -41,7 +41,7 @@ class FetchApi implements FetchApiFn {
     const { apiBaseUrl } = useRuntimeConfig().public
     options.baseURL = apiBaseUrl as string
 
-    const isRefreshTokenRequest = request === '/user/refresh-token'
+    const isRefreshTokenRequest = request === '/admin/user/refresh-token'
 
     if (isRefreshTokenRequest && this.refreshToken.value) {
       options.headers = new Headers(options.headers)
