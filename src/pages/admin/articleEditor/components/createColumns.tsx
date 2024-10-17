@@ -31,7 +31,7 @@ export const createColumns = (
   /*自定义发布时间弹窗*/
   const showUpdateReleaseTime = (row: Row) => {
     const m = modal.create({
-      title: 'Card 预设',
+      title: '自定义发布时间',
       preset: 'card',
       style: {
         width: '400px'
