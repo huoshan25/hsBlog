@@ -2,7 +2,7 @@
 import {Search} from '@vicons/ionicons5'
 import {type ArticleReq, ArticleStatus} from "~/api/admin/article/type";
 import {deleteArticle, editArticleStatus, getArticle} from "~/api/admin/article";
-import {getAllCategories} from "~/api/categories";
+import {getAllCategories} from "~/api/admin/categories";
 import {HttpStatus} from "~/enums/httpStatus";
 import { NButton, NIcon} from 'naive-ui'
 import {createColumns} from "~/pages/admin/articleEditor/components/createColumns";
@@ -104,7 +104,7 @@ const getList = async () => {
     loading.value = false
   }
 }
-
+const router = useRouter()
 /**
  * 新增/编辑文章
  * @param type
@@ -118,6 +118,8 @@ const newArticle = (type: string, row?: Row) => {
     ...row,
     categoryOption: categoryOption.value,
   }
+  // navigateTo(`/admin/articleEditor/detail/${row?.id}`);
+  // router.push({name: 'articleEditor', params: {type, row}})
 }
 
 /**关闭编辑文章*/
