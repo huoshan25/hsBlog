@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>移动端</div>
+  <div class="fancy-header"><ContentSlot/></div>
 </template>
 
 <style scoped>
