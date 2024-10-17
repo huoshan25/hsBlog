@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import {InformationCircleOutline, HelpCircleOutline, ArchiveOutline} from "@vicons/ionicons5";
-import {HttpStatus} from "~/enums/httpStatus";
-import {deleteCategory, getAllCategories} from "~/api/categories";
-import {createColumns} from "~/pages/admin/categoryManage/components/createColumns";
+import { ref, onMounted, h } from 'vue'
+import { InformationCircleOutline, HelpCircleOutline, ArchiveOutline } from "@vicons/ionicons5";
+import { HttpStatus } from "~/enums/httpStatus";
+import {
+  deleteCategory,
+  getAllCategories,
+  updateCategory,
+  createCategory
+} from "~/api/admin/categories";
+import { createColumns } from "~/pages/admin/categoryManage/components/createColumns";
 
 definePageMeta({
   layout: 'admin',
@@ -71,6 +77,7 @@ const categoryVisibility = ref(false)
 const categoryDialogTitle = ref('')
 
 const form = ref({
+  id: 0,
   sort: 0,
   icon: '',
   name: '',
@@ -121,6 +128,28 @@ const getList = async () => {
 /**提交*/
 const handleSubmit = async () => {
   await formRef.value?.validate()
+  const formData = new FormData()
+  formData.append('name', form.value.name)
+  formData.append('alias', form.value.alias)
+  formData.append('sort', form.value.sort.toString())
+  if (fileList.value.length > 0) {
+    formData.append('category_image', fileList.value[0].file)
+  }
+
+  try {
+    if (form.value.id) {
+      formData.append('id', form.value.id.toString())
+      await updateCategory(formData)
+      message.success('更新分类成功')
+    } else {
+      await createCategory(formData)
+      message.success('添加分类成功')
+    }
+    categoryVisibility.value = false
+    await getList()
+  } catch (error) {
+    message.error('操作失败')
+  }
 }
 
 const columns = ref(createColumns(
@@ -128,9 +157,55 @@ const columns = ref(createColumns(
       handleCategory, handleDeleteCategory
     }
 ))
+
+const previewUrl = ref('')
+
+
 onMounted(async () => {
   await getList()
 })
+
+const file = ref(null)
+const imageUrl = ref('')
+const fileList = ref<any>([])
+
+//@ts-ignore
+const customRequest = ({ file: uploadFile}) => {
+  file.value = uploadFile
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    //@ts-ignore
+    imageUrl.value = e.target.result
+  }
+  reader.readAsDataURL(uploadFile.file)
+}
+
+const handleChange = (options: any) => {
+  fileList.value = options.fileList
+  if (options.fileList.length === 0) {
+    file.value = null
+    imageUrl.value = ''
+  }
+}
+
+const handleUpload = () => {
+  if (file.value) {
+    console.log('上传文件:', file.value)
+  }
+}
+
+
+const setImageUrl = (url: any) => {
+  imageUrl.value = url
+  fileList.value = [
+    {
+      id: 'existing-image',
+      name: 'existing-image.jpg',
+      status: 'finished',
+      url: url
+    }
+  ]
+}
 
 </script>
 
@@ -167,8 +242,7 @@ onMounted(async () => {
 
   <n-modal v-model:show="categoryVisibility">
     <n-card
-        w-500
-        h-600
+        class="w500px"
         :title="categoryDialogTitle"
         :segmented="{
           content: true,
@@ -181,35 +255,40 @@ onMounted(async () => {
           size="small"
           require-mark-placement="left"
       >
-        <n-form-item label="分类图标" path="categoryIcon">
+        <n-form-item label="分类图标" path="icon">
           <div style="width: 100%">
             <div flex items-center color-gray m-b-6>
               <n-icon m-r-3>
                 <InformationCircleOutline/>
               </n-icon>
-              你可以再
+              你可以在
               <nuxt-link class="mx-[4px]" to="https://www.iconfont.cn" color-blue target="_blank">阿里巴巴矢量图标库
               </nuxt-link>
               搜索和下载喜欢的图标。
             </div>
-            <n-upload
-                multiple
-                w-200
-                h-110
-                directory-dnd
-                action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-            >
-              <n-upload-dragger>
-                <div>
-                  <n-icon size="28">
-                    <ArchiveOutline/>
-                  </n-icon>
-                </div>
-                <n-text text-size-10>
-                  点击或者拖动文件到该区域
-                </n-text>
-              </n-upload-dragger>
-            </n-upload>
+            <div class="image-upload-demo">
+              <n-upload
+                  accept="image/*"
+                  :max="1"
+                  :default-file-list="fileList"
+                  :custom-request="customRequest"
+                  @change="handleChange"
+                  drag
+              >
+<!--                </n-upload-dragger>-->
+<!--                  <n-icon size="48" :depth="3">-->
+<!--                    <ArchiveOutline/>-->
+<!--                  </n-icon>-->
+<!--                  <n-text style="font-size: 16px">-->
+<!--                    点击或者拖动文件到该区域来上传-->
+<!--                  </n-text>-->
+<!--                </n-upload-dragger>-->
+              </n-upload>
+              <div v-if="imageUrl" class="image-preview w50 h50">
+                <img :src="imageUrl" alt="预览图片" />
+              </div>
+              <n-button @click="handleUpload" :disabled="!file">上传图片</n-button>
+            </div>
           </div>
         </n-form-item>
         <n-form-item label="分类名称" path="name">
@@ -218,7 +297,7 @@ onMounted(async () => {
         <n-form-item path="alias">
           <template #label>
             <div flex items-center>
-              分类名称
+              分类别名
               <n-tooltip trigger="hover">
                 <template #trigger>
                   <n-icon color-gray m-l-3>
@@ -236,8 +315,8 @@ onMounted(async () => {
         </n-form-item>
       </n-form>
       <template #action>
-        <div style="text-align: right">
-          <n-button @click="categoryVisibility = false">取消</n-button>
+        <div class="text-right">
+          <n-button class="mr10px" @click="categoryVisibility = false">取消</n-button>
           <n-button type="primary" @click="handleSubmit">提交</n-button>
         </div>
       </template>
@@ -252,5 +331,23 @@ th {
 
 td {
   text-align: center;
+}
+
+.image-upload-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.image-preview {
+  max-width: 300px;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
 }
 </style>
