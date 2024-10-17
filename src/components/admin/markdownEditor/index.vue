@@ -55,13 +55,9 @@ const getTags = async () => {
 
 /*删除图片*/
 const handleEditorImgDel = async (pos:any) => {
-  try {
-    const res = await deletePicture({path: pos[0]})
-    if(res.code === HttpStatus.OK) {
-      message.error(res.message)
-    }
-  } catch (error) {
-    console.error('删除图片失败：', error);
+  const res = await deletePicture({path: pos[0]})
+  if(res.code === HttpStatus.OK) {
+    message.success(res.message)
   }
 }
 
@@ -111,10 +107,11 @@ onMounted(async () => {
       form.value.category_id = res.data.category_id
       content.value = res.data.content
       selectedTags.value = res.data.tags.map((item: Tag) => item.name)
+      form.value.articleUUID = props.currentRow.id
     }
   } else if(props.currentRow.type === 'add') {
     const { generateUUID } = useUUID();
-    form.value.articleUUID = generateUUID();
+    // form.value.articleUUID = generateUUID();
   }
   await getTags()
 
