@@ -11,6 +11,7 @@ export interface loginReqRes {
 }
 
 export interface registerReq extends loginReq{
+  confirmPassword: string
 }
 
 export interface registerReqRes extends loginReqRes{

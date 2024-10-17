@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { loginReq, registerReq } from "~/api/user/type";
-import {getLogin, getRegister} from "~/api/user";
+import type { loginReq, registerReq } from "~/api/admin/user/type";
+import {getLogin, getRegister} from "~/api/admin/user";
 import { HttpStatus } from "~/enums/httpStatus";
 import { useStorage } from '@vueuse/core'
 import type {FormItemRule} from "naive-ui";
