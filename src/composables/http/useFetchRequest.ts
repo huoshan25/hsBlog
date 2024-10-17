@@ -57,6 +57,11 @@ class FetchApi implements FetchApiFn {
   private async onResponse({ request, response, options }: { request: Request, response: FetchResponse<any>, options: any }) {
     const data = response._data
 
+    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
+      message.error(`${data.code} - ${data.message}`)
+      return Promise.reject(new Error(data.message))
+    }
+
     if (data.code === ErrorStatus.EXPIRE_TOKEN) {
       if (this.pending === null) {
         this.pending = this.handleTokenRefresh()
@@ -98,12 +103,12 @@ class FetchApi implements FetchApiFn {
 
     if (data && typeof data.code === 'number' && typeof data.message === 'string') {
       // 服务器的结构化错误响应
-      if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
-        message.error(`${data.code} - ${data.message}`)
-      }
+      message.error(`${data.code} - ${data.message}`)
     } else {
+      // 非结构化错误响应或未知错误
       message.error(`${response.status} - ${response.statusText || '未知错误'}`)
     }
+    return Promise.reject(new Error(data?.message || response.statusText || '未知错误'))
   }
 
   /*处理token刷新*/
