@@ -78,10 +78,6 @@ if (categoryData.value?.code === HttpStatus.OK) {
 
 aliasList.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
 
-if (!aliasList.value) {
-  navigateTo('/blog');
-}
-
 /**列表*/
 const { data: articleData, refresh: refreshArticles, status: articlesPending } = useAsyncData(
     'articles',
@@ -113,6 +109,11 @@ useHead({
   titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
 })
 
+onMounted(() => {
+  if(!aliasList.value) {
+    navigateTo('/blog');
+  }
+})
 
 
 </script>
