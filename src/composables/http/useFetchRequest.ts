@@ -57,11 +57,6 @@ class FetchApi implements FetchApiFn {
   private async onResponse({ request, response, options }: { request: Request, response: FetchResponse<any>, options: any }) {
     const data = response._data
 
-    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
-      message.error(`${data.code} - ${data.message}`)
-      return Promise.reject(new Error(data.message))
-    }
-
     if (data.code === ErrorStatus.EXPIRE_TOKEN) {
       if (this.pending === null) {
         this.pending = this.handleTokenRefresh()
@@ -92,6 +87,11 @@ class FetchApi implements FetchApiFn {
         navigateTo('/blog')
         return Promise.reject(error)
       }
+    }
+
+    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
+      message.error(`${data.code} - ${data.message}`)
+      return Promise.reject(new Error(data.message))
     }
 
     return data
