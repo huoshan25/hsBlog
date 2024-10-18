@@ -19,8 +19,7 @@ definePageMeta({
 /**文章分类*/
 const categoryList = ref()
 /**文章列表骨架屏*/
-const entryListSkeleton = ref(false)
-
+const entryListSkeleton = computed(() => !articlesPending.value)
 interface EntryInfo {
   id: number;
   title: string;
@@ -29,14 +28,11 @@ interface EntryInfo {
   tags: { id: number; name: string }[];
 }
 
-/**类目信息*/
-const entryInfo = ref<EntryInfo[]>([])
-
 /**个人模块信息*/
 const personal = reactive({
   name: 'volcano',
   avatar: '/img/avatar.jpg',
-  avatarBackgroundImage: 'https://cdn.duanx.cn/static/Cuteen/img/center-bg.svg',
+  avatarBackgroundImage: 'https://hs-blog.oss-cn-beijing.aliyuncs.com/user/PixPin_2024-10-18_10-32-30.png',
   description: '“风很温柔 花很浪漫 你很特别 我很喜欢”',
   articlesTotal: 0,
   categoriesTotal: 0,
@@ -56,61 +52,69 @@ const aliasList = ref<ICategory>({})
 const handleUpdateValue = () => {
 }
 
-/**列表*/
-const getList = async () => {
-  entryListSkeleton.value = true
-  const params = {
-    categoryId: aliasList.value?.id,
-    status: ArticleStatus.PUBLISH
-  }
-  const res = await getArticle(params)
-  if (res.code === HttpStatus.OK) {
-    entryInfo.value = res.data.list.map((item: EntryInfo) => {
-      return {
-        id: item.id,
-        title: item.title,
-        category_name: item.category_name,
-        content: item.content,
-        tags: item.tags
-      }
-    })
-    entryListSkeleton.value = false
-  }
-}
-
 /**文章详情*/
 const goDetails = (id: number) => {
   navigateTo(`/blog/post/${id}`)
 }
 
-onMounted(async () => {
-  const tagsRes = await getTagsList()
-  if (tagsRes.code === HttpStatus.OK) {
-    personal.tagTotal = tagsRes.data.tag_total
-    personal.articlesTotal = tagsRes.data.article_total
+const {data: tagsData} = await useAsyncData('tags', () => getTagsList())
+if (tagsData.value?.code === HttpStatus.OK) {
+  personal.tagTotal = tagsData.value.data.tag_total
+  personal.articlesTotal = tagsData.value.data.article_total
+}
+
+const {data: categoryData} = await useAsyncData('categories', () => getAllCategories())
+if (categoryData.value?.code === HttpStatus.OK) {
+  categoryList.value = categoryData.value.data.map((item: ICategory) => {
+    return {
+      id: item.id,
+      alias: `/blog/${item.alias}`,
+      name: item.name,
+      icon: item.icon,
+    }
+  })
+  personal.categoriesTotal = categoryData.value.data.length
+}
+
+aliasList.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
+
+if (!aliasList.value) {
+  navigateTo('/blog');
+}
+
+/**列表*/
+const { data: articleData, refresh: refreshArticles, status: articlesPending } = useAsyncData(
+    'articles',
+    () => getArticle({
+      categoryId: aliasList.value?.id,
+      status: ArticleStatus.PUBLISH
+    }),
+    {
+      watch: [() => aliasList.value?.id]
+    }
+)
+
+/**类目信息*/
+const entryInfo = computed<EntryInfo[]>(() => {
+  if (articleData.value?.code === HttpStatus.OK) {
+    return articleData.value.data.list.map((item: EntryInfo) => ({
+      id: item.id,
+      title: item.title,
+      category_name: item.category_name,
+      content: item.content,
+      tags: item.tags
+    }))
   }
-  const categoryRes = await getAllCategories()
-  if (categoryRes.code === HttpStatus.OK) {
-    categoryList.value = categoryRes.data.map((item: ICategory) => {
-      return {
-        id: item.id,
-        alias: `/blog/${item.alias}`,
-        name: item.name,
-        icon: item.icon,
-      }
-    })
-    personal.categoriesTotal = categoryRes.data.length
-  }
-  aliasList.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
-  if(!aliasList.value) {
-    navigateTo('/blog');
-  }
-  useHead({
-      title: aliasList.value?.name,
-      titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
-    })
-  await getList()
+  return []
 })
+
+useHead({
+  title: aliasList.value?.name,
+  titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
+})
+
+
+
 </script>
 
 <template>
@@ -127,7 +131,8 @@ onMounted(async () => {
             <n-skeleton height="15px" width="70%"/>
             <n-skeleton height="15px" width="50%"/>
           </n-space>
-          <div v-show="!entryListSkeleton" class="entry-list" v-for="(item, index) in entryInfo" :key="index" @click="goDetails(item.id)">
+          <div v-show="!entryListSkeleton" class="entry-list" v-for="item in entryInfo" :key="item.id + 'article'"
+               @click="goDetails(item.id)">
             <n-ellipsis class="entry-list-title" :tooltip="false">
               {{ item.title }}
             </n-ellipsis>
@@ -148,7 +153,7 @@ onMounted(async () => {
                 </div>
               </div>
               <div class="entry-list-bottom-right">
-                <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="index">
+                <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="tag.id + 'tag'">
                   {{ tag.name }}
                 </n-tag>
               </div>
