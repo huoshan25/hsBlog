@@ -166,30 +166,30 @@ onMounted(() => {
         <!-- 个人 -->
         <div class="personal">
           <div class="personal-contents">
-            <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal.avatarBackgroundImage})`}"></div>
+            <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal?.avatarBackgroundImage})`}"></div>
             <div class="personal-introduced">
-              <img class="personal-introduced-avatar" :src="personal.avatar" alt="avatar">
+              <img class="personal-introduced-avatar" :src="personal?.avatar" alt="avatar">
             </div>
-            <div class="personal-introduced-name">{{ personal.name }}</div>
-            <div class="personal-introduced-description">{{ personal.description }}</div>
+            <div class="personal-introduced-name">{{ personal?.name }}</div>
+            <div class="personal-introduced-description">{{ personal?.description }}</div>
           </div>
           <div class="personal-bottom">
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
               <div style="text-align: center; color: #212529;">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.articlesTotal"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.articlesTotal"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.categoriesTotal"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.categoriesTotal"/>
               </div>
             </div>
             <div class="personal-bottom-item">
               <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
               <div style="text-align: center">
-                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal.tagTotal"/>
+                <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.tagTotal"/>
               </div>
             </div>
           </div>
