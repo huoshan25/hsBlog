@@ -13,7 +13,7 @@ const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor);
     <n-notification-provider>
       <n-message-provider>
         <n-modal-provider>
-          <blog-navbar></blog-navbar>
+          <blog-navbar/>
           <div>
             <slot></slot>
           </div>
