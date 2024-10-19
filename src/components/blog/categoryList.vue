@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const router = useRouter()
 const props = defineProps({
-  currentRow: {
+  categoryList: {
     type: Object,
     default() {
       return {};
@@ -29,7 +29,7 @@ onMounted(async () => {
 <template>
   <div class="category-wrap">
     <ul class="category-list">
-      <li v-for="item in props.currentRow" :key="item.id">
+      <li v-for="item in props.categoryList" :key="item.id">
         <nuxt-link :to="item.alias" active-class="active" :class="{ active: currentPath === item.alias }">
           <nuxt-img :src="item.icon" h70 alt="category"/>
           <span>{{ item.name }}</span>
