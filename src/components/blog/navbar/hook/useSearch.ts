@@ -1,7 +1,8 @@
-import { ref, computed } from 'vue'
-import { getArticleQuery } from "~/api/blog/home"
-import { HttpStatus } from "~/enums/httpStatus"
+import {ref, computed} from 'vue'
+import {HttpStatus} from "~/enums/httpStatus"
 import {useRouter} from "#vue-router";
+import {SearchDimension} from "~/pages/blog/search/components/enum";
+import {getArticleQuerySelect} from "~/api/blog/home";
 
 /**
  * 搜索hook
@@ -58,8 +59,8 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
   /**输入框事件*/
   const handleInput = async () => {
     if (searchInput.value) {
-      const res = await getArticleQuery({keyword: searchInput.value})
-      if(res.code === HttpStatus.OK) {
+      const res = await getArticleQuerySelect({keyword: searchInput.value})
+      if (res.code === HttpStatus.OK) {
         fuzzyResults.value = res.data.map((item: any) => item.title)
       }
     } else {
@@ -73,7 +74,10 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
       addSearchHistory(searchInput.value)
       await router.push({
         path: '/blog/search',
-        query: { keyword: searchInput.value }
+        query: {
+          keyword: searchInput.value,
+          type: SearchDimension.SYNTHESIS,
+        }
       })
     }
     searchInput.value = ''

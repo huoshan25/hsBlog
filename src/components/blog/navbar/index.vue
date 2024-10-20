@@ -11,13 +11,19 @@ const currentPath = ref('')
 
 const { getMenuOptions } = useNavigationMenu()
 
+const { scrollY } = useScrollWatcher()
+
+const isNavbarVisible = computed(() => {
+  return scrollY.value === 0
+})
+
 onMounted(() => {
   currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
 })
 </script>
 
 <template>
-  <header class="header">
+  <header class="header" :class="{ 'header-hidden': !isNavbarVisible }">
     <div class="header-container">
       <div flex items-center>
         <div class="header-container-logo">
