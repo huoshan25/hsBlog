@@ -6,6 +6,7 @@ import {getAllCategories} from "~/api/admin/categories";
 import {HttpStatus} from "~/enums/httpStatus";
 import { NButton, NIcon} from 'naive-ui'
 import {createColumns} from "~/pages/admin/articleEditor/components/createColumns";
+import markdownEditor from "./components/markdownEditor/index.vue"
 
 definePageMeta({
   layout: 'admin'
@@ -286,7 +287,7 @@ onMounted(async () => {
   </div>
 
   <!-- 新增/编辑文章 -->
-  <admin-markdown-editor
+  <markdown-editor
       v-if="articleEditorVisibility"
       :visible="articleEditorVisibility"
       :type="editorType"

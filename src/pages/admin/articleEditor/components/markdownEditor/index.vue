@@ -10,7 +10,7 @@ import {ArticleStatus} from "~/api/admin/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
 import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
 import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
-import {toolbarsConfig} from "~/components/admin/markdownEditor/config/toolbarsConfig";
+import {toolbarsConfig} from "~/pages/admin/articleEditor/detail/components/config/toolbarsConfig";
 import {computed} from "vue";
 
 const props = defineProps(['currentRow']);
@@ -111,7 +111,7 @@ onMounted(async () => {
     }
   } else if(props.currentRow.type === 'add') {
     const { generateUUID } = useUUID();
-    // form.value.articleUUID = generateUUID();
+    form.value.articleUUID = generateUUID();
   }
   await getTags()
 
