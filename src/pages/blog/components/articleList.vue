@@ -64,6 +64,11 @@ const goDetails = (id: number) => {
   navigateTo(`/blog/post/${id}`)
 }
 
+/*标签页*/
+const goTabs = (tab: string) => {
+  navigateTo(`/blog/tag/${tab}`)
+}
+
 onMounted(() => {
   if (!aliasList.value) {
     navigateTo('/blog');
@@ -101,7 +106,8 @@ onMounted(() => {
           </div>
         </div>
         <div class="entry-list-bottom-right">
-          <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="tag.id + 'tag'">
+          <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="tag.id + 'tag'"
+                 @click.stop="goTabs(tag.name)" class="hover:(text-[#1e80ff] cursor-pointer)">
             {{ tag.name }}
           </n-tag>
         </div>
