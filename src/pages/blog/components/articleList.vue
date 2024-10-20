@@ -113,6 +113,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <blog-no-more-data-divider/>
   </div>
 </template>
 
@@ -132,6 +133,10 @@ onMounted(() => {
   flex-direction: column;
   align-items: flex-start;
   border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+
+  &:nth-last-child(2) {
+    border-bottom: none;
+  }
 
   &-title {
     font-weight: 700;
