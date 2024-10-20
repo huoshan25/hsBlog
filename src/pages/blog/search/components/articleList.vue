@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {HttpStatus} from "~/enums/httpStatus";
 import {getArticleQuery} from "~/api/blog/search";
-import {SearchDimension} from "~/pages/blog/search/components/enum";
 
 const entryInfo = ref()
 const route = useRoute()
@@ -68,7 +67,7 @@ onMounted(() => {
       <n-ellipsis class="entry-list-content" :tooltip="false" v-html="item.content_highlight"/>
     </div>
 
-    <blog-no-more-data-divider class="w-[100vw]"/>
+    <blog-no-more-data-divider/>
   </div>
 </template>
 

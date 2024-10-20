@@ -17,7 +17,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 20px 0;
+  padding-bottom: 20px;
 }
 
 .dashed-line {
