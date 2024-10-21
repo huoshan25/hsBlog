@@ -86,12 +86,12 @@ onMounted(() => {
   margin-top: 50px;
 }
 
-:deep .n-tabs .n-tabs-nav.n-tabs-nav--line-type.n-tabs-nav--top .n-tabs-nav-scroll-content {
+:deep(.n-tabs .n-tabs-nav.n-tabs-nav--line-type.n-tabs-nav--top .n-tabs-nav-scroll-content) {
   border-bottom: none;
 }
 
-:deep .n-tab-pane,
-:deep .n-tabs-bar {
+:deep(.n-tab-pane),
+:deep(.n-tabs-bar) {
   display: none;
 }
 
