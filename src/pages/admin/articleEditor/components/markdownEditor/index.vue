@@ -85,7 +85,7 @@ const handlePublish = async (status: ArticleStatus) => {
     category_id: form.value.category_id,
     content: content.value,
     status,
-    tagNames: [],
+    tagNames: selectedTags.value,
     /**裁减摘要内容到指定长度（默认长度：255）*/
     brief_content: briefContent.value.substring(0, 255),
   }
