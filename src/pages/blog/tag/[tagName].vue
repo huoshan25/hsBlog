@@ -65,7 +65,7 @@ onMounted(() => {
   </div>
 
   <div class="flex">
-    <div class="flex flex-col items-center justify-center w-[100vw] h-[100%] mt-[20px]">
+    <div class="flex flex-col items-center justify-center w-[100vw] h-[100vh] mt-[20px]">
       <div class="tabs p-[5px] w-[950px] bg-white">
         <n-tabs class="p-[15px]" type="line" animated @update:value="handleUpdateValue">
           <n-tab-pane :name="SearchDimension.SYNTHESIS" tab="综合"/>
