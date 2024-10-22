@@ -133,6 +133,9 @@ onMounted(() => {
   flex-direction: column;
   align-items: flex-start;
   border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+  &:hover {
+    background-color: #F7F8FA;
+  }
 
   &:nth-last-child(2) {
     border-bottom: none;
