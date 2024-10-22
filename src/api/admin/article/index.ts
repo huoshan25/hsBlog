@@ -61,7 +61,7 @@ export async function getTagsList() {
  * 删除图片
  */
 export async function deletePicture(params: any) {
-  return await fetchRequest.delete<any>('/oss/ali/article-img', params);
+  return await fetchRequest.delete<any>('/admin/oss/ali/article-img', params);
 }
 
 /**

@@ -15,4 +15,4 @@ const { apiBaseUrl } = useRuntimeConfig().public
  * 上传文件 - 数据流
  * @param file
  */
-export const fileUploadUrl = `${apiBaseUrl}oss/ali/article-img`
+export const fileUploadUrl = `${apiBaseUrl}admin/oss/ali/article-img`

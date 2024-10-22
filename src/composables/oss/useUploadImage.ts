@@ -1,7 +1,7 @@
 import { useRuntimeConfig } from '#app'
 import {HttpStatus} from "~/enums/httpStatus";
 import {createDiscreteApi} from "naive-ui";
-import {fileUploadUrl} from "~/api/oss";
+import {fileUploadUrl} from "~/api/admin/oss";
 import type {HttpRes} from "~/api/type";
 
 interface UploadResponse {
