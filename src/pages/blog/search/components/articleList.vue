@@ -78,6 +78,7 @@ onMounted(() => {
   flex-grow: 1;
   border-radius: 0 6px 6px 6px;
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
+  min-height: 100vh;
 }
 
 :deep(em) {

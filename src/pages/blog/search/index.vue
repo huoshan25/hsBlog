@@ -29,7 +29,7 @@ const isNavbarVisible = computed(() => {
       </div>
     </header>
 
-    <div class="contents h-[100%]">
+    <div class="contents">
       <!-- 文章列表 -->
       <article-list v-if="currentTab !== SearchDimension.TAG"/>
       <!-- 标签列表 -->
@@ -44,7 +44,6 @@ const isNavbarVisible = computed(() => {
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 100%;
 }
 
 .header-container {
