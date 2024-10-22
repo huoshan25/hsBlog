@@ -37,7 +37,9 @@ const goTabs = (tab: string) => {
 
 watch(() => route.query, getArticleList, {deep: true});
 onMounted(() => {
-  getArticleList()
+  if(!entryInfo.value) {
+    getArticleList()
+  }
 })
 
 </script>
