@@ -7,11 +7,13 @@ import ArticleList from "./components/articleList.vue";
 definePageMeta({
   layout: 'blog',
   middleware: async (to) => {
-    const {data: tagsData} = await useAsyncData('getTagsList', getTagsAll);
-    useState('tagsInfo', () => tagsData.value)
-    const tagName = to.params.tagName as string;
-    if (tagsData.value && !tagsData.value.data.list.some((tag: any) => tag.name === tagName)) {
-      return showError({statusCode: HttpStatus.FORBIDDEN})
+    const res = await getTagsAll()
+    if(res.code === HttpStatus.OK) {
+      useState('tagsInfo', () => res)
+      const tagName = to.params.tagName as string;
+      if (res.data && !res.data.list.some((tag: any) => tag.name === tagName)) {
+        return showError({statusCode: HttpStatus.FORBIDDEN})
+      }
     }
   }
 })
@@ -50,7 +52,6 @@ const getArticleList = async () => {
 }
 
 watchEffect(() => {
-  console.log(tagsInfo.value, 'tagsInfo')
 })
 
 onMounted(() => {
