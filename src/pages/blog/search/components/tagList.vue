@@ -20,14 +20,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col bg-white w-[100%]">
-    <div class="flex p-[20px]" v-for="tag in tagsList" :key="tag.id">
+  <div class="flex flex-col bg-white w-[100%] min-h-[100vh]">
+    <div class="flex p-[20px] custom-border-bottom-1px_solid_#E4E6EB7F" v-for="tag in tagsList" :key="tag.id">
       <img class="w-[40px] h-[40px]" src="~/assets/images/tag.png" alt="标签图片">
       <div class="flex flex-1 flex-col ml-[10px]">
         <div v-html="tag.name"></div>
         <div>{{ tag.articleCount }}  文章</div>
       </div>
     </div>
+
+    <blog-no-more-data-divider/>
   </div>
 </template>
 

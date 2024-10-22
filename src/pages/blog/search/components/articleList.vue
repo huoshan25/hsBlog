@@ -106,7 +106,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+  border-bottom: 1px solid #E4E6EB7F;
 
   &:nth-last-child(2) {
     border-bottom: none;
