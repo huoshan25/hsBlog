@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {getUserInfo} from "~/api/blog/home";
 import {HttpStatus} from "~/enums/httpStatus";
-import {getTagsList} from "~/api/admin/article";
+import {getTagsList} from "~/api/blog/tag";
 
 const props = defineProps({
   categoryList: {

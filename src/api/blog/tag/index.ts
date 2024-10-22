@@ -14,6 +14,13 @@ export async function getTagsAll() {
 }
 
 /**
+ * 文章标签(获取发布文章数量)
+ */
+export async function getTagsList() {
+  return await fetchRequest.get<any>('/blog/article/tags');
+}
+
+/**
  * 标签查询文章
  */
 export async function getArticle(params?: any) {
