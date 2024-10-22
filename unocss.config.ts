@@ -8,9 +8,36 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
-import presetRemToPx from "@unocss/preset-rem-to-px";
+
+import type {Rule} from 'unocss'
+import {presetRemToPx} from '@unocss/preset-rem-to-px'
 
 export default defineConfig({
+  rules: [
+    [
+      /^custom-border(?:-(.+))?-(.+)$/,
+      ([, direction, value]) => {
+        const parts = value.split('_');
+        const width = parts[0] || '1px';
+        const style = parts[1] || 'solid';
+        const color = parts[2] || 'currentColor';
+        const borderValue = `${width} ${style} ${color.replace(/-/g, ',')}`;
+
+        if (!direction) {
+          return {'border': borderValue};
+        }
+
+        const sides = direction.split('-');
+        const result: Record<string, string> = {};
+        sides.forEach(side => {
+          if (['top', 'right', 'bottom', 'left'].includes(side)) {
+            result[`border-${side}`] = borderValue;
+          }
+        });
+        return result;
+      }
+    ] as Rule
+  ],
   // 自定义类名
   shortcuts: [
     ['btn', 'px-4 py-1 rounded inline-block bg-teal-600 text-white cursor-pointer hover:bg-teal-700 disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50'],
@@ -32,7 +59,7 @@ export default defineConfig({
     }),
     presetRemToPx({
       baseFontSize: 4, //unocss计算：1单位 = 0.25rem = 1px
-    }),
+    }) as any,
   ],
   transformers: [ //转换器用于处理特殊的CSS语法：
     transformerDirectives(), //支持类似@apply指令的语法，便于在CSS中应用多个实用类
