@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CategoryList, {type ICategory} from "~/components/blog/categoryList.vue";
 import {HttpStatus} from "~/enums/httpStatus";
-import {getAllCategories} from "~/api/admin/categories";
+import {getAllCategories} from "~/api/blog/home";
 import Personal from "~/pages/blog/components/personal.vue";
 import ArticleList from "~/pages/blog/components/articleList.vue";
 import calender from "./components/calendar.vue"

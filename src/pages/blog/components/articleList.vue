@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {EyeOutline, ThumbsUpOutline} from "@vicons/ionicons5";
 import {ArticleStatus} from "~/api/admin/article/type";
-import {getArticle} from "~/api/admin/article";
+import {getArticle} from "~/api/blog/home";
 import type {ICategory} from "~/components/blog/categoryList.vue";
 import {HttpStatus} from "~/enums/httpStatus";
 
