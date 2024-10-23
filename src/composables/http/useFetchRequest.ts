@@ -1,12 +1,12 @@
-import type {FetchResponse, SearchParameters} from 'ofetch'
-import {HttpStatus} from "~/enums/httpStatus"
-import {useStorage} from '@vueuse/core'
-import {ErrorStatus} from "~/enums/ErrorStatus"
-import {createDiscreteApi} from 'naive-ui'
+import type {SearchParameters} from "ofetch";
 import type {FetchApiFn, RefreshTokenResponse} from "~/composables/http/type"
+import {useStorage} from '@vueuse/core';
+import {createDiscreteApi} from 'naive-ui';
+import {HttpStatus} from "~/enums/httpStatus";
+import {ErrorStatus} from "~/enums/ErrorStatus";
 import type {HttpRes} from "~/api/type";
 
-const {message} = createDiscreteApi(['message'])
+const {message} = createDiscreteApi(['message']);
 
 /*参数序列化*/
 const paramsSerializer = (params?: SearchParameters): SearchParameters | undefined => {
@@ -24,26 +24,23 @@ const paramsSerializer = (params?: SearchParameters): SearchParameters | undefin
 
 /*API请求*/
 class FetchApi implements FetchApiFn {
-  private readonly fetch: typeof $fetch
-  private token = useStorage('token', '')
-  private refreshToken = useStorage('refreshToken', '')
-  private pending: Promise<HttpRes<RefreshTokenResponse>> | null = null
-  private readonly timeout: number
+  private readonly fetch: typeof $fetch;
+  private token = useStorage('token', '');
+  private refreshToken = useStorage('refreshToken', '');
+  private refreshPromise: Promise<void> | null = null;
 
-  constructor(timeout: number = 30000) {
-    this.timeout = timeout
+  constructor() {
     this.fetch = $fetch.create({
       onRequest: this.onRequest.bind(this),
       onResponse: this.onResponse.bind(this),
       onResponseError: this.onResponseError.bind(this),
-      timeout: this.timeout
-    })
+    });
   }
 
   private async onRequest({options, request}: { options: any, request: any }) {
     options.params = paramsSerializer(options.params)
-    const {apiBaseUrl} = useRuntimeConfig().public
-    options.baseURL = apiBaseUrl as string
+    const {apiBaseUrl} = useRuntimeConfig().public;
+    options.baseURL = apiBaseUrl as string;
 
     const isRefreshTokenRequest = request === '/admin/user/refresh-token'
 
@@ -57,108 +54,77 @@ class FetchApi implements FetchApiFn {
   }
 
   /*返回响应结果*/
-  private async onResponse({request, response, options}: {
-    request: Request,
-    response: FetchResponse<any>,
-    options: any
-  }) {
-    const data = response._data
+  private async onResponse({request, response, options}: { request: Request, response: any, options: any }) {
+    const data = response._data;
 
     if (data.code === ErrorStatus.EXPIRE_TOKEN) {
-      if (this.pending === null) {
-        this.pending = this.handleTokenRefresh()
-      }
+      await this.refreshTokenIfNeeded();
 
-      try {
-        const refreshResult = await this.pending
-
-        if (refreshResult.code === HttpStatus.OK) {
-          this.token.value = refreshResult.data.token
-          this.refreshToken.value = refreshResult.data.refresh_token
-
-          // 继续请求原来的数据
-          const newResponse: any = await this.fetch(request, {
-            ...options,
-            headers: {...options.headers}
-          })
-
-          // 返回新的响应数据
-          return newResponse._data
-        } else {
-          return message.error(`刷新令牌失败`)
-        }
-      } catch (error) {
-        this.pending = null
-        this.token.value = ''
-        this.refreshToken.value = ''
-        navigateTo('/blog')
-        return Promise.reject(error)
-      }
+      // 使用新token重试原始请求
+      const newResponse: any = await this.fetch(request, {
+        ...options,
+        headers: {...options.headers, Authorization: `Bearer ${this.token.value}`}
+      });
+      return newResponse._data;
     }
 
     if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
-      message.error(`${data.code} - ${data.message}`)
-      return Promise.reject(new Error(data.message))
+      message.error(`${data.code} - ${data.message}`);
+      throw new Error(data.message);
     }
 
-    return data
+    return data;
   }
 
-  /*错误响应*/
-  private onResponseError({response}: { response: FetchResponse<any> }) {
-    const data = response._data
+  private async refreshTokenIfNeeded() {
+    if (!this.refreshPromise) {
+      this.refreshPromise = this.doRefreshToken();
+    }
+    await this.refreshPromise;
+  }
+
+  private async doRefreshToken() {
+    try {
+      const refreshResult = await this.fetch<HttpRes<RefreshTokenResponse>>('/admin/user/refresh-token', {
+        method: 'POST',
+      });
+      this.token.value = refreshResult.data.token;
+      this.refreshToken.value = refreshResult.data.refresh_token;
+    } catch (error) {
+      this.token.value = '';
+      this.refreshToken.value = '';
+      navigateTo('/blog');
+      throw error;
+    } finally {
+      this.refreshPromise = null;
+    }
+  }
+
+  private onResponseError({response}: { response: any }) {
+    const data = response._data;
 
     if (data && typeof data.code === 'number' && typeof data.message === 'string') {
-      // 服务器的结构化错误响应
-      message.error(`${data.code} - ${data.message}`)
+      message.error(`${data.code} - ${data.message}`);
     } else {
-      // 非结构化错误响应或未知错误
-      message.error(`${response.status} - ${response.statusText || '未知错误'}`)
+      message.error(`${response.status} - ${response.statusText || '未知错误'}`);
     }
-    return Promise.reject(new Error(data?.message || response.statusText || '未知错误'))
+    throw new Error(data?.message || response.statusText || '未知错误');
   }
 
-  /*处理token刷新*/
-  private handleTokenRefresh(): Promise<HttpRes<RefreshTokenResponse>> {
-    return this.fetch<HttpRes<RefreshTokenResponse>>('/user/refresh-token', {
-      method: 'POST',
-    }).finally(() => {
-      this.pending = null
-    })
+  async get<T>(url: string, params?: SearchParameters): Promise<T> {
+    return this.fetch(url, {method: 'get', params});
   }
 
-  private async executeRequest<T>(url: string, options: any): Promise<T> {
-    try {
-      const controller = new AbortController()
-      const id = setTimeout(() => controller.abort(), this.timeout)
-
-      const response = await this.fetch<T>(url, {
-        ...options,
-        signal: controller.signal
-      })
-
-      clearTimeout(id)
-      return response
-    } catch (error: any) {
-      message.error(`请求超时`)
-      throw new Error(`请求超时: ${url}`)
-    }
+  async post<T>(url: string, body?: SearchParameters): Promise<T> {
+    return this.fetch(url, {method: 'post', body});
   }
 
-  get<T>(url: string, params?: SearchParameters): Promise<T> {
-    return this.executeRequest(url, {method: 'get', params})
+  async put<T>(url: string, body?: SearchParameters): Promise<T> {
+    return this.fetch(url, {method: 'put', body});
   }
 
-  post<T>(url: string, body?: SearchParameters): Promise<T> {
-    return this.executeRequest(url, {method: 'post', body})
-  }
-
-  put<T>(url: string, body?: SearchParameters): Promise<T> {
-    return this.executeRequest(url, {method: 'put', body})
-  }
-
-  delete<T>(url: string, body?: SearchParameters): Promise<T> {
-    return this.executeRequest(url, {method: 'delete', body})
+  async delete<T>(url: string, body?: SearchParameters): Promise<T> {
+    return this.fetch(url, {method: 'delete', body});
   }
 }
 

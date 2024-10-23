@@ -102,8 +102,8 @@ const getList = async () => {
   if (res.code === HttpStatus.OK) {
     tableData.value = res.data.list
     total.value = res.data.total
-    loading.value = false
   }
+  loading.value = false
 }
 const router = useRouter()
 /**
