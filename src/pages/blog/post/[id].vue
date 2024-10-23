@@ -1,46 +1,60 @@
 <script setup lang="ts">
-import {getArticleDetails} from "~/api/admin/article";
+import {getArticleDetails} from "~/api/blog/post";
 
-const route = useRoute()
 definePageMeta({
   layout: 'blog',
 })
+const {scrollY} = useScrollWatcher()
+const isNavbarVisible = computed(() => {
+  return scrollY.value === 0
+})
+const headings = ref([])
+const route = useRoute()
+const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}))
 
-const {data} = await getArticleDetails({id: route.params.id as any})
-console.log(data, 'data')
+const updateHeadings = (newHeadings: any) => {
+  headings.value = newHeadings
+}
 </script>
 
 <template>
   <div class="main">
-    <div class="main-content">
-      <h1>{{ data.title }}</h1>
+    <div class="content">
+      <h1>{{ articleData.data.title }}</h1>
+      <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
     </div>
-
-    <div class="main-info">
-      <n-card
-          title="分类"
-      >
-        卡片内容
-        当前分类的所有文章{{data.category_article_count}}
-      </n-card>
+    <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
+      <markdown-anchor :content="articleData.data.content"/>
     </div>
-
   </div>
 </template>
 
 <style scoped>
 .main {
-  width: 100%;
-  padding: 0 4vw;
+  width: 100vw;
   display: flex;
   justify-content: center;
+}
 
-  &-content {
-    background-color: white;
-  }
+.content {
+  margin-top: 15px;
+  background-color: white;
+  padding: 15px;
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+}
 
-  &-info {
-    background-color: white;
+.content-right {
+  position: relative;
+  transition: top 0.2s ease-in-out;
+  top: 15px;
+
+  &.header-hidden {
+    top: -60px;
   }
 }
 </style>

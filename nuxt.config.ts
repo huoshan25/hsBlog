@@ -75,9 +75,8 @@ export default defineNuxtConfig({
   modules: ['nuxtjs-naive-ui', '@varlet/nuxt', '@vueuse/nuxt', '@unocss/nuxt', '@nuxt/image', '@unocss/nuxt', '@nuxt/content'],
 
   content: {
-    // ... options
     highlight: {
-      langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml']
+      langs: ['json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml', 'typescript', 'javascript']
     }
   },
 
