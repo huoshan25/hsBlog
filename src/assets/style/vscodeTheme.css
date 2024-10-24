@@ -1,0 +1,154 @@
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+code.hljs {
+    padding: 3px 5px;
+    font-weight: 500;
+    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-size: 16px;
+}
+
+.hljs {
+    background: #1E1E1E;
+    color: #ABB2BF;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.hljs-keyword,
+.hljs-literal,
+.hljs-symbol,
+.hljs-name {
+    color: #569CD6;
+    font-weight: 600;
+}
+
+.hljs-link {
+    color: #569CD6;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.hljs-built_in,
+.hljs-type {
+    color: #4EC9B0;
+    font-weight: 600;
+}
+
+.hljs-number,
+.hljs-class {
+    color: #B5CEA8;
+    font-weight: 600;
+}
+
+.hljs-string,
+.hljs-meta .hljs-string {
+    color: #CE9178;
+    font-weight: 600;
+}
+
+.hljs-regexp,
+.hljs-template-tag {
+    color: #D16969;
+    font-weight: 600;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_ {
+    color: #DCDCAA;
+    font-weight: 600;
+}
+
+.hljs-subst,
+.hljs-function,
+.hljs-params,
+.hljs-formula {
+    color: #ABB2BF;
+    font-weight: 500;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #608B4E;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.hljs-doctag {
+    color: #608B4E;
+    font-weight: 600;
+}
+
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-tag {
+    color: #E6E6AA;
+    font-weight: 600;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+    color: #9CDCFE;
+    font-weight: 600;
+}
+
+.hljs-attr,
+.hljs-attribute {
+    color: #9CDCFE;
+    font-weight: 600;
+}
+
+.hljs-section {
+    color: #FFD700;
+    font-weight: 600;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+    font-weight: 600;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+.hljs-bullet,
+.hljs-selector-tag,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+    color: #D7BA7D;
+    font-weight: 600;
+}
+
+/* 特别强调关键字的颜色 */
+.hljs-keyword {
+    color: #a763c5;
+}
+
+/* 特别强调字符串的颜色 */
+.hljs-string {
+    color: #CE9178;
+}
+
+/* 特别强调函数的颜色 */
+.hljs-function {
+    color: #DCDCAA;
+}
+
+/* 特别强调变量的颜色 */
+.hljs-variable {
+    color: #9CDCFE;
+}
+
+/* 特别强调注释的颜色 */
+.hljs-comment {
+    color: #6A9955;
+}
