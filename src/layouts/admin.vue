@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {dateZhCN, type GlobalThemeOverrides, zhCN} from 'naive-ui'
 import type {MenuOption} from 'naive-ui'
+import {useMenus} from "~/composables/store/useMenus";
 
 const img = useImage()
 const router = useRouter()
-import {useMenus} from "~/composables/store/useMenus";
 
 onMounted(() => {
   /**获取当前路由路径*/

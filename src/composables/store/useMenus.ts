@@ -1,4 +1,4 @@
-import {CreateOutline, SpeedometerOutline, GitNetwork, PersonSharp} from "@vicons/ionicons5";
+import {CreateOutline, SpeedometerOutline, GitNetwork, PersonSharp, SettingsSharp} from "@vicons/ionicons5";
 import {type MenuOption, NIcon} from "naive-ui";
 import type {Component} from "vue";
 
@@ -34,6 +34,11 @@ export const useMenus = () => {
         label: '关于管理',
         key: '/admin/profileManage',
         icon: renderIcon(PersonSharp),
+      },
+      {
+        label: '系统设置',
+        key: '/admin/systemSettings',
+        icon: renderIcon(SettingsSharp),
       },
     ]
   })
