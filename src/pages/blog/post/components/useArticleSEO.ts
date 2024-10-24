@@ -8,13 +8,13 @@ export const useArticleSEO = (article: any) => {
 
   useHead({
     title: article.title,
-    titleTemplate: (title) => `${title} - 你的博客名称`,
+    titleTemplate: (title) => `${title} - 火山博客`,
 
     meta: [
       {
         'data-n-head': 'ssr',
         name: 'description',
-        content: article.description || article.summary || `${article.title} - 你的博客名称`
+        content: article.description || article.summary || `${article.title} - 火山博客`
       },
       {
         'data-n-head': 'ssr',
