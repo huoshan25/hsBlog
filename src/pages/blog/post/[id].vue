@@ -2,16 +2,20 @@
 import {getArticleDetails} from "~/api/blog/post";
 import License from "./components/license.vue"
 import {useArticleSEO} from "~/pages/blog/post/components/useArticleSEO";
+import AuthorInfo from "~/pages/blog/post/components/authorInfo.vue";
 
 definePageMeta({
   layout: 'blog',
 })
+
 const {scrollY} = useScrollWatcher()
+
+const headings = ref([])
+const route = useRoute()
+
 const isNavbarVisible = computed(() => {
   return scrollY.value === 0
 })
-const headings = ref([])
-const route = useRoute()
 const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}))
 useArticleSEO(articleData.value)
 const updateHeadings = (newHeadings: any) => {
@@ -23,10 +27,14 @@ const updateHeadings = (newHeadings: any) => {
 <template>
   <div class="main">
     <div class="content">
-      <h1>{{ articleData.data.title }}</h1>
+      <h1 class="text-[40px] font-600 line-height-1.31">{{ articleData.data.title }}</h1>
+      <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
       <client-only>
-        <license/>
+        <!--许可证-->
+        <div class="flex justify-center">
+          <license/>
+        </div>
       </client-only>
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
@@ -44,12 +52,10 @@ const updateHeadings = (newHeadings: any) => {
 .content {
   margin-top: 15px;
   background-color: white;
-  padding: 15px;
+  padding: 20px;
   width: 900px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   margin-right: 24px;
 }
 
