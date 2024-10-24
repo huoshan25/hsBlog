@@ -1,4 +1,3 @@
-<!-- src/components/markdown/anchor/index.vue -->
 <script setup lang="ts">
 const props = defineProps({
   content: {
@@ -33,14 +32,20 @@ const headings = computed(() => {
 
   return result
 })
+
+const handleScrollTo = (href: string, el: HTMLElement) => {
+  const targetOffset = el.getBoundingClientRect().top + window.pageYOffset - 3000
+  window.scrollTo({
+    top: targetOffset,
+    behavior: 'smooth'
+  })
+}
 </script>
 
 <template>
   <div class="nav-container" v-if="hasHeadings">
     <n-anchor
-        :show-rail="true"
-        :bound="100"
-        :offset="100"
+        :bound="150"
         :top="88"
         style="z-index: 1"
         :ignore-gap="true"

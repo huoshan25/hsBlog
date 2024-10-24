@@ -1,4 +1,3 @@
-// src/plugins/markdown.ts
 import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
 import hljs from 'highlight.js'

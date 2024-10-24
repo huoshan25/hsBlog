@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {getArticleDetails} from "~/api/blog/post";
+import License from "./components/license.vue"
 
 definePageMeta({
   layout: 'blog',
@@ -22,6 +23,9 @@ const updateHeadings = (newHeadings: any) => {
     <div class="content">
       <h1>{{ articleData.data.title }}</h1>
       <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
+      <client-only>
+        <license/>
+      </client-only>
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
       <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
