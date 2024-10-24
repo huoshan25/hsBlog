@@ -61,6 +61,8 @@ export default defineNuxtConfig({
     /**对客户端暴露的公共密钥*/
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1/',
+      /*网站域名*/
+      siteUrl: process.env.SITE_URL || 'https://myblog.com'
       // gtagId: G-XXXXXX,
     }
   },
