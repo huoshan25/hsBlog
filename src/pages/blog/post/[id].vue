@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {getArticleDetails} from "~/api/blog/post";
 import License from "./components/license.vue"
+import {useArticleSEO} from "~/pages/blog/post/components/useArticleSEO";
 
 definePageMeta({
   layout: 'blog',
@@ -12,10 +13,11 @@ const isNavbarVisible = computed(() => {
 const headings = ref([])
 const route = useRoute()
 const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}))
-
+useArticleSEO(articleData.value)
 const updateHeadings = (newHeadings: any) => {
   headings.value = newHeadings
 }
+
 </script>
 
 <template>
@@ -61,4 +63,5 @@ const updateHeadings = (newHeadings: any) => {
     top: -60px;
   }
 }
+
 </style>
