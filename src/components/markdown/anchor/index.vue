@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import {ChevronUp, ChevronDownSharp} from '@vicons/ionicons5'
+
 const props = defineProps({
   content: {
     type: String,
     required: true
   }
 })
+
+const collapsed = ref(false)
 
 const hasHeadings = computed(() => {
   return headings.value.length > 0
@@ -33,37 +37,65 @@ const headings = computed(() => {
   return result
 })
 
-const handleScrollTo = (href: string, el: HTMLElement) => {
-  const targetOffset = el.getBoundingClientRect().top + window.pageYOffset - 3000
-  window.scrollTo({
-    top: targetOffset,
-    behavior: 'smooth'
-  })
-}
 </script>
 
 <template>
   <div class="nav-container" v-if="hasHeadings">
-    <n-anchor
-        :bound="150"
-        :top="88"
-        style="z-index: 1"
-        :ignore-gap="true"
-    >
-      <template v-for="heading in headings" :key="heading.id">
-        <n-anchor-link
-            :title="heading.title"
-            :href="`#${heading.id}`"
-        />
+    <n-card hoverable>
+      <template #header>
+        <div class="card-header">
+          <span>目录</span>
+          <n-button icon-placement="right" text @click="collapsed = !collapsed">
+            {{ collapsed ? '展开' : '收起' }}
+            <template #icon>
+              <ChevronDownSharp v-if="collapsed"/>
+              <ChevronUp v-else/>
+            </template>
+          </n-button>
+        </div>
       </template>
-    </n-anchor>
+
+      <n-collapse-transition :show="!collapsed">
+        <div class="anchor-wrapper">
+          <n-anchor
+              :bound="150"
+              :top="88"
+              style="z-index: 1"
+              :ignore-gap="true"
+          >
+            <template v-for="heading in headings" :key="heading.id">
+              <n-anchor-link
+                  :title="heading.title"
+                  :href="`#${heading.id}`"
+              />
+            </template>
+          </n-anchor>
+        </div>
+      </n-collapse-transition>
+    </n-card>
   </div>
 </template>
 
 <style scoped>
 .nav-container {
-  padding: 20px;
-  background-color: white;
   position: fixed;
+  background-color: white;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.anchor-wrapper {
+  max-height: 420px;
+  overflow-x: hidden;
+}
+
+:deep(.n-anchor-link__title) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
