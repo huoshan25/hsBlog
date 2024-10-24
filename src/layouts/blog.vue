@@ -19,7 +19,7 @@ onMounted(() => {
       <n-message-provider>
         <n-modal-provider>
           <blog-navbar/>
-          <div class="mt-[70px]">
+          <div class="mt-[70px] min-h-[100vh]">
             <slot></slot>
           </div>
           <blog-footer/>
