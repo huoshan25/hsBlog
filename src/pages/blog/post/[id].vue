@@ -24,14 +24,13 @@ const updateHeadings = (newHeadings: any) => {
       <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
-      <markdown-anchor :content="articleData.data.content"/>
+      <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
     </div>
   </div>
 </template>
 
 <style scoped>
 .main {
-  width: 100vw;
   display: flex;
   justify-content: center;
 }
@@ -45,10 +44,11 @@ const updateHeadings = (newHeadings: any) => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 15px;
+  margin-right: 24px;
 }
 
 .content-right {
+  width: 330px;
   position: relative;
   transition: top 0.2s ease-in-out;
   top: 15px;
