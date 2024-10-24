@@ -52,7 +52,7 @@ const updateHeadings = (newHeadings: any) => {
 .content {
   margin-top: 15px;
   background-color: white;
-  padding: 20px;
+  padding: 25px 30px;
   width: 900px;
   display: flex;
   flex-direction: column;
