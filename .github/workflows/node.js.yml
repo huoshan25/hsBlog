@@ -34,7 +34,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Install依赖关系
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: 构建
         run: pnpm run build
