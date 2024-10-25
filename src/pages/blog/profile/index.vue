@@ -76,27 +76,28 @@ const copyEmail = () => {
 
 <template>
   <main class="wrap">
+    <section class="intro">
+      <div class="avatar-container">
+        <n-avatar
+            round
+            :size="120"
+            src="/img/avatar.jpg"
+            fallback-src="/default-avatar.png"
+        />
+      </div>
+      <h1 class="title">{{ personalInfo.name }}</h1>
+      <h2 class="subtitle color-white">{{ personalInfo.title }}</h2>
+      <p class="description color-white">{{ personalInfo.description }}</p>
+      <div class="bio-list">
+        <p v-for="(item, index) in personalInfo.bio"
+           :key="index"
+           class="bio-item color-white">
+          {{ item }}
+        </p>
+      </div>
+    </section>
+
     <div class="wrap-container">
-      <section class="intro">
-        <div class="avatar-container">
-          <n-avatar
-              round
-              :size="120"
-              src="/img/avatar.jpg"
-              fallback-src="/default-avatar.png"
-          />
-        </div>
-        <h1 class="title">{{ personalInfo.name }}</h1>
-        <h2 class="subtitle">{{ personalInfo.title }}</h2>
-        <p class="description">{{ personalInfo.description }}</p>
-        <div class="bio-list">
-          <p v-for="(item, index) in personalInfo.bio"
-             :key="index"
-             class="bio-item">
-            {{ item }}
-          </p>
-        </div>
-      </section>
 
       <section class="github-stats">
         <h2 class="section-title">GitHub statistics</h2>
@@ -218,8 +219,8 @@ const copyEmail = () => {
 <style scoped lang="scss">
 .wrap {
   display: flex;
-  justify-content: center;
-  padding: 0 4vw;
+  flex-direction: column;
+  align-items: center;
   min-height: 100%;
   background-color: #f5f5f5;
 
@@ -234,30 +235,64 @@ const copyEmail = () => {
 }
 
 .intro {
-  margin-bottom: 48px;
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(-90deg,#00BCD4 0,#1890ff 100%);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  margin-top: 100px;
   text-align: center;
 
   .avatar-container {
     margin-bottom: 20px;
+    position: absolute;
+    left: calc(50% - 60px);
+    top: 85px;
+    width: 120px;
+    height: 120px;
+    padding: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    & > img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   }
 
   .title {
+    padding-top: 20px;
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #2c3e50;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .subtitle {
     font-size: 1.5rem;
     font-weight: 500;
-    color: #666;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     margin-bottom: 16px;
   }
 
   .description {
     font-size: 1.1rem;
-    color: #666;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     line-height: 1.6;
     margin-bottom: 24px;
   }
@@ -269,7 +304,8 @@ const copyEmail = () => {
 
     .bio-item {
       margin: 8px 0;
-      color: #666;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       font-size: 1rem;
       line-height: 1.6;
     }
