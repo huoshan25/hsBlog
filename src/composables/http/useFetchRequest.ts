@@ -54,7 +54,7 @@ class FetchApi implements FetchApiFn {
   }
 
   /*返回响应结果*/
-  private async onResponse({request, response, options}: { request: any, response: any, options: any }) {
+  private async onResponse({request, response, options}: { request: Request, response: any, options: any }) {
     const data = response._data;
 
     if (data.code === ErrorStatus.EXPIRE_TOKEN) {

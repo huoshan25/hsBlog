@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': {redirect: '/blog'},
     // 主页在构建时预渲染
-    '/blog': {prerender: true},
+    // '/blog': {prerender: true},
     // 产品页面按需生成，后台自动重新验证
     // '/products/**': { swr: 3600 },
     // 博客文章按需生成，直到下一次部署前持续有效
