@@ -88,6 +88,7 @@ export default defineNuxtConfig({
     '~/assets/style/default.scss',
     'highlight.js/styles/atom-one-dark.css',
     'mavon-editor/dist/css/index.css',
+    '~/assets/style/global.scss',
   ],
 
   srcDir: 'src/',
@@ -110,13 +111,6 @@ export default defineNuxtConfig({
         resolvers: [NaiveUiResolver()]
       })
     ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@import "~/assets/style/global.scss";'
-        }
-      }
-    }
   },
 
   compatibilityDate: '2024-07-06'
