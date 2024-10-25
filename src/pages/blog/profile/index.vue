@@ -86,12 +86,12 @@ const copyEmail = () => {
         />
       </div>
       <h1 class="title">{{ personalInfo.name }}</h1>
-      <h2 class="subtitle color-white">{{ personalInfo.title }}</h2>
-      <p class="description color-white">{{ personalInfo.description }}</p>
+      <h2 class="subtitle">{{ personalInfo.title }}</h2>
+      <p class="description">{{ personalInfo.description }}</p>
       <div class="bio-list">
         <p v-for="(item, index) in personalInfo.bio"
            :key="index"
-           class="bio-item color-white">
+           class="bio-item">
           {{ item }}
         </p>
       </div>
