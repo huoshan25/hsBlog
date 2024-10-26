@@ -9,7 +9,7 @@ const props = defineProps({
   categoryList: {
     type: Object,
     default() {
-      return {};
+      return [];
     },
   },
 });
@@ -48,7 +48,7 @@ aliasList.value = props.categoryList.find((item: ICategory) => item.alias === `/
 /**类目信息*/
 const entryInfo = computed<EntryInfo[]>(() => {
   if (articleData.value?.code === HttpStatus.OK) {
-    return articleData.value.data.list.map((item: EntryInfo) => ({
+    return articleData.value.data.list?.map((item: EntryInfo) => ({
       id: item.id,
       title: item.title,
       category_name: item.category_name,

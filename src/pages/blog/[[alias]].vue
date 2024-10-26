@@ -17,7 +17,15 @@ const categoryList = ref()
 
 const titleName = ref()
 
-const {data: categoryData} = await useAsyncData('categories', () => getAllCategories())
+const {data: categoryData} = await useAsyncData('categories', () => getAllCategories(), {
+  default: () => {
+    return {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      data: []
+    }
+  }
+})
+
 if (categoryData.value?.code === HttpStatus.OK) {
   categoryList.value = categoryData.value.data.map((item: ICategory) => {
     return {
@@ -27,9 +35,10 @@ if (categoryData.value?.code === HttpStatus.OK) {
       icon: item.icon,
     }
   })
+
+  titleName.value = categoryList.value?.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
 }
 
-titleName.value = categoryList.value.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
 
 useHead({
   title: titleName.value?.name,
