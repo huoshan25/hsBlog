@@ -27,6 +27,7 @@ jobs:
         run: |
           pnpm install
           pnpm run build
+          ls -la .output
 
       - name: 部署到服务器
         uses: appleboy/scp-action@master
@@ -35,9 +36,8 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: ".output/*"
+          source: ".output"
           target: "/www/wwwroot/web/hsBlog"
-          strip_components: 1
 
       - name: 重启服务
         uses: appleboy/ssh-action@master
@@ -49,4 +49,4 @@ jobs:
           script: |
             cd /www/wwwroot/web/hsBlog
             pm2 delete hs-blog || true
-            pm2 start node --name hs-blog server/index.mjs
+            NITRO_PORT=3001 pm2 start node --name hs-blog .output/server/index.mjs
