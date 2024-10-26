@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: ".output"
+          source: ".output, ecosystem.config.js"
           target: "/www/wwwroot/web/hsBlog"
 
       - name: 重启服务
@@ -49,4 +49,4 @@ jobs:
           script: |
             cd /www/wwwroot/web/hsBlog
             pm2 delete hs-blog || true
-            pm2 start node --name hs-blog .output/server/index.mjs
+            pm2 start ecosystem.config.js
