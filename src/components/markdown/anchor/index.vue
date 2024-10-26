@@ -15,11 +15,11 @@ const hasHeadings = computed(() => {
 })
 
 const headings = computed(() => {
-  const lines = props.content.split('\n')
+  const lines = props.content?.split('\n')
   const result: any = []
   let index = 0
 
-  lines.forEach(line => {
+  lines?.forEach(line => {
     const match = line.match(/^(#{1,6})\s+(.+)$/)
     if (match) {
       const level = match[1].length

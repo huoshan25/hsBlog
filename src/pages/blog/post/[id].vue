@@ -3,6 +3,7 @@ import {getArticleDetails} from "~/api/blog/post";
 import License from "./components/license.vue"
 import {useArticleSEO} from "~/pages/blog/post/components/useArticleSEO";
 import AuthorInfo from "~/pages/blog/post/components/authorInfo.vue";
+import {HttpStatus} from "~/enums/httpStatus";
 
 definePageMeta({
   layout: 'blog',
@@ -16,7 +17,14 @@ const route = useRoute()
 const isNavbarVisible = computed(() => {
   return scrollY.value === 0
 })
-const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}))
+const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}), {
+  default() {
+      return {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        data: []
+      }
+  },
+})
 useArticleSEO(articleData.value)
 const updateHeadings = (newHeadings: any) => {
   headings.value = newHeadings

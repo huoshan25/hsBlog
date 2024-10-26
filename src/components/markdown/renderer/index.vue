@@ -13,7 +13,11 @@ const props = defineProps({
 const {$markdown} = useNuxtApp()
 
 const renderedContent = computed(() => {
-  return $markdown.render(props.markdown)
+  if(props.markdown) {
+    return $markdown.render(props.markdown)
+  } else {
+    return ''
+  }
 })
 </script>
 
