@@ -137,7 +137,7 @@ onMounted(async () => {
               filterable
               placeholder="请选择"
               v-model:value="form.category_id"
-              :options="props.currentRow.categoryOption"
+              :options="props.currentRow.categoryOption?.slice(1)"
           />
         </n-form-item>
       </div>
