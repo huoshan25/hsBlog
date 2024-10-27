@@ -126,9 +126,10 @@ onUnmounted(() => {
             :items="articles"
             :item-size="120"
             item-resizable
+            class="animated-list"
         >
           <template #default="{ item }">
-            <div class="entry-list" @click="goDetails(item.id)">
+            <div class="entry-list animate-entry" @click="goDetails(item.id)">
               <n-ellipsis class="entry-list-title" :tooltip="false">
                 {{ item.title }}
               </n-ellipsis>
@@ -178,6 +179,21 @@ onUnmounted(() => {
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }
 
+.animated-list {
+  animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /*类目模块*/
 .entry-list {
   cursor: pointer;
@@ -186,6 +202,14 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: flex-start;
   border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+  opacity: 0;
+  animation: scaleUp 0.4s ease-out forwards;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
 
   &:hover {
     background-color: #F7F8FA;
@@ -224,6 +248,17 @@ onUnmounted(() => {
         justify-content: center;
       }
     }
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 </style>
