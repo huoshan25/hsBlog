@@ -63,7 +63,7 @@ const personalInfo = {
     {
       name: 'fastapi-template',
       description: '使用 FastAPI.py 构建的RESTful API服务项目模板、包含认证、自动注册路由、日志、登录注册刷新token等基础功能。',
-        tech: ['FastAPI.py', 'Pytest', 'MySQL', 'JWT', 'Pydantic', 'Starlette'],
+      tech: ['FastAPI.py', 'Pytest', 'MySQL', 'JWT', 'Pydantic', 'Starlette'],
       link: 'https://github.com/huoshan25/fastapi-template'
     },
   ],
@@ -117,14 +117,19 @@ const copyEmail = () => {
           />
           <div class="github-metrics">
             <img
-                src="https://github-readme-stats.vercel.app/api?username=huoshan25&show_icons=true&theme=vue"
-                alt="GitHub Stats"
-                class="github-stats-card"
+                src="https://github-readme-stats.vercel.app/api/top-langs/?username=huoshan25&layout=compact&title_color=1E80FF"
+                alt="commonLanguage"
+            />
+            <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=huoshan25"
+                 alt="commits"
             />
             <img
-                src="https://github-readme-stats.vercel.app/api/top-langs/?username=huoshan25&layout=compact&theme=vue"
-                alt="Most Used Languages"
-                class="github-langs-card"
+                src="https://github-readme-stats.vercel.app/api?username=huoshan25&show_icons=true&title_color=1E80FF"
+                alt="stats统计"
+            />
+            <img
+                src="https://github-readme-streak-stats.herokuapp.com/?user=huoshan25&ring=1E80FF&fire=1E80FF&currStreakLabel=1E80FF"
+                alt="streak"
             />
           </div>
         </div>
@@ -396,6 +401,7 @@ const copyEmail = () => {
 
   .skill-category {
     margin-bottom: 5px;
+
     .category-title {
       font-size: 1.2rem;
       margin-bottom: 16px;
