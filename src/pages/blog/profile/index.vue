@@ -10,59 +10,68 @@ useHead({
 
 const personalInfo = {
   name: '火山',
-  title: '独立开发者',
-  description: '热爱技术，热爱开源，持续学习中...',
+  title: 'Web前端开发',
+  description: '建立广泛的知识储备，专注深耕前端技术栈，热爱技术，热爱开源，持续学习中...',
   bio: [
-    '👨‍💻 目前专注于全栈开发，特别是 Vue 生态系统',
+    '👨‍💻 目前专注于全栈开发，主要是前端领域',
     '🌱 正在学习 Rust 和 后端开发',
-    '🎯 2024年目标：为开源项目贡献代码，写 100 篇技术博客',
-    '🎸 业余时间喜欢运动和阅读技术书籍'
+    '🎯 2024年目标：写 100 篇技术博客',
+    '🏃‍♂️‍➡️ 业余时间喜欢健身和阅读技术书籍'
   ],
   skills: [
     {
       name: 'Frontend',
       items: [
-        { name: 'Vue.js', level: 90 },
-        { name: 'Nuxt.js', level: 85 },
-        { name: 'TypeScript', level: 80 },
-        { name: 'Tailwind CSS', level: 70 }
+        {name: 'Vue.js'},
+        {name: 'Nuxt.js'},
+        {name: 'TypeScript'},
+        {name: 'Tailwind CSS'},
+        {name: 'Scss'},
+        {name: 'React.js'},
+        {name: 'Next.js'}
       ]
     },
     {
       name: 'Backend',
       items: [
-        { name: 'Node.js', level: 85 },
-        { name: 'Python', level: 75 },
-        { name: 'MySQL', level: 80 }
+        {name: 'Nest.js'},
+        {name: 'FastAPI'},
+        {name: 'MySQL'}
       ]
     },
     {
       name: 'Tools',
       items: [
-        { name: 'Git', level: 85 },
-        { name: 'Docker', level: 75 },
-        { name: 'WebStorm', level: 90 }
+        {name: 'Git'},
+        {name: 'Docker'},
+        {name: 'WebStorm'}
       ]
     }
   ],
   projects: [
     {
-      name: '个人博客系统',
+      name: 'hsBlog',
       description: '基于 Nuxt3 + NaiveUI 构建的现代化个人博客系统（前后台）',
       tech: ['Vue3', 'Nuxt3', 'TypeScript', 'NaiveUI'],
-      link: 'https://github.com/yourproject'
+      link: 'https://github.com/huoshan25/hsBlog'
     },
     {
-      name: '博客后端API服务',
+      name: 'hsBlog_api',
       description: '使用 Nest.js 构建的RESTful API服务，实现博客核心功能，包含用户认证、文章管理、对象存储等模块',
       tech: ['Nest.js', 'TypeScript', 'TypeORM', 'MySQL', 'JWT', 'Ali-OSS'],
-      link: 'https://github.com/yourproject-api'
+      link: 'https://github.com/huoshan25/hsBlog_api'
+    },
+    {
+      name: 'fastapi-template',
+      description: '使用 FastAPI.py 构建的RESTful API服务项目模板、包含认证、自动注册路由、日志、登录注册刷新token等基础功能。',
+        tech: ['FastAPI.py', 'Pytest', 'MySQL', 'JWT', 'Pydantic', 'Starlette'],
+      link: 'https://github.com/huoshan25/fastapi-template'
     },
   ],
   contacts: [
-    { platform: 'GitHub', link: 'https://github.com/huoshan25', icon: '/svg/github.svg' },
-    { platform: 'Email', link: 'mailto:1726941245@qq.com', icon: '/svg/icon_email.svg' },
-    { platform: '掘金', link: 'https://juejin.cn/user/46604556441571', icon: '/svg/juejin.svg' }
+    {platform: 'GitHub', link: 'https://github.com/huoshan25', icon: '/svg/github.svg'},
+    {platform: 'Email', link: 'mailto:1726941245@qq.com', icon: '/svg/icon_email.svg'},
+    {platform: '掘金', link: 'https://juejin.cn/user/46604556441571', icon: '/svg/juejin.svg'}
   ]
 }
 
@@ -123,7 +132,7 @@ const copyEmail = () => {
       </section>
 
       <section class="skills">
-        <h2 class="section-title">技能栈</h2>
+        <h2 class="section-title">技术栈</h2>
         <div class="skills-container">
           <div v-for="(category, index) in personalInfo.skills"
                :key="index"
@@ -133,17 +142,9 @@ const copyEmail = () => {
               <div v-for="(skill, skillIndex) in category.items"
                    :key="skillIndex"
                    class="skill-item">
-                <span class="skill-name">{{ skill.name }}</span>
-                <client-only>
-                  <n-progress
-                      processing
-                      type="line"
-                      :percentage="skill.level"
-                      :height="6"
-                      :border-radius="4"
-                      :color="'#1E80FF'"
-                  />
-                </client-only>
+                <div class="skill-tag">
+                  {{ skill.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -167,6 +168,7 @@ const copyEmail = () => {
                     type="primary"
                     :href="project.link"
                     target="_blank"
+                    tag="a"
                 >
                   查看项目
                 </n-button>
@@ -238,7 +240,7 @@ const copyEmail = () => {
   width: 900px;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(-90deg,#00BCD4 0,#1890ff 100%);
+  background-image: linear-gradient(-90deg, #00BCD4 0, #1890ff 100%);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 30px;
@@ -362,13 +364,39 @@ const copyEmail = () => {
 .skills {
   margin-bottom: 48px;
 
+  .skills-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 2rem;
+  }
+
+  .skill-tag {
+    margin-right: 6px;
+    padding: 0.6rem 1.2rem;
+    background: #f5f7fa;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+  }
+
+  .skill-tag:hover {
+    background: #1E80FF;
+    color: white;
+    transform: scale(1.05);
+  }
+
   .skills-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
+    display: flex;
+    flex-direction: column;
   }
 
   .skill-category {
+    margin-bottom: 5px;
     .category-title {
       font-size: 1.2rem;
       margin-bottom: 16px;
@@ -377,8 +405,6 @@ const copyEmail = () => {
 
     .skill-list {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
     }
 
     .skill-item {
