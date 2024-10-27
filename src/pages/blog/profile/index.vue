@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import {useProfileSEO} from "~/pages/blog/profile/components/useProfileSEO";
+
 definePageMeta({
   layout: 'blog',
 })
 
-useHead({
-  title: '关于',
-  titleTemplate: (titleChunk) => `${titleChunk} - 火山博客`
-})
+useProfileSEO()
 
 const personalInfo = {
   name: '火山',
