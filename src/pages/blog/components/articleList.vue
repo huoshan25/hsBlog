@@ -26,13 +26,27 @@ const aliasList = ref<ICategory>({});
 const numberOfViews = ref(22);
 const numberOfLikes = ref(22);
 
-// 加载文章列表
+/*虚拟列表*/
+const virtualListRef = ref();
+
+aliasList.value = props.categoryList.find(
+    (item: ICategory) => {
+      if(route.params.alias === '') {
+        return props.categoryList[0]
+      } else {
+        return item.alias === `/blog/${route?.params?.alias}`
+      }
+    }
+);
+
+/*加载文章列表*/
 const loadArticles = async () => {
   if (loading.value || !hasMore.value || !aliasList.value.id) return;
 
   loading.value = true;
   try {
     const res = await getArticle({
+      //@ts-ignore
       categoryId: aliasList.value.id,
       cursor: cursor.value,
       limit: 10
@@ -49,13 +63,6 @@ const loadArticles = async () => {
     initialLoading.value = false;
   }
 }
-
-// 虚拟列表
-const virtualListRef = ref();
-
-aliasList.value = props.categoryList.find(
-    (item: ICategory) => item.alias === `/blog/${route?.params?.alias}`
-);
 
 /**文章详情*/
 const goDetails = (id: number) => {
