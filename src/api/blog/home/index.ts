@@ -20,7 +20,7 @@ export async function getUserInfo(params?: any) {
  * 文章查询
  * @param params
  */
-export async function getArticle(params?: ArticleReq) {
+export async function getArticle(params: ArticleReq) {
   return await fetchRequest.get<any>('/blog/article/list', params);
 }
 

@@ -1,12 +1,24 @@
 <script setup lang="ts">
-
+defineProps({
+  hasMore: {
+    type: Boolean,
+    default: true
+  }
+})
 </script>
 
 <template>
   <div class="no-data-container">
     <div class="dashed-line"></div>
     <div class="content">
-      <slot>没有更多数据</slot>
+      <template v-if="hasMore">
+        <n-spin size="small">
+          <template #description>加载中...</template>
+        </n-spin>
+      </template>
+      <template v-else>
+        <slot>没有更多数据</slot>
+      </template>
     </div>
   </div>
 </template>

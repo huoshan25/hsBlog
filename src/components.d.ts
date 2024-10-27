@@ -41,6 +41,7 @@ declare module 'vue' {
     NNumberAnimation: typeof import('naive-ui')['NNumberAnimation']
     NProgress: typeof import('naive-ui')['NProgress']
     NResult: typeof import('naive-ui')['NResult']
+    NScrollbar: typeof import('naive-ui')['NScrollbar']
     NSelect: typeof import('naive-ui')['NSelect']
     NSkeleton: typeof import('naive-ui')['NSkeleton']
     NSpace: typeof import('naive-ui')['NSpace']
@@ -50,6 +51,7 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     NTooltip: typeof import('naive-ui')['NTooltip']
     NUpload: typeof import('naive-ui')['NUpload']
+    NVirtualList: typeof import('naive-ui')['NVirtualList']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

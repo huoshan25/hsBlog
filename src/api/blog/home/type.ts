@@ -1,15 +1,19 @@
-import {ArticleStatus} from "~/api/admin/article/type";
-
 export interface ArticleReq {
-  search?: string | null,
-  page?: number,
-  limit?: number,
-  /**标题*/
-  title?: string
-  /**内容*/
-  content?: string
-  /**发布状态*/
-  status?: ArticleStatus | null
-  /**分类id*/
-  categoryId?: number | null
+  cursor: number | null,
+  limit: number,
+  categoryId: number
+}
+
+export interface ArticleItem {
+  id: number;
+  title: string;
+  content: string;
+  category_name: string;
+  tags: { id: number; name: string }[];
+}
+
+export interface ArticleResponse {
+  list: ArticleItem[];
+  cursor: number;
+  hasMore: boolean;
 }
