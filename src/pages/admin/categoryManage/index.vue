@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
-import { InformationCircleOutline, HelpCircleOutline, ArchiveOutline } from "@vicons/ionicons5";
-import { HttpStatus } from "~/enums/httpStatus";
+import {ref, onMounted, h} from 'vue'
+import {InformationCircleOutline, HelpCircleOutline, ArchiveOutline} from "@vicons/ionicons5";
+import {HttpStatus} from "~/enums/httpStatus";
 import {
   deleteCategory,
   getAllCategories,
   updateCategory,
-  createCategory
+  createCategory, getCategory
 } from "~/api/admin/categories";
-import { createColumns } from "~/pages/admin/categoryManage/components/createColumns";
+import {createColumns} from "~/pages/admin/categoryManage/components/createColumns";
+import type {FormRules, FormItemRule} from 'naive-ui'
 
 definePageMeta({
   layout: 'admin',
@@ -56,7 +57,7 @@ const handleDeleteCategory = async (id?: number) => {
     negativeText: '取消',
     onPositiveClick: async () => {
       const ids = id ? [id] : checkedRowKeysRef.value
-      const res = await deleteCategory(ids)
+      const res = await deleteCategory({ids})
       if (res.code === HttpStatus.OK) {
         message.success('删除成功！')
         await getList()
@@ -65,10 +66,41 @@ const handleDeleteCategory = async (id?: number) => {
   })
 }
 
-/**新增分类*/
-const handleCategory = (id: number | null, type: string) => {
+/**新增/编辑分类*/
+const handleCategory = async (id: number | null, type: string) => {
   categoryVisibility.value = !categoryVisibility.value
-  categoryDialogTitle.value = type === 'edit' ? '编辑分类' : '新增分类'
+  // 重置表单状态
+  form.value = {
+    id: 0,
+    sort: 0,
+    icon: '',
+    name: '',
+    alias: '',
+  }
+  imageUrl.value = ''
+  fileList.value = []
+  imageFile.value = null
+
+  if (type === 'edit' && id) {
+    categoryDialogTitle.value = '编辑分类'
+    form.value.id = id
+    const res = await getCategory(id)
+    if (res.code === HttpStatus.OK) {
+      form.value.sort = res.data.sort
+      form.value.name = res.data.name
+      form.value.alias = res.data.alias
+      fileList.value = [{
+        id: res.data.id,
+        name: `${res.data.icon.split('/').pop()}`, // 生成一个文件名
+        status: 'finished',
+        url: res.data.icon,
+        thumbnailUrl: res.data.icon // 缩略图URL
+      }]
+      imageUrl.value = res.data.icon
+    }
+  } else {
+    categoryDialogTitle.value = '新增分类'
+  }
 }
 
 /**分类弹窗*/
@@ -84,18 +116,47 @@ const form = ref({
   alias: '',
 })
 
+watch(categoryVisibility, (newVal) => {
+  if (!newVal) {
+    // 当模态框关闭时重置表单
+    if (!form.value.id) { // 如果不是编辑状态
+      form.value = {
+        id: 0,
+        sort: 0,
+        icon: '',
+        name: '',
+        alias: '',
+      }
+      imageUrl.value = ''
+      fileList.value = []
+      imageFile.value = null
+    }
+  }
+})
+
+const formRef = ref()
+
+const imageFile = ref<File | null>(null)
+
 const loading = ref(false)
 
-const rules = {
+const rules: any = {
   sort: {
     required: true,
     message: '请输入排序',
-    trigger: 'blur'
+    trigger: 'blur',
+    type: 'number',
   },
   icon: {
     required: true,
     message: '请上传分类图标',
-    trigger: 'blur'
+    trigger: ['change', 'blur'],
+    validator: (rule: FormItemRule, value: string) => {
+      if (!imageFile.value && !(form.value.id && imageUrl.value)) {
+        return new Error('请上传分类图标')
+      }
+      return true
+    }
   },
   name: {
     required: true,
@@ -112,8 +173,6 @@ const rules = {
 /**不允许排序的值前后有空格*/
 const noSideSpace = (value: string) => !value.startsWith(' ') && !value.endsWith(' ')
 
-const formRef = ref()
-
 /**列表*/
 const getList = async () => {
   loading.value = true
@@ -125,6 +184,29 @@ const getList = async () => {
   }
 }
 
+const clearImagePreview = () => {
+  imageUrl.value = ''
+  fileList.value = []
+  imageFile.value = null
+}
+
+const handleUploadChange = (options: any) => {
+  fileList.value = options.fileList
+  if (options.fileList.length === 0) {
+    clearImagePreview()
+  } else {
+    const file = options.fileList[0].file
+    imageFile.value = file
+
+    // 预览图像
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imageUrl.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
 /**提交*/
 const handleSubmit = async () => {
   await formRef.value?.validate()
@@ -132,8 +214,9 @@ const handleSubmit = async () => {
   formData.append('name', form.value.name)
   formData.append('alias', form.value.alias)
   formData.append('sort', form.value.sort.toString())
-  if (fileList.value.length > 0) {
-    formData.append('category_image', fileList.value[0].file)
+
+  if (imageFile.value) {
+    formData.append('category_image', imageFile.value)
   }
 
   try {
@@ -158,54 +241,12 @@ const columns = ref(createColumns(
     }
 ))
 
-const previewUrl = ref('')
-
-
 onMounted(async () => {
   await getList()
 })
 
-const file = ref(null)
 const imageUrl = ref('')
 const fileList = ref<any>([])
-
-//@ts-ignore
-const customRequest = ({ file: uploadFile}) => {
-  file.value = uploadFile
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    //@ts-ignore
-    imageUrl.value = e.target.result
-  }
-  reader.readAsDataURL(uploadFile.file)
-}
-
-const handleChange = (options: any) => {
-  fileList.value = options.fileList
-  if (options.fileList.length === 0) {
-    file.value = null
-    imageUrl.value = ''
-  }
-}
-
-const handleUpload = () => {
-  if (file.value) {
-    console.log('上传文件:', file.value)
-  }
-}
-
-
-const setImageUrl = (url: any) => {
-  imageUrl.value = url
-  fileList.value = [
-    {
-      id: 'existing-image',
-      name: 'existing-image.jpg',
-      status: 'finished',
-      url: url
-    }
-  ]
-}
 
 </script>
 
@@ -262,32 +303,22 @@ const setImageUrl = (url: any) => {
                 <InformationCircleOutline/>
               </n-icon>
               你可以在
-              <nuxt-link class="mx-[4px]" to="https://www.iconfont.cn" color-blue target="_blank">阿里巴巴矢量图标库
+              <nuxt-link class="mx-[4px]" to="https://www.iconfont.cn" color-blue target="_blank">
+                阿里巴巴矢量图标库
               </nuxt-link>
               搜索和下载喜欢的图标。
             </div>
-            <div class="image-upload-demo">
-              <n-upload
-                  accept="image/*"
-                  :max="1"
-                  :default-file-list="fileList"
-                  :custom-request="customRequest"
-                  @change="handleChange"
-                  drag
-              >
-<!--                </n-upload-dragger>-->
-<!--                  <n-icon size="48" :depth="3">-->
-<!--                    <ArchiveOutline/>-->
-<!--                  </n-icon>-->
-<!--                  <n-text style="font-size: 16px">-->
-<!--                    点击或者拖动文件到该区域来上传-->
-<!--                  </n-text>-->
-<!--                </n-upload-dragger>-->
-              </n-upload>
-              <div v-if="imageUrl" class="image-preview w50 h50">
-                <img :src="imageUrl" alt="预览图片" />
-              </div>
-              <n-button @click="handleUpload" :disabled="!file">上传图片</n-button>
+            <n-upload
+                accept="image/*"
+                :max="1"
+                :default-file-list="fileList"
+                @change="handleUploadChange"
+                :show-file-list="true"
+            >
+              <n-button>选择图片</n-button>
+            </n-upload>
+            <div v-if="imageUrl" class="image-preview">
+              <img :src="imageUrl" alt="预览图片"/>
             </div>
           </div>
         </n-form-item>

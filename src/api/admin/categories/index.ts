@@ -31,7 +31,7 @@ export async function getAllCategories(params?:any) {
  * @param id
  */
 export async function getCategory(id: number) {
-  return await fetchRequest.get<any>(`${API.GET_CATEGORY}${id}`);
+  return await fetchRequest.get<any>(`/admin/category/${id}`);
 }
 
 /**
@@ -39,14 +39,14 @@ export async function getCategory(id: number) {
  * @param params
  */
 export async function updateCategory(params?: any) {
-  return await fetchRequest.put<any>('', params);
+  return await fetchRequest.put<any>('/admin/category', params);
 }
 
 /**
  * 删除分类
  */
-export async function deleteCategory(ids: number[]) {
-  return await fetchRequest.delete<any>('/admin/categories', ids);
+export async function deleteCategory(params: { ids: number[] }) {
+  return await fetchRequest.delete<HttpRes<null>>('/admin/category', params);
 }
 
 /**
