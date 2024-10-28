@@ -86,7 +86,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <blog-no-more-data-divider/>
+    <blog-no-more-data-divider :has-more="false"/>
   </div>
 </template>
 

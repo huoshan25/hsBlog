@@ -8,21 +8,29 @@ const router = useRouter()
 /**文章列表骨架屏*/
 const entryListSkeleton = ref(false)
 
+const loading = ref(false)
+
 /**文章详情*/
 const goDetails = (id: number) => {
   navigateTo(`/blog/post/${id}`)
 }
 
 const getArticleList = async () => {
-  entryListSkeleton.value = true
-  const params = {
-    ...route.query
+  try {
+    loading.value = true
+    entryListSkeleton.value = true
+    const params = {
+      ...route.query
+    }
+    const res = await getArticleQuery(params)
+    if (res.code === HttpStatus.OK) {
+      entryInfo.value = res.data
+    }
+    entryListSkeleton.value = false
+  } finally {
+    loading.value = false
   }
-  const res = await getArticleQuery(params)
-  if (res.code === HttpStatus.OK) {
-    entryInfo.value = res.data
-  }
-  entryListSkeleton.value = false
+
 }
 
 /*对应分类*/
@@ -69,7 +77,7 @@ onMounted(() => {
       <n-ellipsis class="entry-list-content" :tooltip="false" v-html="item.content_highlight"/>
     </div>
 
-    <blog-no-more-data-divider/>
+    <blog-no-more-data-divider :hasMore="loading"/>
   </div>
 </template>
 

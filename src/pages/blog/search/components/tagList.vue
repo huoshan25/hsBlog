@@ -5,10 +5,17 @@ import {HttpStatus} from "~/enums/httpStatus";
 const route = useRoute()
 const tagsList = ref<TagsList[]>([])
 
+const loading = ref(false)
+
 const getTagsList = async () => {
-  const res = await getTagsQuery({keyword: route.query.keyword as string})
-  if (res.code === HttpStatus.OK) {
-    tagsList.value = res.data
+  try {
+    loading.value = true
+    const res = await getTagsQuery({keyword: route.query.keyword as string})
+    if (res.code === HttpStatus.OK) {
+      tagsList.value = res.data
+    }
+  } finally {
+    loading.value = false
   }
 }
 watch(() => route.query, getTagsList, {deep: true});
@@ -29,7 +36,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <blog-no-more-data-divider/>
+    <blog-no-more-data-divider :hasMore="loading"/>
   </div>
 </template>
 

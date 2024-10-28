@@ -14,15 +14,17 @@ onMounted(() => {
 })
 </script>
 <template>
-  <n-config-provider class="flex flex-col h-[100vh]" :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
+  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
       <n-message-provider>
         <n-modal-provider>
-          <blog-navbar class="flex-none"/>
-          <div class="mt-[70px] flex-auto">
-            <slot></slot>
+          <div class="flex flex-col h-[100vh]">
+            <blog-navbar/>
+            <div class="mt-[70px] flex-auto">
+              <slot></slot>
+            </div>
+            <blog-footer/>
           </div>
-          <blog-footer class="flex-none"/>
         </n-modal-provider>
       </n-message-provider>
     </n-notification-provider>

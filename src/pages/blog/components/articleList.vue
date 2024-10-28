@@ -59,7 +59,6 @@ const loadArticles = async () => {
       hasMore.value = response.hasMore;
     }
   } finally {
-    console.log('结束了')
     loading.value = false;
     initialLoading.value = false;
   }
