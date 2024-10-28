@@ -59,6 +59,7 @@ const loadArticles = async () => {
       hasMore.value = response.hasMore;
     }
   } finally {
+    console.log('结束了')
     loading.value = false;
     initialLoading.value = false;
   }
@@ -167,7 +168,7 @@ onUnmounted(() => {
           </template>
         </n-virtual-list>
       </template>
-      <blog-no-more-data-divider :hasMore="hasMore"/>
+      <blog-no-more-data-divider :hasMore="loading"/>
     </n-scrollbar>
   </div>
 </template>
