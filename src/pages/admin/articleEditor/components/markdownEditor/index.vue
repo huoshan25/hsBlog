@@ -12,6 +12,7 @@ import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
 import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
 import {toolbarsConfig} from "~/pages/admin/articleEditor/detail/components/config/toolbarsConfig";
 import {computed} from "vue";
+import {pictureUpload} from "~/api/admin/oss";
 
 const props = defineProps(['currentRow']);
 const message = useMessage()
@@ -63,9 +64,16 @@ const handleEditorImgDel = async (pos:any) => {
 
 /*图片上传*/
 const handleImageUpload = async (pos: any, file: File) => {
-  const fileUrl = await useUploadImage(file, form.value.articleUUID)
-  if (fileUrl) {
-    editorRef.value.$img2Url(pos, fileUrl)
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('articleUUID',  form.value.articleUUID)
+
+  const res = await pictureUpload(formData)
+  if(res.code === HttpStatus.CREATED) {
+    message.success(res.message)
+    if (res.data.fileUrl) {
+      editorRef.value.$img2Url(pos, res.data.fileUrl)
+    }
   }
 }
 

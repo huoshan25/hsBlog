@@ -1,5 +1,4 @@
 import type {HttpRes} from "~/api/type";
-import {useRuntimeConfig} from "#app";
 
 export interface TemporarySignatureResponse {
   accessKeyId: string;
@@ -9,10 +8,16 @@ export interface TemporarySignatureResponse {
   region: string;
 }
 
-const { apiBaseUrl } = useRuntimeConfig().public
+export interface PictureUploadReq {
+  /*图片文件*/
+  category_image: File,
+  /*文章UUID*/
+  articleUUID: string,
+}
 
 /**
  * 上传文件 - 数据流
- * @param file
  */
-export const fileUploadUrl = `${apiBaseUrl}admin/oss/ali/article-img`
+export async function pictureUpload(params: FormData) {
+  return await fetchRequest.post<HttpRes<{ fileUrl: string }>>('/admin/oss/ali/article-img', params);
+}

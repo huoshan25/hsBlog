@@ -66,10 +66,10 @@ const handleEditorImgDel = async (pos:any) => {
 
 /*图片上传*/
 const handleImageUpload = async (pos: any, file: File) => {
-  const fileUrl = await useUploadImage(file, form.value.articleUUID)
-  if (fileUrl) {
-    editorRef.value.$img2Url(pos, fileUrl)
-  }
+  // const fileUrl = await useUploadImage(file, form.value.articleUUID)
+  // if (fileUrl) {
+  //   editorRef.value.$img2Url(pos, fileUrl)
+  // }
 }
 
 // let html = reactive<any>(null)
