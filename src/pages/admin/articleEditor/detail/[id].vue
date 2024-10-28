@@ -90,7 +90,8 @@ const handlePublish = async (status: ArticleStatus) => {
     status,
     tagNames: [],
     /**裁减摘要内容到指定长度（默认长度：255）*/
-    brief_content: briefContent.value.substring(0, 255),
+    // brief_content: briefContent.value.substring(0, 255),
+    description: ''
   }
 
   const res = props.currentRow.type === 'edit'

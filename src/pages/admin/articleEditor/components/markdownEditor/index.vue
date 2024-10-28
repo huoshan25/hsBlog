@@ -9,7 +9,6 @@ import {
 import {ArticleStatus} from "~/api/admin/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
 import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
-import useMarkdownAbstract from "~/composables/tools/useMarkdownAbstract";
 import {toolbarsConfig} from "~/pages/admin/articleEditor/detail/components/config/toolbarsConfig";
 import {computed} from "vue";
 import {pictureUpload} from "~/api/admin/oss";
@@ -23,12 +22,17 @@ const content = ref<any>()
 
 const formRef = ref()
 
-const rules = {}
+const rules = {
+  title: {required: true, message: '请输入文章标题', trigger: 'blur'},
+  description: {required: true, message: '请输入文章描述', trigger: 'blur'},
+  category_id: {required: true, message: '请选择文章分类', trigger: 'blur'},
+}
 
 const form = ref({
   title: '',
   category_id: '',
   articleUUID: '',
+  description: '',
 })
 
 const editorRef = ref()
@@ -86,22 +90,22 @@ const change = (value: any, render: any) => {
 
 /**发布文章*/
 const handlePublish = async (status: ArticleStatus) => {
+  if(!content.value) return message.warning('未填写文章内容')
+
   await formRef.value?.validate
-  const {briefContent} = useMarkdownAbstract(content.value)
   const commonParams = {
     title: form.value.title,
     category_id: form.value.category_id,
     content: content.value,
     status,
     tagNames: selectedTags.value,
-    /**裁减摘要内容到指定长度（默认长度：255）*/
-    brief_content: briefContent.value.substring(0, 255),
+    description: form.value.description,
   }
 
   const res = props.currentRow.type === 'edit'
       ? await updateArticle({...commonParams , id: props.currentRow.id})
       : await createArticle({...commonParams , articleUUID: form.value.articleUUID,})
-  if (res.code === HttpStatus.OK) {
+  if (res.code === HttpStatus.OK || res.code === HttpStatus.CREATED) {
     message.success(res.message)
     emits('close')
   }
@@ -113,6 +117,7 @@ onMounted(async () => {
     if (res.code === HttpStatus.OK) {
       form.value.title = res.data.title
       form.value.category_id = res.data.category_id
+      form.value.description = res.data.description
       content.value = res.data.content
       selectedTags.value = res.data.tags.map((item: Tag) => item.name)
       form.value.articleUUID = props.currentRow.id
@@ -120,9 +125,9 @@ onMounted(async () => {
   } else if(props.currentRow.type === 'add') {
     const { generateUUID } = useUUID();
     form.value.articleUUID = generateUUID();
+    form.value.category_id = props.currentRow.categoryOption?.at(-1).value;
   }
   await getTags()
-
 })
 </script>
 
@@ -137,7 +142,7 @@ onMounted(async () => {
     >
       <div class="flex">
         <n-form-item label="标题" path="title" class="mr10 w100%">
-          <n-input v-model:value="form.title" placeholder="请输入标题"/>
+          <n-input v-model:value="form.title" placeholder="请输入标题" maxlength="50" show-count clearable/>
         </n-form-item>
         <n-form-item label="分类">
           <n-select
@@ -149,6 +154,9 @@ onMounted(async () => {
           />
         </n-form-item>
       </div>
+      <n-form-item label="文章描述" path="description">
+        <n-input v-model:value="form.description" placeholder="请输入文章描述" maxlength="100" show-count clearable/>
+      </n-form-item>
 
       <ClientOnly>
         <mavon-editor

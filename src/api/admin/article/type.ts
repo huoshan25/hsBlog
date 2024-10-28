@@ -33,8 +33,8 @@ export interface CreateArticleReq {
   tagNames: string[];
   /**标题*/
   title: string;
-  /**文章摘要*/
-  brief_content: string;
+  /**文章描述*/
+  description: string;
   /*文章UUID*/
   articleUUID: string;
 }
