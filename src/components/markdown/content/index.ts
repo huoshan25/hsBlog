@@ -1,5 +1,6 @@
 // components/MarkdownContent.tsx
 import { defineComponent, type PropType } from 'vue'
+import { useMarkdown } from '../../../composables/markdown/useMarkdown'
 
 export default defineComponent({
   props: {
@@ -9,8 +10,8 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // const { renderToVNode } = useMarkdown()
-    //
-    // return () => renderToVNode(props.content)
+    const { renderToVNode } = useMarkdown()
+
+    return () => renderToVNode(props.content)
   }
 })

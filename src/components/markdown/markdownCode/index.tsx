@@ -47,7 +47,7 @@ export const MarkdownCode = defineComponent({
             </div>
           </div>
           <pre
-            class="hljs p-[15px]"
+            class="hljs p-[15px] my-[0px]"
             style={{display: isCollapsed.value ? 'none' : 'block'}}
           >
           <code innerHTML={props.code}></code>

@@ -17,7 +17,9 @@ export const languageAliases: Record<string, string> = {
 export const CodeBlock: MarkdownComponent = {
   name: 'code-block',
   render: (str: string, lang: string): string => {
-    const actualLang = languageAliases[lang] || lang
+    // 处理语言字符串，移除前后空格
+    const cleanLang = (lang || '').trim()
+    const actualLang = languageAliases[cleanLang] || cleanLang
     let languageDisplay = actualLang ? actualLang.charAt(0).toUpperCase() + actualLang.slice(1) : 'Text'
 
     if (actualLang && hljs.getLanguage(actualLang)) {
@@ -36,11 +38,11 @@ export const CodeBlock: MarkdownComponent = {
                 <button onclick="copyCode(this)" class="copy-btn">复制代码</button>
               </div>
             </div>
-            <pre class="hljs p-[15px]"><code>${highlighted}</code></pre>
+            <pre class="hljs p-[15px] my-[0px] mx-[0px]"><code>${highlighted}</code></pre>
           </div>
           <style>
-               ${codeBlockStyles}
-            </style>
+            ${codeBlockStyles}
+          </style>
           <script>
             ${copyToClipboard}
             ${toggleCode}

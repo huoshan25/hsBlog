@@ -1,8 +1,8 @@
 // // utils/markdown/highlight.ts
 // import hljs from 'highlight.js'
-// import { languageAliases } from './language-aliases'
 // import { copyToClipboard, toggleCode } from './code-scripts'
 // import { codeStyles } from './code-styles'
+// import {languageAliases} from "~/hsMarkdown/components/codeBlock";
 //
 // export function highlightCode(str: string, lang: string, md: any): string {
 //   const actualLang = languageAliases[lang] || lang

@@ -23,8 +23,6 @@ const renderedContent = computed(() => {
 
 <style>
 .markdown-body {
-  padding: 20px;
-  overflow-x: hidden;
 }
 
 </style>

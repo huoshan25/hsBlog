@@ -38,9 +38,9 @@ const updateHeadings = (newHeadings: any) => {
       <h1 class="text-[40px] font-600 line-height-1.31">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
-<!--      <client-only>-->
+      <client-only>
 <!--        <markdown-content :content="articleData.data.content" />-->
-<!--      </client-only>-->
+      </client-only>
       <client-only>
         <!--许可证-->
         <div class="flex justify-center">
