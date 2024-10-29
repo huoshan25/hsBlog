@@ -17,6 +17,6 @@ export const toggleCode = `
     const pre = card.querySelector('pre');
     const isCollapsed = pre.style.display === 'none';
     pre.style.display = isCollapsed ? 'block' : 'none';
-    button.innerHTML = isCollapsed ? '收起' : '展开';
+    button.innerHTML = isCollapsed ? '收起2' : '展开';
   }
 `

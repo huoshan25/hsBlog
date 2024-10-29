@@ -39,7 +39,7 @@ export const MarkdownCode = defineComponent({
             </div>
             <div class="code-actions">
               <button onClick={toggle} class="toggle-btn">
-                {isCollapsed.value ? '展开' : '收起'}
+                {isCollapsed.value ? '展开' : '收起3'}
               </button>
               <button onClick={copyCode} class="copy-btn">
                 {copyStatus.value === 'copied' ? '已复制' : '复制代码'}

@@ -1,4 +1,3 @@
-// plugins/markdown.ts
 import {MarkdownExtension} from "~/hsMarkdown/core";
 
 export default defineNuxtPlugin(() => {

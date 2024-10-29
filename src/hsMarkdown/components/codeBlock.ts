@@ -3,6 +3,7 @@ import hljs from 'highlight.js'
 import { copyToClipboard, toggleCode } from '../scripts/codeActions'
 import type { MarkdownComponent } from '../types'
 import {codeBlockStyles} from "~/hsMarkdown/scripts/code-block";
+import {NButton, NIcon, NTag, NDatePicker, NConfigProvider } from "naive-ui";
 
 export const languageAliases: Record<string, string> = {
   'ts': 'typescript',
@@ -34,7 +35,7 @@ export const CodeBlock: MarkdownComponent = {
             <div class="code-header">
               <div class="language-tag">${languageDisplay}</div>
               <div class="code-actions">
-                <button onclick="toggleCode(this)" class="toggle-btn">收起</button>
+                <NButton text onclick="toggleCode(this)" class="toggle-btn">收起</NButton>
                 <button onclick="copyCode(this)" class="copy-btn">复制代码</button>
               </div>
             </div>

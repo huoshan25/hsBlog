@@ -39,9 +39,6 @@ const updateHeadings = (newHeadings: any) => {
       <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
       <client-only>
-<!--        <markdown-content :content="articleData.data.content" />-->
-      </client-only>
-      <client-only>
         <!--许可证-->
         <div class="flex justify-center">
           <license/>

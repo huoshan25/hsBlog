@@ -1,4 +1,8 @@
 export const codeBlockStyles = `
+  .hljs {
+    margin: 0px
+  }
+  
   .code-card {
     margin: 16px 0;
     border: 1px solid #e0e0e0;

@@ -1,6 +1,5 @@
 import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
-import hljs from 'highlight.js'
 import 'highlight.js/styles/vs2015.css'
 import type { MarkdownComponent, MarkdownOptions } from './types'
 import {CodeBlock} from "~/hsMarkdown/components/codeBlock";
@@ -33,14 +32,13 @@ export class MarkdownExtension {
       return this.components.get('code-block')?.render(token.content, '') || token.content
     }
 
-    this.md.renderer.rules.fence = (tokens, idx, options, env, self) => {
-      const token = tokens[idx]
-      console.log('Fence token:', token)
-      const result = this.components.get('code-block')?.render(token.content, token.info) || token.content
-      console.log('Rendered result:', result)
-      return result
-    }
-
+    // this.md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+    //   const token = tokens[idx]
+    //   console.log('Fence token:', token)
+    //   const result = this.components.get('code-block')?.render(token.content, token.info) || token.content
+    //   console.log('Rendered result:', result)
+    //   return result
+    // }
 
     this.registerDefaultComponents()
     this.setupAnchor()
