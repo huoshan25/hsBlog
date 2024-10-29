@@ -9,6 +9,7 @@ export const codeBlockStyles = `
     border-radius: 8px;
     overflow: hidden;
   }
+  
   .code-header {
     display: flex;
     justify-content: space-between;
@@ -17,25 +18,55 @@ export const codeBlockStyles = `
     background: #f5f5f5;
     border-bottom: 1px solid #e0e0e0;
   }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
   .language-tag {
     font-size: 14px;
     color: #666;
   }
+  
+  .toggle-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #666;
+    transition: color 0.3s;
+  }
+  
+  .toggle-btn:hover {
+    color: #2080f0;
+  }
+  
+  .arrow-icon {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+  
   .code-actions {
     display: flex;
     gap: 8px;
   }
-  .copy-btn, .toggle-btn {
+  
+  .copy-btn {
     padding: 4px 8px;
     font-size: 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    background: white;
+    border: none;
+    background: none;
+    color: #666;
     cursor: pointer;
     transition: all 0.3s;
   }
-  .copy-btn:hover, .toggle-btn:hover {
-    border-color: #2080f0;
+  
+  .copy-btn:hover {
     color: #2080f0;
   }
 `

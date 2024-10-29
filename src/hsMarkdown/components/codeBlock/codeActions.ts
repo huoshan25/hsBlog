@@ -15,8 +15,13 @@ export const toggleCode = `
   function toggleCode(button) {
     const card = button.closest('.code-card');
     const pre = card.querySelector('pre');
+    const arrow = button.querySelector('.arrow-icon');
     const isCollapsed = pre.style.display === 'none';
+    
     pre.style.display = isCollapsed ? 'block' : 'none';
-    button.innerHTML = isCollapsed ? '收起2' : '展开';
+    arrow.style.transform = isCollapsed ? '' : 'rotate(180deg)';
+    
+    // 同时更新 aria-expanded 状态，提高可访问性
+    button.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
   }
 `

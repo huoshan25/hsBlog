@@ -31,9 +31,13 @@ export const codeBlock: MarkdownComponent = {
         return `
           <div class="code-card n-card">
             <div class="code-header">
-              <div class="language-tag">${languageDisplay}</div>
+              <div class="header-left">
+                <button onclick="toggleCode(this)" class="toggle-btn" aria-label="Toggle code">
+                  <span class="arrow-icon">▼</span>
+                </button>
+                <span class="language-tag">${languageDisplay}</span>
+              </div>
               <div class="code-actions">
-                <NButton text onclick="toggleCode(this)" class="toggle-btn">收起</NButton>
                 <button onclick="copyCode(this)" class="copy-btn">复制代码</button>
               </div>
             </div>
