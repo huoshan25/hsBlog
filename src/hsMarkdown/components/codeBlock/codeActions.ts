@@ -1,4 +1,4 @@
-export const copyToClipboard = `
+export const copyCode = `
   function copyCode(button) {
     const pre = button.closest('.code-card').querySelector('pre');
     const code = pre.querySelector('code').innerText;

@@ -1,7 +1,7 @@
 import hljs from 'highlight.js'
 import type {MarkdownComponent} from "~/hsMarkdown/types";
 import {codeBlockStyles} from "~/hsMarkdown/components/codeBlock/code-block";
-import {copyToClipboard, toggleCode} from "~/hsMarkdown/components/codeBlock/codeActions";
+import {copyCode, toggleCode} from "~/hsMarkdown/components/codeBlock/codeActions";
 import {createDiscreteApi} from "naive-ui";
 
 export const languageAliases: Record<string, string> = {
@@ -62,7 +62,7 @@ export const codeBlock: MarkdownComponent = {
             ${codeBlockStyles}
           </style>
           <script>
-            ${copyToClipboard}
+            ${copyCode}
             ${toggleCode}
           </script>
         `
