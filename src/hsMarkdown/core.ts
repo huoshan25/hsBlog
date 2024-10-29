@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
 import 'highlight.js/styles/vs2015.css'
 import type { MarkdownComponent, MarkdownOptions } from './types'
-import {CodeBlock} from "~/hsMarkdown/components/codeBlock";
+import {codeBlock} from "~/hsMarkdown/components/codeBlock";
 
 export class MarkdownExtension {
   private readonly md: MarkdownIt
@@ -61,7 +61,7 @@ export class MarkdownExtension {
   }
 
   private registerDefaultComponents() {
-    this.registerComponent(CodeBlock)
+    this.registerComponent(codeBlock)
   }
 
   getInstance() {

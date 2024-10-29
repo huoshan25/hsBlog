@@ -1,9 +1,7 @@
-// markdown/components/CodeBlock.ts
 import hljs from 'highlight.js'
-import { copyToClipboard, toggleCode } from '../scripts/codeActions'
-import type { MarkdownComponent } from '../types'
-import {codeBlockStyles} from "~/hsMarkdown/scripts/code-block";
-import {NButton, NIcon, NTag, NDatePicker, NConfigProvider } from "naive-ui";
+import type {MarkdownComponent} from "~/hsMarkdown/types";
+import {codeBlockStyles} from "~/hsMarkdown/components/codeBlock/code-block";
+import {copyToClipboard, toggleCode} from "~/hsMarkdown/components/codeBlock/codeActions";
 
 export const languageAliases: Record<string, string> = {
   'ts': 'typescript',
@@ -15,7 +13,7 @@ export const languageAliases: Record<string, string> = {
   'rs': 'rust'
 }
 
-export const CodeBlock: MarkdownComponent = {
+export const codeBlock: MarkdownComponent = {
   name: 'code-block',
   render: (str: string, lang: string): string => {
     // 处理语言字符串，移除前后空格
