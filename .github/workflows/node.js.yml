@@ -49,4 +49,4 @@ jobs:
           script: |
             cd /www/wwwroot/web/hsBlog
             pm2 delete hs-blog || true
-            pm2 start ecosystem.config.js
+            pm2 start ecosystem.config.cjs
