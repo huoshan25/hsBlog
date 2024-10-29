@@ -3,7 +3,8 @@ export const copyToClipboard = `
     const pre = button.closest('.code-card').querySelector('pre');
     const code = pre.querySelector('code').innerText;
     navigator.clipboard.writeText(code).then(() => {
-      button.textContent = '已复制';
+      button.textContent = '复制成功';
+      window.showCopySuccess('已经复制到剪贴板');
       setTimeout(() => {
         button.textContent = '复制代码';
       }, 2000);
