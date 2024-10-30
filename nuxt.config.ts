@@ -23,7 +23,10 @@ export default defineNuxtConfig({
         {name: 'renderer', content: 'webkit'},
         {name: 'author', content: '2633057734@qq.com'}
       ],
-      link: [{rel: 'icon', type: 'image/x-icon', href: '/svg/logo.svg'}]
+      link: [
+        {rel: 'icon', type: 'image/x-icon', href: '/svg/logo.svg'},
+        { rel: 'stylesheet', href: 'https://chinese-fonts-cdn.deno.dev/packages/syst/dist/SourceHanSerifCN/result.css' }
+      ]
     }
   },
 
