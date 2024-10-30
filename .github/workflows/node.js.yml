@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: ".output, ecosystem.config.js"
+          source: ".output, ecosystem.config.cjs"
           target: "/www/wwwroot/web/hsBlog"
 
       - name: 重启服务
