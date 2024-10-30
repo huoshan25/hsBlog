@@ -11,7 +11,6 @@ definePageMeta({
 
 const {scrollY} = useScrollWatcher()
 
-const headings = ref([])
 const route = useRoute()
 
 const isNavbarVisible = computed(() => {
@@ -25,10 +24,8 @@ const {data: articleData} = await useAsyncData('post', () => getArticleDetails({
       }
   },
 })
+
 useArticleSEO(articleData.value)
-const updateHeadings = (newHeadings: any) => {
-  headings.value = newHeadings
-}
 
 </script>
 
@@ -37,7 +34,7 @@ const updateHeadings = (newHeadings: any) => {
     <div class="content">
       <h1 class="text-[40px] font-600 line-height-1.31">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data"/>
-      <markdown-renderer :markdown="articleData.data.content" @headings-updated="updateHeadings"/>
+      <markdown-renderer :markdown="articleData.data.content"/>
       <client-only>
         <!--许可证-->
         <div class="flex justify-center">
