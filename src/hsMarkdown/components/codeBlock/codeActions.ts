@@ -63,3 +63,20 @@ export const toggleCode = `
     button.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
   }
 `
+
+export const analyzeCode = `
+  function analyzeCode(button) {
+    const pre = button.closest('.code-card').querySelector('pre');
+    const code = pre.querySelector('code').innerText;
+    const language = button.closest('.code-card').querySelector('.language-tag').textContent;
+    
+    // 触发全局事件
+    const event = new CustomEvent('analyze-code', {
+      detail: {
+        code,
+        language
+      }
+    });
+    window.dispatchEvent(event);
+  }
+`

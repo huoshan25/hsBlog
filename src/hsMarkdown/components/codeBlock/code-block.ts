@@ -69,4 +69,18 @@ export const codeBlockStyles = `
   .copy-btn:hover {
     color: #2080f0;
   }
+  
+  .analyze-btn {
+    background: radial-gradient(495.98% 195.09% at 144.79% 10.71%, #ff8a01 0, #b051b9 22.37%, #672bff 45.54%, #06f 99.99%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+   .copy-analyze-btn:hover {
+    color: #2080f0;
+  }
 `

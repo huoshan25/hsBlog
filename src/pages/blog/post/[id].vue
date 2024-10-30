@@ -44,6 +44,7 @@ useArticleSEO(articleData.value)
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
       <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
+      <markdown-ai-analyzer/>
     </div>
   </div>
 </template>
@@ -74,5 +75,4 @@ useArticleSEO(articleData.value)
     top: -60px;
   }
 }
-
 </style>
