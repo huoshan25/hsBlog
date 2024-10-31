@@ -10,6 +10,8 @@ const isLoading = ref(false)
 const error = ref('')
 const content = ref('')
 
+const contentRef = ref<HTMLElement | null>(null)
+
 const abortController = ref<AbortController | null>(null)
 
 // 使用计算属性来渲染markdown
@@ -102,6 +104,49 @@ watch(isOpen, (newValue) => {
   }
 })
 
+const userScrolled = ref(false)
+const isNearBottom = ref(true)
+
+// 检查是否接近底部
+const checkIfNearBottom = () => {
+  if (!contentRef.value) return true
+
+  const { scrollTop, scrollHeight, clientHeight } = contentRef.value
+  const scrollBottomThreshold = 100 // 距离底部100px认为是接近底部
+  return scrollHeight - (scrollTop + clientHeight) <= scrollBottomThreshold
+}
+
+// 处理滚动事件
+const handleScroll = () => {
+  userScrolled.value = true
+  isNearBottom.value = checkIfNearBottom()
+
+  // 如果用户滚动到接近底部，重置userScrolled
+  if (isNearBottom.value) {
+    userScrolled.value = false
+  }
+}
+
+// 滚动到底部的函数
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (contentRef.value) {
+      contentRef.value.scrollTo({
+        top: contentRef.value.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  })
+}
+
+// 监听content变化自动滚动
+watch(content, () => {
+  // 只有当用户没有手动滚动或者本来就在底部时才自动滚动
+  if (!userScrolled.value || isNearBottom.value) {
+    scrollToBottom()
+  }
+})
+
 onMounted(() => {
   window.addEventListener('analyze-code', handleAnalyzeCode as any)
 })
@@ -110,6 +155,8 @@ onUnmounted(() => {
   if (abortController.value) {
     abortController.value.abort()
   }
+  userScrolled.value = false
+  isNearBottom.value = true
   window.removeEventListener('analyze-code', handleAnalyzeCode as any)
 })
 </script>
@@ -145,9 +192,7 @@ onUnmounted(() => {
           </n-button>
         </div>
       </div>
-      <div class="bg-#F7F9FD h-[100%] overflow-auto">
-
-        <n-back-top :right="100" />
+      <div class="bg-#F7F9FD h-[100%] overflow-auto" ref="contentRef" @scroll="handleScroll">
         <div class="ai-analyzer-content">
           <div v-if="isLoading && !content" class="loading">
             <n-spin size="medium"/>
@@ -195,6 +240,7 @@ onUnmounted(() => {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
+  scroll-behavior: smooth;
 }
 
 .loading {
