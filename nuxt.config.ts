@@ -9,8 +9,15 @@ export default defineNuxtConfig({
     port: 8800 // 项目运行的端口号
   },
 
+  experimental: {
+  },
+
   app: {
     head: {
+      /*避免组件膳所*/
+      htmlAttrs: {
+        lang: 'zh-CN'
+      },
       title: '火山博客',
       meta: [
         {charset: 'utf-8'},
@@ -95,6 +102,12 @@ export default defineNuxtConfig({
   ],
 
   srcDir: 'src/',
+
+  build: {
+    transpile: process.env.NODE_ENV === 'production'
+      ? ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
+      : ['@juggle/resize-observer']
+  },
 
   vite: {
     plugins: [
