@@ -68,10 +68,10 @@ class FetchApi implements FetchApiFn {
       return newResponse._data;
     }
 
-    if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
-      message.error(`${data.code} - ${data.message}`);
-      throw new Error(data.message);
-    }
+    // if (data.code !== HttpStatus.OK && data.code !== HttpStatus.CREATED) {
+    //   message.error(`${data.code} - ${data.message}`);
+    //   throw new Error(data.message);
+    // }
 
     return data;
   }

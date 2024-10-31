@@ -8,36 +8,97 @@ const {$aiMarkdown} = useNuxtApp()
 const isOpen = ref(false)
 const isLoading = ref(false)
 const error = ref('')
-const analysis = ref('')
+const content = ref('')
+
+const abortController = ref<AbortController | null>(null)
+
+// 使用计算属性来渲染markdown
+const analysis = computed(() => {
+  return content.value ? $aiMarkdown.render(content.value) : ''
+})
 
 /*处理代码分析*/
 const handleAnalyzeCode = async (event: CustomEvent) => {
-  const {code, language} = event.detail
+  const { code, language } = event.detail
   isOpen.value = true
   isLoading.value = true
   error.value = ''
+  content.value = ''
+
+  abortController.value = new AbortController()
 
   try {
-    const res = await analyzeCode({code, language})
-    analysis.value = $aiMarkdown.render(res.data)
+    const response = await analyzeCode({
+      code,
+      language,
+      signal: abortController.value.signal
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP错误!状态: ${response.status}`)
+    }
+
+    const reader = response.body?.getReader()
+    if (!reader) {
+      throw new Error('无法获取响应流')
+    }
+
+    const decoder = new TextDecoder()
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      const chunk = decoder.decode(value)
+      const lines = chunk
+          .split('\n')
+          .filter(line => line.trim().startsWith('data: '))
+          .map(line => line.replace('data: ', ''))
+
+      for (const line of lines) {
+        if (line.trim() === '[DONE]') continue
+        try {
+          const { content: newContent } = JSON.parse(line)
+          if (newContent) {
+            content.value += newContent
+          }
+        } catch (e) {
+          console.error('解析流数据错误:', e)
+        }
+      }
+    }
   } catch (err) {
+    console.error('分析错误:', err)
     error.value = '代码分析失败，请稍后重试'
   } finally {
     isLoading.value = false
+    abortController.value = null
   }
 }
 
+
 const close = () => {
+  if (abortController.value) {
+    abortController.value.abort()
+    abortController.value = null
+  }
   isOpen.value = false
+}
+
+const clearContent = () => {
+  content.value = ''
 }
 
 watch(isOpen, (newValue) => {
   if (!newValue) {
-    // 当面板关闭时，延迟清除内容
+    if (abortController.value) {
+      abortController.value.abort()
+      abortController.value = null
+    }
     setTimeout(() => {
-      analysis.value = ''
+      content.value = ''
       error.value = ''
-    }, 300) // 等待动画完成后再清除内容
+    }, 300)
   }
 })
 
@@ -46,6 +107,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  if (abortController.value) {
+    abortController.value.abort()
+  }
   window.removeEventListener('analyze-code', handleAnalyzeCode as any)
 })
 </script>
@@ -53,44 +117,46 @@ onUnmounted(() => {
 <template>
   <Transition name="slide">
     <div v-if="isOpen" class="ai-analyzer">
-      <div class="bg-#F7F9FD h-[100%] overflow-auto">
-        <div class="ai-analyzer-header">
-          <h3 class="flex items-center gap-3">
-            AI代码解读 -
-            <nuxt-img class="ml-[2px]" src="/svg/deepseek.svg" size="40" alt="Deepseek Logo"/>
-            deepseek
-          </h3>
-          <div class="flex">
-            <n-tooltip trigger="hover">
-              <template #trigger>
-                <n-button text quaternary @click="analysis = ''">
-                  <template #icon>
-                    <n-icon size="10">
-                      <CalendarClearOutline/>
-                    </n-icon>
-                  </template>
-                </n-button>
-              </template>
-              清空内容
-            </n-tooltip>
-            <n-button text @click="close">
-              <template #icon>
-                <n-icon>
-                  <CloseOutline/>
-                </n-icon>
-              </template>
-            </n-button>
-          </div>
+      <div class="ai-analyzer-header">
+        <h3 class="flex items-center gap-3">
+          AI代码解读 -
+          <nuxt-img class="ml-[2px]" src="/svg/deepseek.svg" size="40" alt="Deepseek Logo"/>
+          deepseek
+        </h3>
+        <div class="flex">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button text @click="clearContent">
+                <template #icon>
+                  <n-icon size="10">
+                    <CalendarClearOutline/>
+                  </n-icon>
+                </template>
+              </n-button>
+            </template>
+            清空内容
+          </n-tooltip>
+          <n-button class="ml-[10px]" text @click="close">
+            <template #icon>
+              <n-icon>
+                <CloseOutline/>
+              </n-icon>
+            </template>
+          </n-button>
         </div>
+      </div>
+      <div class="bg-#F7F9FD h-[100%] overflow-auto">
+
+        <n-back-top :right="100" />
         <div class="ai-analyzer-content">
-          <div v-if="isLoading" class="loading">
+          <div v-if="isLoading && !content" class="loading">
             <n-spin size="medium"/>
             <span>AI正在分析代码...</span>
           </div>
           <div v-else-if="error" class="error">
             {{ error }}
           </div>
-          <div v-else-if="analysis" class="analysis" v-html="analysis"></div>
+          <div v-else-if="content" class="analysis markdown-body" v-html="analysis"></div>
           <div v-else class="placeholder">
             点击代码块中的"代码解读"按钮开始分析
           </div>
@@ -116,10 +182,6 @@ onUnmounted(() => {
   border-radius: 15px;
   padding: 15px;
 }
-
-/*.ai-analyzer-open {
-  right: 0;
-}*/
 
 .ai-analyzer-header {
   padding: 15px;
@@ -150,11 +212,7 @@ onUnmounted(() => {
 .analysis {
   white-space: pre-wrap;
 }
-
-.placeholder {
-  color: #666;
-  text-align: center;
-}
+/*
 
 /* 过渡动画 */
 .slide-enter-active,
@@ -192,5 +250,16 @@ onUnmounted(() => {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/*打字机效果*/
+.analysis {
+  white-space: pre-wrap;
+  animation: typing 0.05s;
+}
+
+@keyframes typing {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>
