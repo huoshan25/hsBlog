@@ -40,13 +40,13 @@ const headings = computed(() => {
 </script>
 
 <template>
-  <div class="nav-container" v-if="hasHeadings">
+  <div class="fixed bg-white" v-if="hasHeadings">
     <client-only>
       <n-card hoverable>
         <template #header>
-          <div class="card-header">
+          <div class="flex justify-between items-center">
             <span>目录</span>
-            <n-button icon-placement="right" text @click="collapsed = !collapsed">
+            <n-button icon-placement="right" text @click.stop="collapsed = !collapsed">
               {{ collapsed ? '展开' : '收起' }}
               <template #icon>
                 <ChevronDownSharp v-if="collapsed"/>
@@ -56,8 +56,8 @@ const headings = computed(() => {
           </div>
         </template>
 
-        <n-collapse-transition :show="!collapsed">
-          <div class="anchor-wrapper">
+        <div class="overflow-hidden">
+          <div class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
             <n-anchor
                 :bound="150"
                 :top="88"
@@ -72,10 +72,10 @@ const headings = computed(() => {
               </template>
             </n-anchor>
           </div>
-        </n-collapse-transition>
+        </div>
       </n-card>
       <template #fallback>
-        <div v-for="i in 2" :key="i + 'initialLoading'" class="p-[15px]">
+        <div class="p-[15px]">
           <common-skeleton text width="100%"/>
           <common-skeleton text width="100%"/>
           <common-skeleton text width="100%"/>
@@ -85,21 +85,28 @@ const headings = computed(() => {
   </div>
 </template>
 
-<style scoped>
-.nav-container {
-  position: fixed;
-  background-color: white;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
+<style scoped lang="scss">
 .anchor-wrapper {
   max-height: 420px;
+  overflow-y: auto;
   overflow-x: hidden;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+}
+
+.anchor-wrapper.anchor-collapsed {
+  max-height: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* 隐藏滚动条但保持可滚动 */
+.anchor-wrapper::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 :deep(.n-anchor-link__title) {
