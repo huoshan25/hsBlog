@@ -14,7 +14,6 @@ const props = defineProps({
   },
 });
 
-const initialLoading = ref(true);
 const route = useRoute();
 
 const loading = ref(false);
@@ -31,7 +30,7 @@ const virtualListRef = ref();
 
 aliasList.value = props.categoryList.find(
     (item: ICategory) => {
-      if(route.params.alias === '') {
+      if (route.params.alias === '') {
         return props.categoryList[0]
       } else {
         return item.alias === `/blog/${route?.params?.alias}`
@@ -46,7 +45,6 @@ const loadArticles = async () => {
   loading.value = true;
   try {
     const res = await getArticle({
-      //@ts-ignore
       categoryId: aliasList.value.id,
       cursor: cursor.value,
       limit: 10
@@ -60,7 +58,6 @@ const loadArticles = async () => {
     }
   } finally {
     loading.value = false;
-    initialLoading.value = false;
   }
 }
 
@@ -102,25 +99,8 @@ onUnmounted(() => {
 
 <template>
   <div class="entry-list-wrap">
-    <n-scrollbar @scroll="handleScroll">
-      <template v-if="initialLoading">
-        <div v-for="i in 3" :key="i + 'initialLoading'" class="entry-list">
-          <n-skeleton text :repeat="2" />
-          <div class="entry-list-bottom">
-            <n-space>
-              <n-skeleton text style="width: 60px" />
-              <n-skeleton text style="width: 40px" />
-              <n-skeleton text style="width: 40px" />
-            </n-space>
-            <n-space>
-              <n-skeleton text style="width: 40px" />
-              <n-skeleton text style="width: 40px" />
-            </n-space>
-          </div>
-        </div>
-      </template>
-
-      <template v-else>
+    <client-only>
+      <n-scrollbar @scroll="handleScroll">
         <n-virtual-list
             ref="virtualListRef"
             :items="articles"
@@ -166,9 +146,25 @@ onUnmounted(() => {
             </div>
           </template>
         </n-virtual-list>
+      </n-scrollbar>
+      <template #fallback>
+        <div v-for="i in 2" :key="i + 'initialLoading'" class="entry-list">
+          <common-skeleton text :repeat="2"/>
+          <div class="entry-list-bottom">
+            <n-space>
+              <common-skeleton text width="60px"/>
+              <common-skeleton text width="40px"/>
+              <common-skeleton text width="40px"/>
+            </n-space>
+            <n-space>
+              <common-skeleton text width="40px"/>
+              <common-skeleton text width="40px"/>
+            </n-space>
+          </div>
+        </div>
       </template>
-      <blog-no-more-data-divider :hasMore="loading"/>
-    </n-scrollbar>
+    </client-only>
+    <blog-no-more-data-divider :hasMore="loading"/>
   </div>
 </template>
 
@@ -177,6 +173,11 @@ onUnmounted(() => {
   background-color: white;
   border-radius: 0 6px 6px 6px;
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .animated-list {
