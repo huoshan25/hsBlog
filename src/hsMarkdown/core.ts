@@ -41,19 +41,6 @@ export class MarkdownExtension {
     // }
 
     this.registerDefaultComponents()
-    this.setupAnchor()
-  }
-
-  private setupAnchor() {
-    let headingIndex = 0
-    this.md.use(anchor, {
-      permalink: anchor.permalink.ariaHidden({
-        placement: 'after',
-        symbol: '#',
-      }),
-      level: [1, 2, 3, 4, 5, 6],
-      slugify: () => `heading-${headingIndex++}`
-    })
   }
 
   registerComponent(component: MarkdownComponent) {

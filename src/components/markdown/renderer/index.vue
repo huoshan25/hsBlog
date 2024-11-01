@@ -13,16 +13,19 @@ const props = defineProps({
 const {$markdown} = useNuxtApp()
 
 const renderedContent = computed(() => {
-  if(props.markdown) {
-    return $markdown.render(props.markdown)
-  } else {
-    return ''
-  }
+  if (!props.markdown) return ''
+
+  let content = $markdown.render(props.markdown)
+  let headingIndex = 0
+
+  // 处理标题的锚点
+  return content.replace(/<h([1-6])>(.*?)<\/h\1>/g, (match, level, text) => {
+    const id = `heading-${headingIndex++}`
+    return `<h${level} id="${id}">${text}<a class="header-anchor" href="#${id}"></a></h${level}>`
+  })
 })
 </script>
 
 <style>
-.markdown-body {
-}
 
 </style>
