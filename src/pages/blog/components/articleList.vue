@@ -63,12 +63,20 @@ const loadArticles = async () => {
 
 /**文章详情*/
 const goDetails = (id: number) => {
-  navigateTo(`/blog/post/${id}`);
+  navigateTo(`/blog/post/${id}`, {
+    open: {
+      target: "_blank",
+    }
+  });
 };
 
 /*标签页*/
 const goTabs = (tab: string) => {
-  navigateTo(`/blog/tag/${tab}`);
+  navigateTo(`/blog/tag/${tab}`, {
+    open: {
+      target: "_blank",
+    }
+  });
 };
 
 /*处理滚动到底部*/
