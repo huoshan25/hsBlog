@@ -41,38 +41,47 @@ const headings = computed(() => {
 
 <template>
   <div class="nav-container" v-if="hasHeadings">
-    <n-card hoverable>
-      <template #header>
-        <div class="card-header">
-          <span>目录</span>
-          <n-button icon-placement="right" text @click="collapsed = !collapsed">
-            {{ collapsed ? '展开' : '收起' }}
-            <template #icon>
-              <ChevronDownSharp v-if="collapsed"/>
-              <ChevronUp v-else/>
-            </template>
-          </n-button>
+    <client-only>
+      <n-card hoverable>
+        <template #header>
+          <div class="card-header">
+            <span>目录</span>
+            <n-button icon-placement="right" text @click="collapsed = !collapsed">
+              {{ collapsed ? '展开' : '收起' }}
+              <template #icon>
+                <ChevronDownSharp v-if="collapsed"/>
+                <ChevronUp v-else/>
+              </template>
+            </n-button>
+          </div>
+        </template>
+
+        <n-collapse-transition :show="!collapsed">
+          <div class="anchor-wrapper">
+            <n-anchor
+                :bound="150"
+                :top="88"
+                style="z-index: 1"
+                :ignore-gap="true"
+            >
+              <template v-for="heading in headings" :key="heading.id">
+                <n-anchor-link
+                    :title="heading.title"
+                    :href="`#${heading.id}`"
+                />
+              </template>
+            </n-anchor>
+          </div>
+        </n-collapse-transition>
+      </n-card>
+      <template #fallback>
+        <div v-for="i in 2" :key="i + 'initialLoading'" class="p-[15px]">
+          <common-skeleton text width="100%"/>
+          <common-skeleton text width="100%"/>
+          <common-skeleton text width="100%"/>
         </div>
       </template>
-
-      <n-collapse-transition :show="!collapsed">
-        <div class="anchor-wrapper">
-          <n-anchor
-              :bound="150"
-              :top="88"
-              style="z-index: 1"
-              :ignore-gap="true"
-          >
-            <template v-for="heading in headings" :key="heading.id">
-              <n-anchor-link
-                  :title="heading.title"
-                  :href="`#${heading.id}`"
-              />
-            </template>
-          </n-anchor>
-        </div>
-      </n-collapse-transition>
-    </n-card>
+    </client-only>
   </div>
 </template>
 
