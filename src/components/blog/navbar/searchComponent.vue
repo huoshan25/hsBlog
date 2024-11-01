@@ -26,37 +26,42 @@ const handleSearch = () => {
 
 <template>
   <div flex items-center class="search-container">
-    <n-input-group>
-      <n-input
-          maxlength="64"
-          :on-focus="onFocusInput"
-          :on-blur="onBlurInput"
-          :style="{ width: inputStyle.width , transition: 'width .1s linear 0s' }"
-          :placeholder="searchPlaceholder"
-          v-model:value="searchInput"
-          @input="handleInput"
-          @keyup="handleKeyUp"
-      />
-      <n-button :color="inputStyle.btColor" @click="handleSearch">
-        <template #icon>
-          <n-icon :color="inputStyle.iconColor">
-            <SearchOutline/>
-          </n-icon>
-        </template>
-      </n-button>
-    </n-input-group>
-    <div v-if="showDropdown && dropdownContent.length" class="search-dropdown">
-      <div v-if="!searchInput" class="flex p-[10px] border-b-[1px] border-b-solid border-[#e5e6ecff]">
-        <div class="color-#8a919f flex-1">搜索记录</div>
-        <n-button class="flex-4" text type="info" size="small" @mousedown.stop="clearSearchHistory">
-          清空
+    <client-only>
+      <n-input-group>
+        <n-input
+            maxlength="64"
+            :on-focus="onFocusInput"
+            :on-blur="onBlurInput"
+            :style="{ width: inputStyle.width , transition: 'width .1s linear 0s' }"
+            :placeholder="searchPlaceholder"
+            v-model:value="searchInput"
+            @input="handleInput"
+            @keyup="handleKeyUp"
+        />
+        <n-button :color="inputStyle.btColor" @click="handleSearch">
+          <template #icon>
+            <n-icon :color="inputStyle.iconColor">
+              <SearchOutline/>
+            </n-icon>
+          </template>
         </n-button>
+      </n-input-group>
+      <div v-if="showDropdown && dropdownContent.length" class="search-dropdown">
+        <div v-if="!searchInput" class="flex p-[10px] border-b-[1px] border-b-solid border-[#e5e6ecff]">
+          <div class="color-#8a919f flex-1">搜索记录</div>
+          <n-button class="flex-4" text type="info" size="small" @mousedown.stop="clearSearchHistory">
+            清空
+          </n-button>
+        </div>
+        <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item"
+             @mousedown="selectItem(item)">
+          {{ item }}
+        </div>
       </div>
-      <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item"
-           @mousedown="selectItem(item)">
-        {{ item }}
-      </div>
-    </div>
+      <template #fallback>
+        <common-skeleton text width="120px"/>
+      </template>
+    </client-only>
   </div>
 </template>
 
