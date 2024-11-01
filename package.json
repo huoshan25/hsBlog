@@ -19,6 +19,7 @@
     "@types/markdown-it": "^14.1.1",
     "@types/node": "^20.12.9",
     "@unocss/preset-rem-to-px": "^0.61.3",
+    "@unocss/preset-uno": "^0.63.6",
     "@varlet/import-resolver": "^3.2.9",
     "@varlet/nuxt": "0.1.5",
     "@varlet/ui": "^3.3.0",
