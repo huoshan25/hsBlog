@@ -86,12 +86,7 @@ const copyEmail = () => {
   <main class="wrap">
     <section class="intro">
       <div class="avatar-container">
-        <n-avatar
-            round
-            :size="120"
-            src="/img/avatar.jpg"
-            fallback-src="/default-avatar.png"
-        />
+        <nuxt-img size="120" src="/img/avatar.jpg"/>
       </div>
       <h1 class="title">{{ personalInfo.name }}</h1>
       <h2 class="subtitle">{{ personalInfo.title }}</h2>
@@ -110,26 +105,42 @@ const copyEmail = () => {
       <section class="github-stats">
         <h2 class="section-title">GitHub statistics</h2>
         <div class="stats-container">
-          <img
+          <nuxt-img
               src="https://ghchart.rshah.org/1E80FF/huoshan25"
+              size="120"
+              loading="lazy"
+              format="webp"
               alt="GitHub Contribution Graph"
-              class="github-chart"
+              class="w-full h-auto rounded-[8px]"
           />
           <div class="github-metrics">
-            <img
+            <nuxt-img
                 src="https://github-readme-stats.vercel.app/api/top-langs/?username=huoshan25&layout=compact&title_color=1E80FF"
+                loading="lazy"
+                format="webp"
                 alt="commonLanguage"
+                class="w-full h-auto rounded-[8px]"
             />
-            <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=huoshan25"
-                 alt="commits"
+            <nuxt-img
+                src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=huoshan25"
+                loading="lazy"
+                format="webp"
+                alt="commits"
+                class="w-full h-auto rounded-[8px]"
             />
-            <img
+            <nuxt-img
                 src="https://github-readme-stats.vercel.app/api?username=huoshan25&show_icons=true&title_color=1E80FF"
+                loading="lazy"
+                format="webp"
                 alt="stats统计"
+                class="w-full h-auto rounded-[8px]"
             />
-            <img
+            <nuxt-img
                 src="https://github-readme-streak-stats.herokuapp.com/?user=huoshan25&ring=1E80FF&fire=1E80FF&currStreakLabel=1E80FF"
+                loading="lazy"
+                format="webp"
                 alt="streak"
+                class="w-full h-auto rounded-[8px]"
             />
           </div>
         </div>
@@ -345,23 +356,10 @@ const copyEmail = () => {
     gap: 20px;
   }
 
-  .github-chart {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    background-color: white;
-  }
-
   .github-metrics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-
-    img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
   }
 }
 
