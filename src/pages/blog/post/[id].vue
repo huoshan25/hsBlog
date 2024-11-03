@@ -40,6 +40,12 @@ useArticleSEO(articleData.value)
         <div class="flex justify-center">
           <license/>
         </div>
+        <template #fallback>
+          <div class="p-[15px]">
+            <common-skeleton text width="50%"/>
+            <common-skeleton text width="100%"/>
+          </div>
+        </template>
       </client-only>
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
