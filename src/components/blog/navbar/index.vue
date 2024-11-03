@@ -26,7 +26,7 @@ onMounted(() => {
   <header class="header" :class="{ 'header-hidden': !isNavbarVisible }">
     <div class="header-container">
       <div flex items-center>
-        <div class="flex items-center py-[10px] mr-[5px] cursor-pointer">
+        <div class="flex items-center py-[10px] mr-[5px] cursor-pointer" @click="router.push('/blog')">
           <img class="h-[30px]" src="~/assets/svg/logo.svg" alt="logo">
           <div class="m-l-5 text-size-21 font-550">火山博客</div>
         </div>
