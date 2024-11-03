@@ -26,12 +26,12 @@ onMounted(() => {
   <header class="header" :class="{ 'header-hidden': !isNavbarVisible }">
     <div class="header-container">
       <div flex items-center>
-        <div class="header-container-logo">
-          <img class="logo_img" src="~/assets/svg/logo.svg" alt="logo">
-          <div m-l-5 text-size-21 font-550>火山博客</div>
+        <div class="flex items-center py-[10px] mr-[5px] cursor-pointer">
+          <img class="h-[30px]" src="~/assets/svg/logo.svg" alt="logo">
+          <div class="m-l-5 text-size-21 font-550">火山博客</div>
         </div>
         <div class="header-container-item" v-for="{title, url} in getMenuOptions" :key="url">
-          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}">
+          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}" class="cursor-pointer">
             {{ title }}
           </nuxt-link>
         </div>
