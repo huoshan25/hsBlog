@@ -54,8 +54,8 @@ export async function generateShortText(params: { content: string }) {
 /**
  * 查询任务状态
  */
-export function queryTaskStatus(taskId: string) {
-  return fetchRequest.get<any>(`/tts/query/${taskId}`);
+export function queryTaskStatus(taskId: string[]) {
+  return fetchRequest.post<any>(`/tts/query`, { taskId });
 }
 
 /**

@@ -39,9 +39,9 @@ export function useTTS() {
 
   /**
    * 轮询任务状态
-   * @param taskId
+   * @param taskIds
    */
-  const pollTaskStatus = async (taskId: string): Promise<string> => {
+  const pollTasksStatus = async (taskIds: string[]): Promise<string> => {
     return new Promise((resolve, reject) => {
       let attempts = 0
       const maxAttempts = 20
@@ -50,59 +50,76 @@ export function useTTS() {
 
       pollInterval = setInterval(async () => {
         try {
-          const res = await queryTaskStatus(taskId)
-          if (res.code === 200 && res.data.status === 'Success') {
-            clearInterval(pollInterval!)
-            resolve(res.data.audio)
-            return
+          const res = await queryTaskStatus(taskIds)
+          if (res.code === 200) {
+            const allTasksCompleted = res.data.tasks_info.every(
+              (task: any) => task.task_status === 'Success'
+            )
+
+            if (allTasksCompleted) {
+              clearInterval(pollInterval!)
+              const urls = res.data.tasks_info.map(
+                (task: any) => task.task_result.speech_url
+              )
+              resolve(urls)
+              return
+            }
           }
 
-          // 如果状态不是Success但是是正常响应，继续轮询
           attempts++
           if (attempts >= maxAttempts) {
             clearInterval(pollInterval!)
             reject(new Error('轮询超时'))
           }
         } catch (error) {
-          // 错误重试逻辑
           retryCount++
           console.error(`轮询失败，第 ${retryCount} 次重试`)
 
           if (retryCount >= maxRetries) {
-            console.error('重试次数达到上限，轮询终止')
             clearInterval(pollInterval!)
             reject(error)
           }
-          // 如果未达到最大重试次数，继续轮询
         }
       }, 3000)
     })
   }
 
   /**
-   * 过程的声音
-   * @param text
-   * @param voiceConfig
+   * 处理长对话语音生成
+   * @param dialogues 对话数组
+   */
+  const processLongDialogue = async (dialogues: Array<{ role: string; text: string }>) => {
+    // 1. 生成所有语音合成任务
+    const synthResults = await Promise.all(
+      dialogues.map(dialogue =>
+        synthesizeSpeech({
+          text: dialogue.text,
+          voiceConfig: dialogue.role === 'host' ? VOICE_CONFIGS.host : VOICE_CONFIGS.guest
+        })
+      )
+    )
+
+    // 2. 收集所有任务ID
+    const taskIds = synthResults
+      .filter(result => result.code === 201)
+      .map(result => result.data.task_id)
+
+    // 3. 轮询所有任务状态
+    return await pollTasksStatus(taskIds)
+  }
+
+  /**
+   * 过程的声音 (用于短文本)
    */
   const processVoice = async (text: string, voiceConfig: VoiceConfig) => {
     try {
-      // 1. 调用语音合成接口
       const synthRes = await synthesizeSpeech({ text, voiceConfig })
       if (synthRes.code !== 201) {
         throw new Error('语音合成失败')
       }
 
-      // 2. 轮询获取合成结果
-      const audioUrl = await pollTaskStatus(synthRes.data.task_id)
-
-      // 3. 根据文本类型设置不同的音频URL
-      if (voiceConfig === VOICE_CONFIGS.host) {
-        state.value.shortAudioUrl = audioUrl
-      } else {
-        // 长文本对话的情况，先不设置URL，等待合并
-        console.log('单段对话音频生成完成:', audioUrl)
-      }
-
+      const [audioUrl] = await pollTasksStatus([synthRes.data.task_id])
+      state.value.shortAudioUrl = audioUrl
       return audioUrl
     } catch (error) {
       console.error('语音处理错误:', error)
@@ -173,31 +190,26 @@ export function useTTS() {
           }
         })
 
-      // 3. 串行生成每段对话的语音
-      const audioUrls: string[] = []
-      const totalDialogues = dialogues.length
-
-      for (let i = 0; i < dialogues.length; i++) {
-        const dialogue = dialogues[i]
-        const voiceConfig = dialogue.role === 'host' ? VOICE_CONFIGS.host : VOICE_CONFIGS.guest
-
-        // 更新生成进度
-        state.value.generatingProgress = Math.round((i / totalDialogues) * 100)
-
-        // 等待当前对话的语音生成完成
-        const audioUrl = await processVoice(dialogue.text, voiceConfig)
-        audioUrls.push(audioUrl)
-      }
-
-      // 4. 所有语音生成完成，这里应该调用后端接口合并音频
-      // TODO: 调用后端合并音频的接口
-      // const mergedAudioUrl = await mergeAudios(audioUrls)
-      // state.value.longAudioUrl = mergedAudioUrl
-
-      // 临时处理：使用第一段音频
-      state.value.longAudioUrl = audioUrls[0]
+      // 3. 生成所有对话的语音并获取URL数组
+      state.value.generatingProgress = 30
+      const audioUrls = await processLongDialogue(dialogues)
       state.value.generatingProgress = 100
 
+      // 4. 设置音频URL数组
+      //@ts-ignore
+      state.value.longAudioUrl = audioUrls.join(',')
+
+      // 5. 播放音频
+      clearSound()
+      sound = new Howl({
+        src: audioUrls,
+        html5: true,
+        onplay: () => state.value.isPlaying = true,
+        onend: () => state.value.isPlaying = false,
+        onloaderror: (id, err) => state.value.error = '加载音频失败'
+      })
+
+      sound.play()
     } catch (error: any) {
       state.value.error = error.message
     } finally {

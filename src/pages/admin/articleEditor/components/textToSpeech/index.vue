@@ -58,7 +58,7 @@ interface TaskStatusRes {
  * 获取任务id
  */
 const queryTaskId = async () => {
-  const res = await queryTaskStatus(task_id.value)
+  const res = await queryTaskStatus([task_id.value])
   if (res.code === HttpStatus.OK && res.data.status === 'Success') {
     console.log(res.data.audio, 'audio')
   }
