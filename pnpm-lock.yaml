@@ -23,6 +23,9 @@ importers:
       '@stripe/stripe-js':
         specifier: ^3.4.1
         version: 3.5.0
+      '@types/howler':
+        specifier: ^2.2.12
+        version: 2.2.12
       '@types/markdown-it':
         specifier: ^14.1.1
         version: 14.1.1
@@ -56,6 +59,9 @@ importers:
       highlight.js:
         specifier: ^11.10.0
         version: 11.10.0
+      howler:
+        specifier: ^2.2.4
+        version: 2.2.4
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -1365,6 +1371,9 @@ packages:
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
+
+  '@types/howler@2.2.12':
+    resolution: {integrity: sha512-hy769UICzOSdK0Kn1FBk4gN+lswcj1EKRkmiDtMkUGvFfYJzgaDXmVXkSShS2m89ERAatGIPnTUlp2HhfkVo5g==}
 
   '@types/http-proxy@1.17.14':
     resolution: {integrity: sha512-SSrD0c1OQzlFX7pGu1eXxSEjemej64aaNPRhhVYUGqXh0BtldAAx37MG8btcumvpgKyZp1F5Gn3JkktdxiFv6w==}
@@ -2997,6 +3006,9 @@ packages:
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
+
+  howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
 
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
@@ -6661,6 +6673,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.2
 
+  '@types/howler@2.2.12': {}
+
   '@types/http-proxy@1.17.14':
     dependencies:
       '@types/node': 20.14.10
@@ -8734,6 +8748,8 @@ snapshots:
   highlight.js@11.10.0: {}
 
   hookable@5.5.3: {}
+
+  howler@2.2.4: {}
 
   html-tags@3.3.1: {}
 

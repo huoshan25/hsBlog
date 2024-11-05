@@ -1,5 +1,6 @@
 import {useStorage} from '@vueuse/core';
 import type {AnalyzeCodeReq} from "~/api/blog/post/type";
+import type {VoiceConfig} from "~/pages/admin/articleEditor/components/textToSpeech/types/tts";
 
 /**
  * 文章详情
@@ -26,4 +27,41 @@ export async function analyzeCode (params: AnalyzeCodeReq) {
     }),
     signal: params.signal
   });
+}
+
+/**
+ * 获取百度语音合成token
+ */
+export async function getBaiduToken() {
+  return await fetchRequest.get<any>('/tts/token');
+}
+
+/**
+ * 语音合成
+ */
+export async function synthesizeSpeech(params: { text: string, voiceConfig: VoiceConfig }) {
+  return await fetchRequest.post<any>('/tts/synthesize', params);
+}
+
+/**
+ * 生成短文本
+ * @param params
+ */
+export async function generateShortText(params: { content: string }) {
+  return await fetchRequest.post<any>('/openai/generate-short-content', params);
+}
+
+/**
+ * 查询任务状态
+ */
+export function queryTaskStatus(taskId: string) {
+  return fetchRequest.get<any>(`/tts/query/${taskId}`);
+}
+
+/**
+ * 生成长文本
+ * @param params
+ */
+export async function generateLongText(params: { content: string }) {
+  return await fetchRequest.post<any>('/openai/generate-long-content', params);
 }

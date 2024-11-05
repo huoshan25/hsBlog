@@ -12,13 +12,14 @@ import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
 import {toolbarsConfig} from "~/pages/admin/articleEditor/detail/components/config/toolbarsConfig";
 import {computed} from "vue";
 import {pictureUpload} from "~/api/admin/oss";
+import SpeechSynthesis from "~/pages/admin/articleEditor/components/textToSpeech/index.vue";
 
 const props = defineProps(['currentRow']);
 const message = useMessage()
 const emits = defineEmits(['close']);
 
 /**markdown内容*/
-const content = ref<any>()
+const content = ref<string>('')
 
 const formRef = ref()
 
@@ -50,6 +51,8 @@ const tagOptions = computed(() => {
   return tagList.value.map(tag => ({label: tag.name, value: tag.name}))
 })
 
+const aiPodcastShow = ref(false)
+
 /*获取标签*/
 const getTags = async () => {
   const res = await getTagsList()
@@ -59,9 +62,9 @@ const getTags = async () => {
 }
 
 /*删除图片*/
-const handleEditorImgDel = async (pos:any) => {
+const handleEditorImgDel = async (pos: any) => {
   const res = await deletePicture({path: pos[0]})
-  if(res.code === HttpStatus.OK) {
+  if (res.code === HttpStatus.OK) {
     message.success(res.message)
   }
 }
@@ -70,10 +73,10 @@ const handleEditorImgDel = async (pos:any) => {
 const handleImageUpload = async (pos: any, file: File) => {
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('articleUUID',  form.value.articleUUID)
+  formData.append('articleUUID', form.value.articleUUID)
 
   const res = await pictureUpload(formData)
-  if(res.code === HttpStatus.CREATED) {
+  if (res.code === HttpStatus.CREATED) {
     message.success(res.message)
     if (res.data.fileUrl) {
       editorRef.value.$img2Url(pos, res.data.fileUrl)
@@ -90,7 +93,7 @@ const change = (value: any, render: any) => {
 
 /**发布文章*/
 const handlePublish = async (status: ArticleStatus) => {
-  if(!content.value) return message.warning('未填写文章内容')
+  if (!content.value) return message.warning('未填写文章内容')
 
   await formRef.value?.validate
   const commonParams = {
@@ -103,12 +106,24 @@ const handlePublish = async (status: ArticleStatus) => {
   }
 
   const res = props.currentRow.type === 'edit'
-      ? await updateArticle({...commonParams , id: props.currentRow.id})
-      : await createArticle({...commonParams , articleUUID: form.value.articleUUID,})
+      ? await updateArticle({...commonParams, id: props.currentRow.id})
+      : await createArticle({...commonParams, articleUUID: form.value.articleUUID,})
   if (res.code === HttpStatus.OK || res.code === HttpStatus.CREATED) {
     message.success(res.message)
     emits('close')
   }
+}
+
+const handleAiPodcast = async () => {
+  aiPodcastShow.value = true
+}
+
+const onPositiveClick = () => {
+  aiPodcastShow.value = false
+}
+
+const onNegativeClick = async () => {
+  aiPodcastShow.value = false
 }
 
 onMounted(async () => {
@@ -122,8 +137,8 @@ onMounted(async () => {
       selectedTags.value = res.data.tags.map((item: Tag) => item.name)
       form.value.articleUUID = props.currentRow.id
     }
-  } else if(props.currentRow.type === 'add') {
-    const { generateUUID } = useUUID();
+  } else if (props.currentRow.type === 'add') {
+    const {generateUUID} = useUUID();
     form.value.articleUUID = generateUUID();
     form.value.category_id = props.currentRow.categoryOption?.at(-1).value;
   }
@@ -183,6 +198,12 @@ onMounted(async () => {
       </n-form-item>
 
       <n-form-item>
+        <n-button @click="handleAiPodcast()" class="aiPodcast">
+          AI播客
+        </n-button>
+      </n-form-item>
+
+      <n-form-item>
         <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" class="mr10">
           <template #icon>
             <nuxt-img src="/svg/publish.svg" class="h15"></nuxt-img>
@@ -208,10 +229,29 @@ onMounted(async () => {
       </n-form-item>
     </n-form>
 
+    <n-modal
+        v-model:show="aiPodcastShow"
+        class="h-[500px] w-[500px]"
+        width="500px"
+        preset="dialog"
+        :mask-closable="false"
+        @positive-click="onPositiveClick"
+        @negative-click="onNegativeClick"
+        title="AI播客"
+        positive-text="确认"
+        negative-text="取消">
+      <speech-synthesis :markdown="content"/>
+    </n-modal>
 
 
   </div>
 </template>
 
 <style scoped lang="scss">
+.aiPodcast {
+  background: radial-gradient(495.98% 195.09% at 144.79% 10.71%, #ff8a01 0, #b051b9 22.37%, #672bff 45.54%, #06f 99.99%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 </style>
