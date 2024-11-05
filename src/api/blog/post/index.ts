@@ -1,6 +1,5 @@
 import {useStorage} from '@vueuse/core';
 import type {AnalyzeCodeReq} from "~/api/blog/post/type";
-import type {VoiceConfig} from "~/pages/admin/articleEditor/components/textToSpeech/types/tts";
 
 /**
  * 文章详情
@@ -30,38 +29,53 @@ export async function analyzeCode (params: AnalyzeCodeReq) {
 }
 
 /**
- * 获取百度语音合成token
- */
-export async function getBaiduToken() {
-  return await fetchRequest.get<any>('/tts/token');
-}
-
-/**
  * 语音合成
  */
-export async function synthesizeSpeech(params: { text: string, voiceConfig: VoiceConfig }) {
-  return await fetchRequest.post<any>('/tts/synthesize', params);
+export async function synthesizeSpeech(params: {
+  text: string,
+  type?: 'normal' | 'dialogue'
+}) {
+  return await fetchRequest.post<{
+    success: boolean;
+    data: string;
+    message: string;
+  }>('/tts/convert', params);
 }
 
 /**
- * 生成短文本
- * @param params
+ * 生成简短文本
  */
 export async function generateShortText(params: { content: string }) {
-  return await fetchRequest.post<any>('/openai/generate-short-content', params);
+  return await fetchRequest.post<{
+    code: number
+    data: string;
+  }>('/openai/generate-short-content', params);
 }
 
 /**
- * 查询任务状态
- */
-export function queryTaskStatus(taskId: string[]) {
-  return fetchRequest.post<any>(`/tts/query`, { taskId });
-}
-
-/**
- * 生成长文本
- * @param params
+ * 生成长文本(对话)
  */
 export async function generateLongText(params: { content: string }) {
-  return await fetchRequest.post<any>('/openai/generate-long-content', params);
+  return await fetchRequest.post<{
+    code: number
+    data: string;
+    type: 'dialogue';
+  }>('/openai/generate-long-content', params);
+}
+
+/**
+ * 上传音频文件
+ */
+export async function uploadAudio(params: {
+  buffer: string;
+  articleId: string;
+  type: 'short' | 'long';
+}) {
+  return await fetchRequest.post<{
+    code: number;
+    message: string;
+    data: {
+      url: string;
+    }
+  }>('/admin/oss/ali/upload-audio', params);
 }

@@ -240,7 +240,7 @@ onMounted(async () => {
         title="AI播客"
         positive-text="确认"
         negative-text="取消">
-      <speech-synthesis :markdown="content"/>
+      <speech-synthesis :markdown="content" :articleId="String(form.articleUUID)"/>
     </n-modal>
 
 
