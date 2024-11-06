@@ -118,7 +118,14 @@ const handleAiPodcast = async () => {
   aiPodcastShow.value = true
 }
 
-const onPositiveClick = () => {
+const speech = ref<SpeechType | null>(null)
+
+interface SpeechType {
+  saveContent: () => Promise<void>
+}
+
+const onPositiveClick = async () => {
+  await speech.value?.saveContent()
   aiPodcastShow.value = false
 }
 
@@ -197,7 +204,7 @@ onMounted(async () => {
         />
       </n-form-item>
 
-      <n-form-item>
+      <n-form-item v-if="props.currentRow.type === 'edit'">
         <n-button @click="handleAiPodcast()" class="aiPodcast">
           AI播客
         </n-button>
@@ -231,16 +238,20 @@ onMounted(async () => {
 
     <n-modal
         v-model:show="aiPodcastShow"
-        class="h-[500px] w-[500px]"
-        width="500px"
+        width="600px"
+        height="600px"
         preset="dialog"
         :mask-closable="false"
         @positive-click="onPositiveClick"
         @negative-click="onNegativeClick"
         title="AI播客"
-        positive-text="确认"
+        positive-text="保存"
         negative-text="取消">
-      <speech-synthesis :markdown="content" :articleId="String(form.articleUUID)"/>
+      <speech-synthesis
+          ref="speech"
+          :markdown="content"
+          :articleId="props.currentRow.id"
+      />
     </n-modal>
 
 

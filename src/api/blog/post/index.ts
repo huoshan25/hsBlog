@@ -36,6 +36,7 @@ export async function synthesizeSpeech(params: {
   type?: 'normal' | 'dialogue'
 }) {
   return await fetchRequest.post<{
+    code: number;
     success: boolean;
     data: string;
     message: string;
@@ -64,18 +65,33 @@ export async function generateLongText(params: { content: string }) {
 }
 
 /**
- * 上传音频文件
+ * 生成短文本音频
  */
-export async function uploadAudio(params: {
-  buffer: string;
-  articleId: string;
-  type: 'short' | 'long';
+export async function generateShortAudio(params: {
+  content: string;
+  articleUUID: number;
 }) {
   return await fetchRequest.post<{
     code: number;
-    message: string;
     data: {
       url: string;
+      content: string;
     }
-  }>('/admin/oss/ali/upload-audio', params);
+  }>('/openai/generate-short-audio', params);
+}
+
+/**
+ * 生成对话音频
+ */
+export async function generateLongAudio(params: {
+  content: string;
+  articleUUID: number;
+}) {
+  return await fetchRequest.post<{
+    code: number;
+    data: {
+      url: string;
+      content: string;
+    }
+  }>('/openai/generate-long-audio', params);
 }

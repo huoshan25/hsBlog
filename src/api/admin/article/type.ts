@@ -43,3 +43,11 @@ export interface UpdateArticle extends Omit<CreateArticleReq, 'articleUUID'> {
   /**文章id*/
   id: string;
 }
+
+export interface ArticleTTSReq {
+  id: number
+  short_content: string
+  short_audio_url: string;
+  long_content: string;
+  long_audio_url: string;
+}

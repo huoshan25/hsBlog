@@ -49,6 +49,29 @@ useArticleSEO(articleData.value)
       </client-only>
     </div>
     <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
+      <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px]">
+        <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
+          <div class="mb-[5px] aiPodcast">文章概要</div>
+          <audio
+              :src="articleData.data.short_audio_url"
+              controls
+              class="w-full mt-2"
+          >
+            您的浏览器不支持音频播放
+          </audio>
+        </div>
+
+        <div v-if="articleData.data.long_audio_url">
+          <div class="mb-[5px] aiPodcast">AI播客</div>
+          <audio
+              :src="articleData.data.long_audio_url"
+              controls
+              class="w-full mt-2"
+          >
+            您的浏览器不支持音频播放
+          </audio>
+        </div>
+      </div>
       <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
       <markdown-ai-analyzer/>
     </div>
@@ -80,5 +103,12 @@ useArticleSEO(articleData.value)
   &.header-hidden {
     top: -60px;
   }
+}
+
+.aiPodcast {
+  background: radial-gradient(495.98% 195.09% at 144.79% 10.71%, #ff8a01 0, #b051b9 22.37%, #672bff 45.54%, #06f 99.99%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>

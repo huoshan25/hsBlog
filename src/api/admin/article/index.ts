@@ -1,5 +1,5 @@
 import type {HttpRes} from "~/api/type";
-import type {ArticleReq, CreateArticleReq, UpdateArticle, ArticleStatus} from "~/api/admin/article/type";
+import type {ArticleReq, CreateArticleReq, UpdateArticle, ArticleStatus, ArticleTTSReq} from "~/api/admin/article/type";
 import {fetchRequest} from "~/composables/http/useFetchRequest";
 
 /**
@@ -69,4 +69,11 @@ export async function deletePicture(params: any) {
  */
 export async function updatedArticleReleaseTime(params: any) {
   return await fetchRequest.post<any>('/admin/article/update-publish-time', params);
+}
+
+/**
+ * 修改文章tts内容
+ */
+export async function updateArticleTTS(params: ArticleTTSReq) {
+  return await fetchRequest.put<HttpRes<null>>('/admin/article/tts', params);
 }
