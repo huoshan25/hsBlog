@@ -54,27 +54,29 @@ onMounted(() => {
 
 <template>
   <div class="entry-list-wrap">
-    <n-space v-show="entryListSkeleton" p15 vertical>
-      <n-skeleton height="15px" width="40%"/>
-      <n-skeleton height="15px" width="100%"/>
-      <n-skeleton height="15px" width="70%"/>
-      <n-skeleton height="15px" width="50%"/>
-    </n-space>
-    <div v-show="!entryListSkeleton" class="entry-list" v-for="item in entryInfo" :key="item.id + 'article'"
-         @click="goDetails(item.id)">
-      <div class="flex mb-[5px] color-#b2bac2">
-        <div class="comma hover:color-blue" @click.stop="goCategory(item.category_alias)">{{ item.category_name }}</div>
-        <span class="comma">{{ formatRelativeTime(item.publish_time) }}</span>
-        <template v-if="item.tags && item.tags.length">
+    <div>
+      <n-space v-show="entryListSkeleton" p15 vertical>
+        <n-skeleton height="15px" width="40%"/>
+        <n-skeleton height="15px" width="100%"/>
+        <n-skeleton height="15px" width="70%"/>
+        <n-skeleton height="15px" width="50%"/>
+      </n-space>
+      <div v-show="!entryListSkeleton" class="entry-list" v-for="item in entryInfo" :key="item.id + 'article'"
+           @click="goDetails(item.id)">
+        <div class="flex mb-[5px] color-#b2bac2">
+          <div class="comma hover:color-blue" @click.stop="goCategory(item.category_alias)">{{ item.category_name }}</div>
+          <span class="comma">{{ formatRelativeTime(item.publish_time) }}</span>
+          <template v-if="item.tags && item.tags.length">
           <span v-for="(tag, index) in item.tags" :key="tag + 'tag'" class="inline-block hover:color-blue"
                 @click.stop="goTabs(tag)">
             {{ tag }}
             <span v-if="index !== item.tags.length - 1" class="color-#b2bac2 m-0 mx-[0.3em]">/</span>
           </span>
-        </template>
+          </template>
+        </div>
+        <n-ellipsis class="entry-list-title" :tooltip="false" v-html="item.title_highlight"/>
+        <n-ellipsis class="entry-list-content" :tooltip="false" v-html="item.content_highlight"/>
       </div>
-      <n-ellipsis class="entry-list-title" :tooltip="false" v-html="item.title_highlight"/>
-      <n-ellipsis class="entry-list-content" :tooltip="false" v-html="item.content_highlight"/>
     </div>
 
     <blog-no-more-data-divider :hasMore="loading"/>
@@ -86,7 +88,10 @@ onMounted(() => {
   flex-grow: 1;
   border-radius: 0 6px 6px 6px;
   box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
-  min-height: 100vh;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 :deep(em) {
