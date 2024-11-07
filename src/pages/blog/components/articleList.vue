@@ -21,6 +21,7 @@ const cursor = ref<number | null>(null);
 const hasMore = ref(true);
 const articles = ref<ArticleItem[]>([]);
 const aliasList = ref<ICategory>({});
+const calendar = ref<string | null>(null);
 
 const numberOfViews = ref(22);
 const numberOfLikes = ref(22);
@@ -47,7 +48,8 @@ const loadArticles = async () => {
     const res = await getArticle({
       categoryId: aliasList.value.id,
       cursor: cursor.value,
-      limit: 10
+      limit: 10,
+      date: calendar.value,
     });
 
     if (res.code === HttpStatus.OK) {
@@ -60,6 +62,19 @@ const loadArticles = async () => {
     loading.value = false;
   }
 }
+
+watch(
+    () => route.query.date,
+    (newDate) => {
+      cursor.value = null;
+      hasMore.value = true;
+      articles.value = [];
+      calendar.value = newDate as string || null;
+
+      loadArticles();
+    },
+    { immediate: true }
+);
 
 /**文章详情*/
 const goDetails = (id: number) => {

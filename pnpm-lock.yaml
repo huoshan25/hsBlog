@@ -56,6 +56,9 @@ importers:
       current-device:
         specifier: ^0.10.2
         version: 0.10.2
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       highlight.js:
         specifier: ^11.10.0
         version: 11.10.0
@@ -2363,8 +2366,8 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
 
-  dayjs@1.11.11:
-    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   db0@0.1.4:
     resolution: {integrity: sha512-Ft6eCwONYxlwLjBXSJxw0t0RYtA5gW9mq8JfBXn9TtC0nDPlqePAhpv9v4g9aONBi6JI1OXHTKKkUYGd+BOrCA==}
@@ -7092,7 +7095,7 @@ snapshots:
       '@varlet/icons': 3.3.4
       '@varlet/shared': 3.3.4
       '@varlet/use': 3.3.4(vue@3.4.31(typescript@5.5.3))
-      dayjs: 1.11.11
+      dayjs: 1.11.13
       decimal.js: 10.4.3
       vue: 3.4.31(typescript@5.5.3)
 
@@ -7995,7 +7998,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.7
 
-  dayjs@1.11.11: {}
+  dayjs@1.11.13: {}
 
   db0@0.1.4: {}
 

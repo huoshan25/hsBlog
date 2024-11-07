@@ -27,6 +27,7 @@
     "@vueuse/core": "^10.11.0",
     "@vueuse/nuxt": "^10.11.0",
     "current-device": "^0.10.2",
+    "dayjs": "^1.11.13",
     "highlight.js": "^11.10.0",
     "howler": "^2.2.4",
     "markdown-it": "^14.1.0",

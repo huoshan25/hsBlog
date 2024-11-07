@@ -2,6 +2,7 @@ export interface ArticleReq {
   cursor: number | null,
   limit: number,
   categoryId: number
+  date: string | null
 }
 
 export interface ArticleItem {
