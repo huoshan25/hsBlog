@@ -153,7 +153,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="entry-list-wrap">
+  <div class="border-radius-0-6-6-6 shadow-[0_6px_10px_0_rgba(234,234,234,0.8)] bg-white flex justify-between flex-col h-[100%]">
     <client-only>
       <n-scrollbar @scroll="handleScroll">
         <n-virtual-list
@@ -260,14 +260,8 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .entry-list-wrap {
-  background-color: white;
   border-radius: 0 6px 6px 6px;
-  box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  //box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
 }
 
 .animated-list {

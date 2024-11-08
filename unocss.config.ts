@@ -36,7 +36,13 @@ export default defineConfig({
         });
         return result;
       }
-    ] as Rule
+    ],
+    [
+      /^border-radius-(\d+)-(\d+)-(\d+)-(\d+)$/,
+      ([, t, r, b, l]) => ({
+        'border-radius': `${t}px ${r}px ${b}px ${l}px`
+      })
+    ]
   ],
   // 自定义类名
   shortcuts: [
