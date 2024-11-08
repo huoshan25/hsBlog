@@ -259,11 +259,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-.entry-list-wrap {
-  border-radius: 0 6px 6px 6px;
-  //box-shadow: 0 6px 10px 0 rgba(234, 234, 234, 0.8);
-}
-
 .animated-list {
   animation: slideDown 0.6s ease-out;
 }
