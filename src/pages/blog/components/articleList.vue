@@ -3,7 +3,9 @@ import {EyeOutline, ThumbsUpOutline} from "@vicons/ionicons5";
 import {getArticle} from "~/api/blog/home";
 import type {ICategory} from "~/components/blog/categoryList.vue";
 import {HttpStatus} from "~/enums/httpStatus";
-import type {ArticleItem, ArticleResponse} from "~/api/blog/home/type";
+import type {ArticleItem, ArticleRes} from "~/api/blog/home/type";
+import {ArticleType} from "~/api/admin/article/type";
+import {useUrlPreview} from "~/composables/tools/useUrlPreview";
 
 const props = defineProps({
   categoryList: {
@@ -13,6 +15,8 @@ const props = defineProps({
     },
   },
 });
+
+const {parseUrl, getUrlPreview} = useUrlPreview()
 
 const route = useRoute();
 
@@ -39,6 +43,26 @@ aliasList.value = props.categoryList.find(
     }
 );
 
+const urlPreviews = ref(new Map());
+
+// 预先获取所有外部链接的预览信息
+const preloadUrlPreviews = async (articlesList: ArticleItem[]) => {
+  const externalArticles = articlesList.filter(
+      article => article.type === ArticleType.EXTERNAL
+  );
+
+  for (const article of externalArticles) {
+    if (!urlPreviews.value.has(article.link_url)) {
+      try {
+        const preview = await getUrlPreview(article.link_url);
+        urlPreviews.value.set(article.link_url, preview);
+      } catch (error) {
+        console.error(`Failed to fetch preview for ${article.link_url}:`, error);
+      }
+    }
+  }
+};
+
 /*加载文章列表*/
 const loadArticles = async () => {
   if (loading.value || !hasMore.value || !aliasList.value.id) return;
@@ -53,14 +77,20 @@ const loadArticles = async () => {
     });
 
     if (res.code === HttpStatus.OK) {
-      const response = res.data as ArticleResponse;
+      const response = res.data as ArticleRes;
       articles.value.push(...response.list);
       cursor.value = response.cursor;
       hasMore.value = response.hasMore;
+
+      await preloadUrlPreviews(response.list);
     }
   } finally {
     loading.value = false;
   }
+}
+
+const getPreview = (url: string) => {
+  return urlPreviews.value.get(url);
 }
 
 watch(
@@ -73,12 +103,13 @@ watch(
 
       loadArticles();
     },
-    { immediate: true }
+    {immediate: true}
 );
 
-/**文章详情*/
-const goDetails = (id: number) => {
-  navigateTo(`/blog/post/${id}`, {
+/**文章跳转*/
+const goDetails = (article: ArticleItem) => {
+  const url = article.type === ArticleType.ORIGINAL ? `/blog/post/${article.id}` : article.link_url;
+  navigateTo(url, {
     open: {
       target: "_blank",
     }
@@ -113,6 +144,7 @@ onMounted(async () => {
   await loadArticles();
   // 添加全局滚动监听
   window.addEventListener('scroll', handleScroll);
+  console.log(getUrlPreview('https://juejin.cn/post/7433271555830431784'), 'getUrlPreview')
 });
 
 onUnmounted(() => {
@@ -132,22 +164,22 @@ onUnmounted(() => {
             class="animated-list"
         >
           <template #default="{ item }">
-            <div class="entry-list animate-entry" @click="goDetails(item.id)">
-              <n-ellipsis class="entry-list-title" :tooltip="false">
+            <div v-if="item.type === ArticleType.ORIGINAL" class="entry-list animate-entry" @click="goDetails(item)">
+              <n-ellipsis class="font-700 font-size-[17px] line-height-[24px] w-full mb-[3px]" :tooltip="false">
                 {{ item.title }}
               </n-ellipsis>
-              <n-ellipsis class="entry-list-content" :tooltip="false">
-                {{ item.content }}
+              <n-ellipsis class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f" :tooltip="false">
+                {{ item.description }}
               </n-ellipsis>
-              <div class="entry-list-bottom">
-                <div class="entry-list-bottom-left">
+              <div class="w-full flex justify-between">
+                <div class="flex justify-center items-center color-#8a919f">
                   {{ item.category_name }}
                   <n-divider vertical/>
-                  <div class="entry-list-bottom-left-item">
+                  <div class="flex justify-center items-center">
                     <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
                     {{ numberOfViews }}
                   </div>
-                  <div style="margin-left: 15px" class="entry-list-bottom-left-item">
+                  <div style="margin-left: 15px" class="flex justify-center items-center">
                     <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
                     {{ numberOfLikes }}
                   </div>
@@ -165,6 +197,41 @@ onUnmounted(() => {
                     {{ tag.name }}
                   </n-tag>
                 </div>
+              </div>
+            </div>
+            <div v-else class="entry-list" @click="goDetails(item)">
+              <div class="lex justify-between w-full">
+                <n-ellipsis class="font-700 font-size-[17px] line-heigth-[24px] w-full mb-[3px]" :tooltip="false">
+                  {{ item.title }}
+                </n-ellipsis>
+                <n-ellipsis class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f" :tooltip="false">
+                  {{ getPreview(item.link_url)?.description || item.description }}
+                </n-ellipsis>
+                <div class="flex justify-between w-full">
+                    <div class="flex justify-center items-center color-#8a919f">
+                      {{ item.category_name }}
+                      <n-divider vertical/>
+                      <div class="flex justify-center items-center">
+                        <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
+                        {{ numberOfViews }}
+                      </div>
+                      <div style="margin-left: 15px" class="flex justify-center items-center">
+                        <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
+                        {{ numberOfLikes }}
+                      </div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                      <img
+                          v-if="getPreview(item.link_url)?.favicon"
+                          :src="getPreview(item.link_url)?.favicon"
+                          alt="网站微标"
+                          class="h-[15px] mr-[5px]"
+                      >
+                      <span>
+                        {{ getPreview(item.link_url)?.siteName || parseUrl(item.link_url).domain }}
+                      </span>
+                    </div>
+                  </div>
               </div>
             </div>
           </template>
@@ -237,41 +304,6 @@ onUnmounted(() => {
 
   &:hover {
     background-color: #F7F8FA;
-  }
-
-  &-title {
-    font-weight: 700;
-    font-size: 17px;
-    line-height: 24px;
-    width: 100%;
-    margin-bottom: 3px;
-  }
-
-  &-content {
-    width: 100%;
-    font-size: 13px;
-    line-height: 22px;
-    margin-bottom: 4px;
-    color: #8a919f;
-  }
-
-  &-bottom {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-
-    &-left {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #8a919f;
-
-      &-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
   }
 }
 

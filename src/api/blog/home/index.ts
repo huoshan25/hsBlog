@@ -1,4 +1,5 @@
-import type {ArticleReq} from "~/api/blog/home/type";
+import type {ArticleReq, ArticleRes} from "~/api/blog/home/type";
+import type {HttpRes} from "~/api/type";
 
 /**
  * 文章模糊查询
@@ -21,7 +22,7 @@ export async function getUserInfo(params?: any) {
  * @param params
  */
 export async function getArticle(params: ArticleReq) {
-  return await fetchRequest.get<any>('/blog/article/list', params);
+  return await fetchRequest.get<HttpRes<ArticleRes>>('/blog/article/list', params);
 }
 
 /**

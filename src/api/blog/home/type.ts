@@ -1,3 +1,5 @@
+import type {ArticleType} from "~/api/admin/article/type";
+
 export interface ArticleReq {
   cursor: number | null,
   limit: number,
@@ -11,9 +13,15 @@ export interface ArticleItem {
   content: string;
   category_name: string;
   tags: { id: number; name: string }[];
+  create_time: string;
+  update_time: string;
+  /*文章类型*/
+  type: ArticleType;
+  /*转载文章url*/
+  link_url: string;
 }
 
-export interface ArticleResponse {
+export interface ArticleRes {
   list: ArticleItem[];
   cursor: number;
   hasMore: boolean;

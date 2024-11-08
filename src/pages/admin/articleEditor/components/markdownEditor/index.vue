@@ -6,13 +6,13 @@ import {
   getTagsList,
   updateArticle
 } from "~/api/admin/article";
-import {ArticleStatus} from "~/api/admin/article/type";
+import {ArticleStatus, ArticleType} from "~/api/admin/article/type";
 import {HttpStatus} from "~/enums/httpStatus";
 import {ReturnDownBackOutline, SaveOutline} from '@vicons/ionicons5'
-import {toolbarsConfig} from "~/pages/admin/articleEditor/detail/components/config/toolbarsConfig";
 import {computed} from "vue";
 import {pictureUpload} from "~/api/admin/oss";
 import SpeechSynthesis from "~/pages/admin/articleEditor/components/textToSpeech/index.vue";
+import {toolbarsConfig} from "~/pages/admin/articleEditor/components/markdownEditor/config/toolbarsConfig";
 
 const props = defineProps(['currentRow']);
 const message = useMessage()
@@ -27,6 +27,12 @@ const rules = {
   title: {required: true, message: '请输入文章标题', trigger: 'blur'},
   description: {required: true, message: '请输入文章描述', trigger: 'blur'},
   category_id: {required: true, message: '请选择文章分类', trigger: 'blur'},
+  type: {
+    required: true, message: '请选择文章来源', trigger: 'change', validator: (rule: any, value: any) => {
+      return value === ArticleType.ORIGINAL || value === ArticleType.EXTERNAL
+    }
+  },
+  link_url: {required: true, message: '请输入文章URL链接', trigger: 'blur'},
 }
 
 const form = ref({
@@ -34,6 +40,8 @@ const form = ref({
   category_id: '',
   articleUUID: '',
   description: '',
+  type: ArticleType.ORIGINAL,
+  link_url: ''
 })
 
 const editorRef = ref()
@@ -93,9 +101,9 @@ const change = (value: any, render: any) => {
 
 /**发布文章*/
 const handlePublish = async (status: ArticleStatus) => {
-  if (!content.value) return message.warning('未填写文章内容')
+  if (form.value.type === ArticleType.ORIGINAL && !content.value) return message.warning('未填写文章内容')
 
-  await formRef.value?.validate
+  await formRef.value?.validate()
   const commonParams = {
     title: form.value.title,
     category_id: form.value.category_id,
@@ -103,6 +111,8 @@ const handlePublish = async (status: ArticleStatus) => {
     status,
     tagNames: selectedTags.value,
     description: form.value.description,
+    type: form.value.type,
+    link_url: form.value.link_url
   }
 
   const res = props.currentRow.type === 'edit'
@@ -143,6 +153,8 @@ onMounted(async () => {
       content.value = res.data.content
       selectedTags.value = res.data.tags.map((item: Tag) => item.name)
       form.value.articleUUID = props.currentRow.id
+      form.value.type = res.data.type
+      form.value.link_url = res.data.link_url
     }
   } else if (props.currentRow.type === 'add') {
     const {generateUUID} = useUUID();
@@ -176,39 +188,50 @@ onMounted(async () => {
           />
         </n-form-item>
       </div>
-      <n-form-item label="文章描述" path="description">
-        <n-input v-model:value="form.description" placeholder="请输入文章描述" maxlength="100" show-count clearable/>
+      <n-form-item label="来源" path="type">
+        <n-radio-group v-model:value="form.type" size="small">
+          <n-radio :value="ArticleType.ORIGINAL">原创</n-radio>
+          <n-radio :value="ArticleType.EXTERNAL">转载</n-radio>
+        </n-radio-group>
       </n-form-item>
+      <template v-if="form.type === ArticleType.ORIGINAL">
+        <n-form-item label="文章描述" path="description">
+          <n-input v-model:value="form.description" placeholder="请输入文章描述" maxlength="100" show-count clearable/>
+        </n-form-item>
+        <ClientOnly>
+          <mavon-editor
+              ref="editorRef"
+              v-model="content"
+              class="w-full h-730px"
+              :toolbars="toolbarsConfig"
+              @imgAdd="handleImageUpload"
+              @imgDel="handleEditorImgDel"
+              @change="change"
+          />
+        </ClientOnly>
+        <n-form-item>
+          <n-select
+              v-model:value="selectedTags"
+              filterable
+              multiple
+              tag
+              placeholder="回车新增"
+              :options="tagOptions"
+              :show-arrow="false"
+          />
+        </n-form-item>
+        <n-form-item v-if="props.currentRow.type === 'edit'">
+          <n-button @click="handleAiPodcast()" class="aiPodcast">
+            AI播客
+          </n-button>
+        </n-form-item>
+      </template>
 
-      <ClientOnly>
-        <mavon-editor
-            ref="editorRef"
-            v-model="content"
-            class="w-full h-730px"
-            :toolbars="toolbarsConfig"
-            @imgAdd="handleImageUpload"
-            @imgDel="handleEditorImgDel"
-            @change="change"
-        />
-      </ClientOnly>
-
-      <n-form-item>
-        <n-select
-            v-model:value="selectedTags"
-            filterable
-            multiple
-            tag
-            placeholder="回车新增"
-            :options="tagOptions"
-            :show-arrow="false"
-        />
-      </n-form-item>
-
-      <n-form-item v-if="props.currentRow.type === 'edit'">
-        <n-button @click="handleAiPodcast()" class="aiPodcast">
-          AI播客
-        </n-button>
-      </n-form-item>
+      <template v-else-if="form.type === ArticleType.EXTERNAL">
+        <n-form-item label="URL" path="link_url" class="mr10 w100%">
+          <n-input v-model:value="form.link_url" placeholder="请输入文章URL" maxlength="500" show-count clearable/>
+        </n-form-item>
+      </template>
 
       <n-form-item>
         <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" class="mr10">

@@ -37,6 +37,17 @@ export interface CreateArticleReq {
   description: string;
   /*文章UUID*/
   articleUUID: string;
+  /*文章类型*/
+  type: ArticleType;
+  /*转载文章url*/
+  link_url: string;
+}
+
+export enum ArticleType {
+  /**原创*/
+  ORIGINAL = 1,
+  /**外链*/
+  EXTERNAL = 2
 }
 
 export interface UpdateArticle extends Omit<CreateArticleReq, 'articleUUID'> {
