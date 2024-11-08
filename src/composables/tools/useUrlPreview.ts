@@ -94,14 +94,11 @@ export function useUrlPreview(cacheExpirationTime: number = 30 * 60 * 1000): Use
 
       const response = await fetch(`/api/preview?url=${encodeURIComponent(url)}`)
 
-      console.log(response,'response')
-
       if (!response.ok) {
         throw new Error(`HTTP错误! 状态: ${response.status}`);
       }
 
       const html = await response.text();
-      console.log(html,'html')
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
 
