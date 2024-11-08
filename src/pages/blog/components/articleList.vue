@@ -240,7 +240,7 @@ onUnmounted(() => {
       <template #fallback>
         <div v-for="i in 2" :key="i + 'initialLoading'" class="entry-list">
           <common-skeleton text :repeat="2"/>
-          <div class="entry-list-bottom">
+          <div class="w-full flex justify-between">
             <n-space>
               <common-skeleton text width="60px"/>
               <common-skeleton text width="40px"/>
