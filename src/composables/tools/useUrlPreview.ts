@@ -94,7 +94,7 @@ export function useUrlPreview(cacheExpirationTime: number = 30 * 60 * 1000): Use
 
       const response = await fetch(`/api/preview?url=${encodeURIComponent(url)}`)
 
-      // console.log(response,'response')
+      console.log(response,'response')
 
       if (!response.ok) {
         throw new Error(`HTTP错误! 状态: ${response.status}`);
