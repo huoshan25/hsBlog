@@ -201,32 +201,27 @@ onUnmounted(() => {
             </div>
             <div v-else class="entry-list" @click="goDetails(item)">
               <div class="lex justify-between w-full">
-                <n-ellipsis class="font-700 font-size-[17px] line-heigth-[24px] w-full mb-[3px]" :tooltip="false">
-                  {{ item.title }}
-                </n-ellipsis>
-                <n-ellipsis class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f" :tooltip="false">
-                  {{ getPreview(item.link_url)?.description || item.description }}
+                <div class="flex items-center">
+                  <nuxt-img src="/svg/outsideChain.svg" size="20" class="mr-[3px]"/>
+                  <n-ellipsis class="font-700 font-size-[17px] line-heigth-[24px] w-full mb-[3px]" :tooltip="false">
+                    {{ item.title }}
+                  </n-ellipsis>
+                </div>
+                <n-ellipsis v-if="getPreview(item.link_url)?.description" class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f" :tooltip="false">
+                  {{ getPreview(item.link_url)?.description }}
                 </n-ellipsis>
                 <div class="flex justify-between w-full">
                     <div class="flex justify-center items-center color-#8a919f">
                       {{ item.category_name }}
-                      <n-divider vertical/>
-                      <div class="flex justify-center items-center">
-                        <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
-                        {{ numberOfViews }}
-                      </div>
-                      <div style="margin-left: 15px" class="flex justify-center items-center">
-                        <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
-                        {{ numberOfLikes }}
-                      </div>
                     </div>
                     <div class="flex justify-center items-center">
-                      <img
+                      <nuxt-img
                           v-if="getPreview(item.link_url)?.favicon"
                           :src="getPreview(item.link_url)?.favicon"
+                          placeholder="/svg/websiteIcon.svg"
                           alt="网站微标"
                           class="h-[15px] mr-[5px]"
-                      >
+                      />
                       <span>
                         {{ getPreview(item.link_url)?.siteName || parseUrl(item.link_url).domain }}
                       </span>
