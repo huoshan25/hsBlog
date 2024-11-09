@@ -1,80 +1,52 @@
 <script setup lang="ts">
 import {useProfileSEO} from "~/pages/blog/profile/components/useProfileSEO";
+import {getProfileInfo, type ProfileInfoRes, type SaveProfileInfoReq} from "~/api/admin/profileManage";
+import {HttpStatus} from "~/enums/httpStatus";
 
 definePageMeta({
   layout: 'blog',
 })
 
-useProfileSEO()
-
-const personalInfo = {
-  name: '火山',
-  title: 'Web前端开发',
-  description: '建立广泛的知识储备，专注深耕前端技术栈，热爱技术，热爱开源，持续学习中...',
-  bio: [
-    '👨‍💻 目前专注于全栈开发，主要是前端领域',
-    '🌱 正在学习 Rust 和 后端开发',
-    '🎯 2024年目标：写 100 篇技术博客',
-    '🏃‍♂️‍➡️ 业余时间喜欢健身和阅读技术书籍'
-  ],
-  skills: [
-    {
-      name: 'Frontend',
-      items: [
-        {name: 'Vue.js'},
-        {name: 'Nuxt.js'},
-        {name: 'TypeScript'},
-        {name: 'Tailwind CSS'},
-        {name: 'Scss'},
-        {name: 'React.js'},
-        {name: 'Next.js'}
-      ]
-    },
-    {
-      name: 'Backend',
-      items: [
-        {name: 'Nest.js'},
-        {name: 'FastAPI'},
-        {name: 'MySQL'}
-      ]
-    },
-    {
-      name: 'Tools',
-      items: [
-        {name: 'Git'},
-        {name: 'Docker'},
-        {name: 'WebStorm'}
-      ]
-    }
-  ],
-  projects: [
-    {
-      name: 'hsBlog',
-      description: '基于 Nuxt3 + NaiveUI 构建的现代化个人博客系统（前后台）',
-      tech: ['Vue3', 'Nuxt3', 'TypeScript', 'NaiveUI'],
-      link: 'https://github.com/huoshan25/hsBlog'
-    },
-    {
-      name: 'hsBlog_api',
-      description: '使用 Nest.js 构建的RESTful API服务，实现博客核心功能，包含用户认证、文章管理、对象存储等模块',
-      tech: ['Nest.js', 'TypeScript', 'TypeORM', 'MySQL', 'JWT', 'Ali-OSS'],
-      link: 'https://github.com/huoshan25/hsBlog_api'
-    },
-    {
-      name: 'fastapi-template',
-      description: '使用 FastAPI.py 构建的RESTful API服务项目模板、包含认证、自动注册路由、日志、登录注册刷新token等基础功能。',
-      tech: ['FastAPI.py', 'Pytest', 'MySQL', 'JWT', 'Pydantic', 'Starlette'],
-      link: 'https://github.com/huoshan25/fastapi-template'
-    },
-  ],
-  contacts: [
-    {platform: 'GitHub', link: 'https://github.com/huoshan25', icon: '/svg/github.svg'},
-    {platform: 'Email', link: 'mailto:1726941245@qq.com', icon: '/svg/icon_email.svg'},
-    {platform: '掘金', link: 'https://juejin.cn/user/46604556441571', icon: '/svg/juejin.svg'}
-  ]
-}
-
 const message = useMessage()
+
+const {data: personalInfo } = await useAsyncData('profile', () => getProfileInfo(), {
+  default() {
+    return {
+      message: '获取失败',
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      data: {
+        name: '',
+        title: '',
+        description: '',
+        bio: [],
+        skills: [{
+          name: '',
+          items: []
+        }],
+        projects: [{
+          name: '',
+          description: '',
+          tech: [],
+          link: ''
+        }],
+        contacts: [{
+          platform: '',
+          link: '',
+          icon: ''
+        }],
+        seo: {
+          title: '',
+          description: '',
+          keywords: '',
+          ogDescription: '',
+          twitterDescription: '',
+        }
+      }
+    }
+  },
+})
+
+useProfileSEO(personalInfo.value.data.seo)
 
 const copyEmail = () => {
   navigator.clipboard.writeText('1726941245@qq.com')
@@ -88,11 +60,11 @@ const copyEmail = () => {
       <div class="avatar-container">
         <nuxt-img size="120" src="/img/avatar.jpg"/>
       </div>
-      <h1 class="title">{{ personalInfo.name }}</h1>
-      <h2 class="subtitle">{{ personalInfo.title }}</h2>
-      <p class="description">{{ personalInfo.description }}</p>
+      <h1 class="title">{{ personalInfo.data.name }}</h1>
+      <h2 class="subtitle">{{ personalInfo.data.title }}</h2>
+      <p class="description">{{ personalInfo.data.description }}</p>
       <div class="bio-list">
-        <p v-for="(item, index) in personalInfo.bio"
+        <p v-for="(item, index) in personalInfo.data.bio"
            :key="index"
            class="bio-item">
           {{ item }}
@@ -149,7 +121,7 @@ const copyEmail = () => {
       <section class="skills">
         <h2 class="section-title">技术栈</h2>
         <div class="skills-container">
-          <div v-for="(category, index) in personalInfo.skills"
+          <div v-for="(category, index) in personalInfo.data.skills"
                :key="index"
                class="skill-category">
             <h3 class="category-title">{{ category.name }}</h3>
@@ -170,7 +142,7 @@ const copyEmail = () => {
         <h2 class="section-title">个人项目</h2>
         <div class="projects-grid">
           <n-card
-              v-for="(project, index) in personalInfo.projects"
+              v-for="(project, index) in personalInfo.data.projects"
               :key="index"
               class="project-card"
               hoverable
@@ -208,7 +180,7 @@ const copyEmail = () => {
         <h2 class="section-title">联系方式</h2>
         <div class="contact-links">
           <n-button
-              v-for="(contact, index) in personalInfo.contacts"
+              v-for="(contact, index) in personalInfo.data.contacts"
               :key="index"
               tag="a"
               class="contact-btn"

@@ -1,23 +1,24 @@
-export const useProfileSEO = () => {
+import type {Seo} from "~/api/admin/profileManage";
+
+export const useProfileSEO = (seo: Seo) => {
   const config = useRuntimeConfig()
   const route = useRoute()
 
   useHead({
-    title: '关于火山 - Web前端开发工程师',
+    title: seo.title || '关于我',
     titleTemplate: (titleChunk) => `${titleChunk} - 火山博客`,
     meta: [
-      { name: 'description', content: '火山，Web前端开发工程师。专注全栈开发，擅长Vue.js、Nuxt.js、TypeScript、React.js、Next.js等前端技术，同时具备Nest.js、FastAPI等后端开发经验。热爱技术，持续学习成长中。' },
-      { name: 'keywords', content: '火山,前端开发,全栈开发,Vue.js,Nuxt.js,TypeScript,React,Next.js,Nest.js,FastAPI' },
+      { name: 'description', content: seo.description },
+      { name: 'keywords', content: seo.keywords },
 
       { property: 'og:type', content: 'profile' },
-      { property: 'og:title', content: '关于火山 - Web前端开发工程师' },
-      { property: 'og:description', content: '火山，Web前端开发工程师。专注全栈开发，擅长Vue.js、Nuxt.js、TypeScript等技术栈。' },
-      { property: 'og:url', content: 'https://your-domain.com/about' },
-      { property: 'profile:first_name', content: '火山' },
+      { property: 'og:title', content: seo.title },
+      { property: 'og:description', content: seo.ogDescription },
+      { property: 'og:url', content: route.fullPath },
 
       { name: 'twitter:card', content: 'summary' },
-      { name: 'twitter:title', content: '关于火山 - Web前端开发工程师' },
-      { name: 'twitter:description', content: '火山，Web前端开发工程师。专注全栈开发，擅长Vue.js、Nuxt.js、TypeScript等技术栈。' },
+      { name: 'twitter:title', content: seo.title },
+      { name: 'twitter:description', content: seo.twitterDescription },
     ],
     link: [
       // TODO: 当前页面url暂时空着
