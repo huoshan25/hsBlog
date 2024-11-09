@@ -22,7 +22,7 @@ const errorComponent = computed(() => {
 })
 
 const handleRetry = () => {
-  clearError({ redirect: '/blog' })
+  // clearError({ redirect: '/blog' })
 }
 </script>
 
