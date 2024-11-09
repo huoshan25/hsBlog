@@ -232,6 +232,8 @@ onUnmounted(() => {
           </template>
         </n-virtual-list>
       </n-scrollbar>
+
+      <blog-no-more-data-divider :hasMore="loading"/>
       <template #fallback>
         <div v-for="i in 2" :key="i + 'initialLoading'" class="entry-list">
           <common-skeleton text :repeat="2"/>
@@ -249,7 +251,6 @@ onUnmounted(() => {
         </div>
       </template>
     </client-only>
-    <blog-no-more-data-divider :hasMore="loading"/>
   </div>
 </template>
 
