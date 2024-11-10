@@ -15,12 +15,8 @@ onMounted(() => {
 /**是否反转*/
 const inverted = ref(true)
 
-/**获取主题颜色*/
-const {themeColor} = useThemeColor()
-
 /*主题覆盖*/
-const themeOverrides: GlobalThemeOverrides = useThemeOverrides(themeColor)
-
+const {themeOverrides} = useThemeOverrides()
 
 /**选中菜单项*/
 const activeKey = ref<string>('')
