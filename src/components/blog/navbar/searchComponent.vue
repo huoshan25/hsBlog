@@ -25,7 +25,7 @@ const handleSearch = () => {
 </script>
 
 <template>
-  <div flex items-center class="search-container">
+  <div class="flex items-center relative">
     <client-only>
       <n-input-group>
         <n-input
@@ -46,15 +46,17 @@ const handleSearch = () => {
           </template>
         </n-button>
       </n-input-group>
-      <div v-if="showDropdown && dropdownContent.length" class="search-dropdown bg-white dark:bg-black">
-        <div v-if="!searchInput" class="flex p-[10px] border-b-[1px] border-b-solid border-[#e5e6ecff]">
+      <div v-if="showDropdown && dropdownContent.length" class="search-dropdown bg-white dark:bg-#1a1a1a">
+        <div v-if="!searchInput" class="flex p-[10px] border-b-[1px] border-b-solid
+        border-[#e5e6ecff] dark:border-#918787FF dark:bg-#1a1a1a">
           <div class="color-#8a919f flex-1">搜索记录</div>
           <n-button class="flex-4" text type="info" size="small" @mousedown.stop="clearSearchHistory">
             清空
           </n-button>
         </div>
-        <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item hover:bg-#f5f5f5
-        hover:dark:bg-black dark:c-white hover:dark:c-black"
+        <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item dark:#1a1a1a
+        hover:(dark:bg-#fff dark:c-#1a1a1a bg-#f5f5f5) dark:c-white dark:bg-#1a1a1a
+        py-[8px] px-[12px] cursor-pointer"
              @mousedown="selectItem(item)">
           {{ item }}
         </div>
@@ -68,10 +70,6 @@ const handleSearch = () => {
 
 
 <style lang="scss" scoped>
-.search-container {
-  position: relative;
-}
-
 .search-dropdown {
   position: absolute;
   top: 100%;
@@ -84,14 +82,5 @@ const handleSearch = () => {
   z-index: 1000;
   max-width: 300px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.dropdown-item {
-  padding: 8px 12px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
 }
 </style>
