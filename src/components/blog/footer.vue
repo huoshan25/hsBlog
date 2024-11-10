@@ -106,7 +106,7 @@ const switchMode = () => {
 <template>
   <n-modal v-model:show="loginShow" :auto-focus="false">
     <n-card
-        w-400
+        class="w-[400px]"
         :title="isLogin ? '登录' : '注册'"
         :bordered="false"
         size="huge"
@@ -138,12 +138,12 @@ const switchMode = () => {
         </n-form-item>
       </n-form>
 
-      <div style="text-align: right">
+      <div class="text-align-right">
         <n-button attr-type="button" @click="isLogin ? handleLogin() : handleRegister()">
           {{ isLogin ? '登录' : '注册' }}
         </n-button>
       </div>
-      <div style="text-align: center; margin-top: 10px">
+      <div class="hidden text-align-center mt-[10px]">
         <n-button text @click="switchMode">
           {{ isLogin ? '没有账号？点击注册' : '已有账号？点击登录' }}
         </n-button>
@@ -151,13 +151,13 @@ const switchMode = () => {
     </n-card>
   </n-modal>
 
-  <footer flex justify-center p-22>
+  <footer class="flex justify-center p-[22px] dark:c-white">
     2024 © Powered by
-    <div style="color: #1e80ff; margin: 0 5px; cursor: pointer">
+    <div class="c-#1e80ff px-[5px] cursor-pointer">
       hsBlog
     </div>
     |
-    <nuxt-link class="color-#1e80ff cursor-pointer" m-l-5 @click="toAdmin">
+    <nuxt-link class="color-#1e80ff cursor-pointer ml-[5px]" @click="toAdmin">
       后台管理
     </nuxt-link>
   </footer>
