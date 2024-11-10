@@ -1,0 +1,24 @@
+:root {
+  // 主题色
+  --theme-primary: #1e80ff;
+  --theme-text: #000000;
+  --theme-bg: #ffffff;
+  --theme-hover: black;
+  --theme-border: #fff;
+}
+
+// 深色模式
+.dark {
+  --theme-primary: #eef0f3;
+  --theme-text: #ffffff;
+  --theme-bg: #1a1a1a;
+  --theme-hover: #ffffff;
+  --theme-border: #100606;
+}
+
+// SCSS变量
+$primary: var(--theme-primary);
+$text: var(--theme-text);
+$bg: var(--theme-bg);
+$hover: var(--theme-hover);
+$border: var(--theme-border);

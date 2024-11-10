@@ -110,6 +110,13 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "@/assets/style/variables.scss" as *;'
+        }
+      }
+    },
     plugins: [
       AutoImport({
         imports: [

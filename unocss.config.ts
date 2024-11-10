@@ -13,6 +13,14 @@ import type {Rule} from 'unocss'
 import {presetRemToPx} from '@unocss/preset-rem-to-px'
 
 export default defineConfig({
+  theme: {
+    colors: {
+      primary: 'var(--theme-primary)',
+      text: 'var(--theme-text)',
+      bg: 'var(--theme-bg)',
+      hover: 'var(--theme-hover)',
+    }
+  },
   rules: [
     [
       /^custom-border(?:-(.+))?-(.+)$/,
