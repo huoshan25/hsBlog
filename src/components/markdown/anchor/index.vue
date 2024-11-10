@@ -40,7 +40,7 @@ const headings = computed(() => {
 </script>
 
 <template>
-  <div class="fixed bg-white" v-if="hasHeadings">
+  <div class="bg-white" v-if="hasHeadings">
     <client-only>
       <n-card hoverable>
         <template #header>
@@ -56,7 +56,7 @@ const headings = computed(() => {
           </div>
         </template>
 
-        <div class="overflow-hidden">
+        <div>
           <div class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
             <n-anchor
                 :bound="150"
