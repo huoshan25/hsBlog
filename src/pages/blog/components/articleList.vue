@@ -153,7 +153,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="border-radius-0-6-6-6 shadow-[0_6px_10px_0_rgba(234,234,234,0.8)] bg-white flex justify-between flex-col h-[100%]">
+  <div class="border-radius-0-6-6-6 shadow-[0_2px_5px_0_rgba(234,234,234,0.8)] bg-white flex justify-between flex-col h-[100%]">
     <client-only>
       <n-scrollbar @scroll="handleScroll">
         <n-virtual-list
