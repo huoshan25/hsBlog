@@ -56,8 +56,7 @@ const headings = computed(() => {
           </div>
         </template>
 
-        <div>
-          <div class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
+        <div class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
             <n-anchor
                 :bound="150"
                 :top="88"
@@ -72,7 +71,6 @@ const headings = computed(() => {
               </template>
             </n-anchor>
           </div>
-        </div>
       </n-card>
       <template #fallback>
         <div class="p-[15px]">
