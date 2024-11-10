@@ -1,4 +1,4 @@
-import type {ArticleReq, ArticleRes} from "~/api/blog/home/type";
+import type {ArticleReq, ArticleRes, UrlPreview} from "~/api/blog/home/type";
 import type {HttpRes} from "~/api/type";
 
 /**
@@ -28,6 +28,13 @@ export async function getArticle(params: ArticleReq) {
 /**
  * 获取所有分类
  */
-export async function getAllCategories(params?:any) {
+export async function getAllCategories(params?: any) {
   return await fetchRequest.get<any>('/blog/category', params);
+}
+
+/**
+ * url浏览
+ */
+export async function getArticleByUrl(params: { url: string }) {
+  return await fetchRequest.get<HttpRes<UrlPreview>>('/blog/url-preview', params);
 }

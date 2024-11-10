@@ -26,3 +26,12 @@ export interface ArticleRes {
   cursor: number;
   hasMore: boolean;
 }
+
+export interface UrlPreview {
+  title: string;
+  description: string;
+  image: string;
+  url: string;
+  siteName?: string;
+  favicon?: string;
+}

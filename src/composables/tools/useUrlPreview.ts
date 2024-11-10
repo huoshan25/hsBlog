@@ -1,21 +1,7 @@
 import {type Ref, ref} from 'vue';
-
-// 预览数据接口
-export interface UrlPreview {
-  title: string | null;
-  description: string | null;
-  image: string | null;
-  siteName: string | null;
-  url: string;
-  canonicalUrl: string;
-  publishedTime: string | null;
-  author: string | null;
-  keywords: string[] | null;
-  favicon: string | null;
-}
-
-// 选择器类型
-type MetaSelector = string;
+import {getArticleByUrl} from "~/api/blog/home";
+import {HttpStatus} from "~/enums/httpStatus";
+import type {UrlPreview} from "~/api/blog/home/type";
 
 // 钩子返回类型
 interface UseUrlPreviewReturn {
@@ -24,14 +10,6 @@ interface UseUrlPreviewReturn {
   getUrlPreview: (url: string) => Promise<UrlPreview>;
   parseUrl: (url: string) => ParsedUrl;
   extractMainDomain: (url: string) => string;
-}
-
-// 缓存接口
-interface UrlPreviewCache {
-  data: UrlPreview;
-  timestamp: number;
-  // 缓存过期时间，默认30分钟
-  expiresIn: number;
 }
 
 // URL解析结果接口
@@ -46,38 +24,6 @@ export interface ParsedUrl {
 export function useUrlPreview(cacheExpirationTime: number = 30 * 60 * 1000): UseUrlPreviewReturn {
   const loading = ref<boolean>(false);
   const error = ref<Error | null>(null);
-  const cache = new Map<string, UrlPreviewCache>();
-
-  /*是否缓存*/
-  const isCacheValid = (cacheItem: UrlPreviewCache): boolean => {
-    return Date.now() - cacheItem.timestamp < cacheItem.expiresIn;
-  };
-
-  /*获取元内容*/
-  const getMetaContent = (doc: Document, selectors: MetaSelector[]): string | null => {
-    for (const selector of selectors) {
-      const element = doc.querySelector(selector) as HTMLMetaElement;
-      if (element?.content) return element.content;
-    }
-    return null;
-  };
-
-  /*获取网址*/
-  const getFaviconUrl = (doc: Document, baseUrl: string): string | null => {
-    const faviconEl = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]') as HTMLLinkElement;
-    if (!faviconEl) return null;
-
-    const faviconHref = faviconEl.getAttribute('href');
-    if (!faviconHref) return null;
-
-    try {
-      return faviconHref.startsWith('http')
-        ? faviconHref
-        : new URL(faviconHref, baseUrl).href;
-    } catch {
-      return null;
-    }
-  };
 
   /*获取url预览*/
   const getUrlPreview = async (url: string): Promise<UrlPreview> => {
@@ -85,74 +31,14 @@ export function useUrlPreview(cacheExpirationTime: number = 30 * 60 * 1000): Use
     error.value = null;
 
     try {
-      // 检查缓存
-      const cachedData = cache.get(url);
-      if (cachedData && isCacheValid(cachedData)) {
-        loading.value = false;
-        return cachedData.data;
+
+      const res = await getArticleByUrl({url})
+      if (res.code !== HttpStatus.OK) {
+        throw new Error(`HTTP错误! 状态: ${res.message}`);
       }
-
-      const response = await fetch(`/api/preview?url=${encodeURIComponent(url)}`)
-
-      if (!response.ok) {
-        throw new Error(`HTTP错误! 状态: ${response.status}`);
-      }
-
-      const html = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-
-      const preview: UrlPreview = {
-        title: getMetaContent(doc, [
-          'meta[property="og:title"]',
-          'meta[name="twitter:title"]'
-        ]) || doc.title || doc.querySelector('h1')?.textContent?.trim() || null,
-
-        description: getMetaContent(doc, [
-          'meta[property="og:description"]',
-          'meta[name="twitter:description"]',
-          'meta[name="description"]'
-        ]),
-
-        image: getMetaContent(doc, [
-          'meta[property="og:image"]',
-          'meta[name="twitter:image"]'
-        ]),
-
-        siteName: getMetaContent(doc, [
-          'meta[property="og:site_name"]',
-          'meta[name="application-name"]'
-        ]),
-
-        url: url,
-        canonicalUrl: doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || url,
-
-        publishedTime: getMetaContent(doc, [
-          'meta[property="article:published_time"]',
-          'meta[name="published_time"]'
-        ]),
-
-        author: getMetaContent(doc, [
-          'meta[property="article:author"]',
-          'meta[name="author"]'
-        ]),
-
-        keywords: getMetaContent(doc, ['meta[name="keywords"]'])
-          ?.split(',')
-          .map(k => k.trim()) || null,
-
-        favicon: getFaviconUrl(doc, url)
-      };
-
-      /*更新缓存*/
-      cache.set(url, {
-        data: preview,
-        timestamp: Date.now(),
-        expiresIn: cacheExpirationTime
-      });
 
       loading.value = false;
-      return preview;
+      return res.data;
 
     } catch (err) {
       loading.value = false;
@@ -234,7 +120,7 @@ export function useUrlPreview(cacheExpirationTime: number = 30 * 60 * 1000): Use
 
       return parts.slice(-2).join('.');
     } catch (error) {
-      throw new Error(`Invalid URL for domain extraction: ${urlString}`);
+      throw new Error(`域提取的URL无效: ${urlString}`);
     }
   };
 
