@@ -46,14 +46,15 @@ const handleSearch = () => {
           </template>
         </n-button>
       </n-input-group>
-      <div v-if="showDropdown && dropdownContent.length" class="search-dropdown">
+      <div v-if="showDropdown && dropdownContent.length" class="search-dropdown bg-white dark:bg-black">
         <div v-if="!searchInput" class="flex p-[10px] border-b-[1px] border-b-solid border-[#e5e6ecff]">
           <div class="color-#8a919f flex-1">搜索记录</div>
           <n-button class="flex-4" text type="info" size="small" @mousedown.stop="clearSearchHistory">
             清空
           </n-button>
         </div>
-        <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item"
+        <div v-for="(item, index) in dropdownContent" :key="index" class="dropdown-item hover:bg-#f5f5f5
+        hover:dark:bg-black dark:c-white hover:dark:c-black"
              @mousedown="selectItem(item)">
           {{ item }}
         </div>

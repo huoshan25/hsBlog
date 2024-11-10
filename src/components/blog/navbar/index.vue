@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import {useNavigationMenu} from "~/components/blog/navbar/hook/useNavigationMenu";
 import SearchComponent from "~/components/blog/navbar/searchComponent.vue";
+import {useDark, useStorage, useToggle} from '@vueuse/core'
 
 const router = useRouter()
 
@@ -16,27 +17,85 @@ const { scrollY } = useScrollWatcher()
 const isNavbarVisible = computed(() => {
   return scrollY.value === 0
 })
+const storage: Storage = {
+  length: 0,
+  key(index: number): string | null {
+    if (process.client) {
+      return localStorage.key(index)
+    }
+    return null
+  },
+  getItem(key: string): string | null {
+    if (import.meta.client) {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem(key: string, value: string): void {
+    if (import.meta.client) {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem(key: string): void {
+    if (import.meta.client) {
+      localStorage.removeItem(key)
+    }
+  },
+  clear(): void {
+    if (import.meta.client) {
+      localStorage.clear()
+    }
+  }
+}
+
+// 使用安全的storage对象
+const isDark = useDark({
+  selector: 'html',
+  attribute: 'class',
+  valueDark: 'dark',
+  valueLight: '',
+  storage,
+  storageKey: 'blog-color-scheme',
+})
+
+const themeSwitch = ref()
+const toggleDark = useToggle(isDark)
+const handleUpdateTheme = () => {
+  setTimeout(() => {
+    toggleDark()
+  }, 190)
+}
 
 onMounted(() => {
+  themeSwitch.value = isDark.value
   currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
 })
 </script>
 
 <template>
-  <header class="header" :class="{ 'header-hidden': !isNavbarVisible }">
+  <header class="header bg-white dark:bg-black" :class="{ 'header-hidden': !isNavbarVisible }">
     <div class="header-container">
-      <div flex items-center>
+      <div class="flex items-center c-black dark:c-white">
         <div class="flex items-center py-[10px] mr-[5px] cursor-pointer" @click="router.push('/blog')">
           <img class="h-[30px]" src="~/assets/svg/logo.svg" alt="logo">
           <div class="m-l-5 text-size-21 font-550">火山博客</div>
         </div>
-        <div class="header-container-item" v-for="{title, url} in getMenuOptions" :key="url">
-          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}" class="cursor-pointer">
+        <div class="header-container-item hover:color-black" v-for="{title, url} in getMenuOptions" :key="url">
+          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}"
+                     class="cursor-pointer c-black dark:c-white">
             {{ title }}
           </nuxt-link>
         </div>
       </div>
-      <SearchComponent />
+      <div class="flex items-center">
+        <common-theme-switch-button
+            class="mr-[10px]"
+            size="small"
+            :model-value="themeSwitch"
+            @change="handleUpdateTheme"
+        />
+        <SearchComponent />
+      </div>
     </div>
   </header>
 </template>
