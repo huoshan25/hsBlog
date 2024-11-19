@@ -1,75 +1,72 @@
-# Nuxt 3 Minimal Starter
+# HsBlog
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+一个简介风格的个人博客系统，包含前后台。
 
-## Setup
+## :wrench: 技术栈
 
-Make sure to install the dependencies:
+- Nuxt3
+- Vue3
+- Typescript
+- UnoCSS
+- Naive-UI
+- Scss
+
+## 启动
+
+确保安装了依赖项：
 
 ```bash
-# npm
-npm install
-
 # pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## 开发服务器
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
 pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+
+启动开发服务器 `http://localhost:8800`:
 
 ## Production
 
-Build the application for production:
+构建用于生产的应用程序：
 
 ```bash
-# npm
-npm run build
-
 # pnpm
 pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+本地预览生产构建：
 
 ```bash
-# npm
-npm run preview
-
 # pnpm
 pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## 后台管理面板
+
+### 仪表盘
+
+![alt text](document/img/admin-page1.png)
+
+![alt text](document/img/admin-page2.png)
+
+### 文章管理
+
+![alt text](document/img/article.png)
+
+### 分类管理
+
+![alt text](document/img/category.png)
+
+### 关于管理
+
+![alt text](document/img/profileManage.png)
+
+## 前台页面
+
+![alt text](document/img/blog.png)
+
+> [个人网站](http://47.98.158.27/) · GitHub [@Innei](https://github.com/huoshan25/)
+
