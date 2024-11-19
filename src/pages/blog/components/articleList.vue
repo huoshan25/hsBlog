@@ -144,7 +144,6 @@ onMounted(async () => {
   await loadArticles();
   // 添加全局滚动监听
   window.addEventListener('scroll', handleScroll);
-  console.log(getUrlPreview('https://juejin.cn/post/7433271555830431784'), 'getUrlPreview')
 });
 
 onUnmounted(() => {
