@@ -56,3 +56,28 @@
     }
   }
 }
+
+.mobile-dropdown {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 604px) {
+  .header-container-item {
+    display: none;
+  }
+  .mobile-dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 468px) {
+  .logo-name {
+    display: none;
+  }
+}

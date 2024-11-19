@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import {useNavigationMenu} from "~/components/blog/navbar/hook/useNavigationMenu";
 import SearchComponent from "~/components/blog/navbar/searchComponent.vue";
 import {useDark, useStorage, useToggle} from '@vueuse/core'
+import { ReorderFour } from '@vicons/ionicons5'
 
 const router = useRouter()
 
@@ -70,6 +71,25 @@ onMounted(() => {
   themeSwitch.value = isDark.value
   currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
 })
+
+const dropdownOptions = computed(() => {
+  return getMenuOptions.value.map(item => ({
+    label: item.title,
+    key: item.url,
+  }))
+})
+
+/*获取当前页面对应的菜单标题*/
+const getCurrentMenuTitle = computed(() => {
+  const current = getMenuOptions.value.find(item => item.url === currentPath.value)
+  return current?.title || '导航'
+})
+
+const handleSelect = (key: string) => {
+  currentPath.value = key
+  navigateTo(key)
+}
+
 </script>
 
 <template>
@@ -78,7 +98,7 @@ onMounted(() => {
       <div class="flex items-center c-black dark:c-white">
         <div class="flex items-center py-[10px] mr-[5px] cursor-pointer" @click="router.push('/blog')">
           <img class="h-[30px]" src="~/assets/svg/logo.svg" alt="logo">
-          <div class="m-l-5 text-size-21 font-550">火山博客</div>
+          <div class="logo-name m-l-5 text-size-21 font-550">火山博客</div>
         </div>
         <div class="header-container-item hover:color-black" v-for="{title, url} in getMenuOptions" :key="url">
           <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}"
@@ -86,6 +106,19 @@ onMounted(() => {
             {{ title }}
           </nuxt-link>
         </div>
+        <n-dropdown
+            trigger="click"
+            :options="dropdownOptions"
+            @select="handleSelect"
+            :value="currentPath"
+        >
+          <div class="mobile-dropdown mx-[2px] c-blue flex">
+            <div>{{ getCurrentMenuTitle }}</div>
+            <n-icon size="20">
+              <ReorderFour/>
+            </n-icon>
+          </div>
+        </n-dropdown>
       </div>
       <div class="flex items-center">
         <common-theme-switch-button
