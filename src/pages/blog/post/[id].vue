@@ -27,12 +27,18 @@ const {data: articleData} = await useAsyncData('post', () => getArticleDetails({
 
 useArticleSEO(articleData.value)
 
+const isPlayerExpanded = ref(false)
+
+/*切换播放器展开状态*/
+const togglePlayer = () => {
+  isPlayerExpanded.value = !isPlayerExpanded.value
+}
 </script>
 
 <template>
-  <div class="flex justify-center">
-    <div class="mt-[15px] bg-white py-[25px] px-[30px] max-w-[900px] flex flex-col whitespace-normal mr-[24px]">
-      <h1 class="flex text-[40px] font-600 whitespace-normal m-0">{{ articleData.data.title }}</h1>
+  <div class="flex justify-center flex-wrap">
+    <div class="mt-[15px] bg-white py-[25px] px-[15px] md:px-[5px] md:px-[30px] w-full md:max-w-[900px] flex flex-col whitespace-normal md:mr-[24px]">
+      <h1 class="flex text-[28px] md:text-[40px] font-600 whitespace-normal m-0">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content"/>
       <client-only>
@@ -48,7 +54,45 @@ useArticleSEO(articleData.value)
         </template>
       </client-only>
     </div>
-    <div class="content-right" :class="{ 'header-hidden': !isNavbarVisible }">
+
+    <!-- 移动端音频播放器 -->
+    <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
+         class="mobile-player md:hidden"
+         :class="{ 'expanded': isPlayerExpanded }">
+      <!-- 展开/收起按钮 -->
+      <div class="player-toggle" @click="togglePlayer">
+        <div class="flex-center w-[24px]">
+          <div class="aiPodcast">{{ isPlayerExpanded ? '收起' : 'AI播客' }}</div>
+        </div>
+      </div>
+      <!-- 播放器内容 -->
+      <div class="p-[15px] max-h-[80vh] overflow-y-auto">
+        <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
+          <div class="mb-[5px] aiPodcast">文章概要</div>
+          <audio
+              :src="articleData.data.short_audio_url"
+              controls
+              class="w-full mt-2"
+          >
+            您的浏览器不支持音频播放
+          </audio>
+        </div>
+
+        <div v-if="articleData.data.long_audio_url">
+          <div class="mb-[5px] aiPodcast">AI播客</div>
+          <audio
+              :src="articleData.data.long_audio_url"
+              controls
+              class="w-full mt-2"
+          >
+            您的浏览器不支持音频播放
+          </audio>
+        </div>
+      </div>
+    </div>
+
+    <!-- 桌面端右侧内容 -->
+    <div class="content-right hidden md:block" :class="{ 'header-hidden': !isNavbarVisible }">
       <div class="fixed">
         <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px]">
           <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
@@ -80,16 +124,16 @@ useArticleSEO(articleData.value)
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .content-right {
   width: 330px;
   position: relative;
   transition: top 0.2s ease-in-out;
   top: 15px;
+}
 
-  &.header-hidden {
-    top: -60px;
-  }
+.content-right.header-hidden {
+  top: -60px;
 }
 
 .aiPodcast {
@@ -97,5 +141,61 @@ useArticleSEO(articleData.value)
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/*移动端适配样式*/
+@media (max-width: 768px) {
+  .content-right {
+    width: 100%;
+  }
+}
+
+/*移动端播放器样式*/
+.mobile-player {
+  position: fixed;
+  right: -52px;
+  bottom: 20%;
+  transform: translateY(-50%);
+  width: 300px;
+  background: white;
+  border-radius: 8px 0 0 8px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  transform: translateX(250px); /*默认隐藏大部分*/
+}
+
+.mobile-player.expanded {
+  transform: translateX(0); /*完全展开*/
+  right: 0;
+}
+
+.player-toggle {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(-100%);
+  background: white;
+  padding: 5px 20px 5px 2px;
+  border-radius: 8px 0 0 8px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+}
+
+/*音频播放器样式优化*/
+audio {
+  width: 100%;
+  height: 36px;
+  border-radius: 18px;
+}
+
+/*确保在较小屏幕上播放器不会太宽*/
+@media (max-width: 375px) {
+  .mobile-player {
+    width: 260px;
+    transform: translateX(210px);
+  }
 }
 </style>
