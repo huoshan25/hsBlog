@@ -31,8 +31,8 @@ useArticleSEO(articleData.value)
 
 <template>
   <div class="flex justify-center">
-    <div class="mt-[15px] bg-white py-[25px] px-[30px] w-[900px] flex flex-col mr-[24px]">
-      <h1 class="text-[40px] font-600 line-height-1.31">{{ articleData.data.title }}</h1>
+    <div class="mt-[15px] bg-white py-[25px] px-[30px] max-w-[900px] flex flex-col whitespace-normal mr-[24px]">
+      <h1 class="flex text-[40px] font-600 whitespace-normal m-0">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content"/>
       <client-only>
