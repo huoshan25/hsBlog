@@ -68,5 +68,5 @@ pnpm run preview
 
 ![alt text](document/img/blog.png)
 
-> [个人网站](http://47.98.158.27/) · GitHub [@Innei](https://github.com/huoshan25/)
+> [个人网站](http://47.98.158.27/) · GitHub [@HuoShan](https://github.com/huoshan25/)
 
