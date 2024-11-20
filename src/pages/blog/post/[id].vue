@@ -36,10 +36,10 @@ const togglePlayer = () => {
 </script>
 
 <template>
-  <div class="flex justify-center flex-wrap">
-    <div class="mt-[15px] bg-white py-[25px] px-[7px] w-full md:max-w-[900px] flex flex-col whitespace-normal md:mr-[24px]">
-      <h1 class="flex text-[28px] md:text-[40px] font-600 whitespace-normal m-0">{{ articleData.data.title }}</h1>
-      <author-info :articleData="articleData.data"/>
+  <div class="flex justify-center">
+    <div class="mt-[15px] bg-white py-[25px] w-full max-w-[900px] flex flex-col whitespace-normal">
+      <h1 class="flex text-[28px] font-600 whitespace-normal m-0 px-[15px]">{{ articleData.data.title }}</h1>
+      <author-info :articleData="articleData.data" class="px-[15px]"/>
       <markdown-renderer :markdown="articleData.data.content"/>
       <client-only>
         <!--许可证-->
@@ -92,7 +92,7 @@ const togglePlayer = () => {
     </div>
 
     <!-- 桌面端右侧内容 -->
-    <div class="content-right hidden md:block" :class="{ 'header-hidden': !isNavbarVisible }">
+    <div class="content-right hidden md:block ml-[24px]" :class="{ 'header-hidden': !isNavbarVisible }">
       <div class="fixed">
         <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px]">
           <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
@@ -148,6 +148,16 @@ const togglePlayer = () => {
   .content-right {
     width: 100%;
   }
+
+  :deep(p) {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .content-right {
+    display: none;
+  }
 }
 
 /*移动端播放器样式*/
@@ -196,6 +206,14 @@ audio {
   .mobile-player {
     width: 260px;
     transform: translateX(210px);
+  }
+
+  .markdown-body {
+    padding: 0 5px;
+  }
+
+  :deep(p) {
+    font-size: 14px;
   }
 }
 </style>

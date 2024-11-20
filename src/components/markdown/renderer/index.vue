@@ -1,5 +1,5 @@
 <template>
-  <div class="markdown-body" v-html="renderedContent"></div>
+  <div class="markdown-body px-[15px]" v-html="renderedContent"></div>
 </template>
 
 <script setup>
