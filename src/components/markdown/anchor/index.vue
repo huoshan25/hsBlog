@@ -85,26 +85,32 @@ const headings = computed(() => {
 
 <style scoped lang="scss">
 .anchor-wrapper {
-  max-height: 420px;
+  max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
-}
+  scroll-behavior: smooth;
 
-.anchor-wrapper.anchor-collapsed {
-  max-height: 0;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(-10px);
-}
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
 
-/* 隐藏滚动条但保持可滚动 */
-.anchor-wrapper::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #989b9f;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 :deep(.n-anchor-link__title) {
