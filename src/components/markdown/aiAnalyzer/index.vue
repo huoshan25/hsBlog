@@ -215,8 +215,9 @@ onUnmounted(() => {
 .ai-analyzer {
   position: fixed;
   right: 20px;
-  top: 45px;
-  width: 31%;
+  bottom: 20px;
+  width: 80%;
+  max-width: 450px;
   height: calc(100vh - 100px);
   background-image: url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/086a891….svg), url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/img/bgc2.1e5526a.png), linear-gradient(173deg, #f4f9ff -24.94%, #edf1f9 103.15%);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
@@ -225,7 +226,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   border-radius: 15px;
-  padding: 15px;
+  padding: 10px;
 }
 
 .ai-analyzer-header {
@@ -239,7 +240,7 @@ onUnmounted(() => {
 .ai-analyzer-content {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 10px;
   scroll-behavior: smooth;
 }
 
@@ -281,7 +282,7 @@ onUnmounted(() => {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {

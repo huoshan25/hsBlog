@@ -119,8 +119,9 @@ const togglePlayer = () => {
         </div>
         <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
       </div>
-      <markdown-ai-analyzer/>
     </div>
+
+    <markdown-ai-analyzer/>
   </div>
 </template>
 
