@@ -37,7 +37,7 @@ const togglePlayer = () => {
 
 <template>
   <div class="flex justify-center flex-wrap">
-    <div class="mt-[15px] bg-white py-[25px] px-[15px] md:px-[5px] md:px-[30px] w-full md:max-w-[900px] flex flex-col whitespace-normal md:mr-[24px]">
+    <div class="mt-[15px] bg-white py-[25px] px-[7px] w-full md:max-w-[900px] flex flex-col whitespace-normal md:mr-[24px]">
       <h1 class="flex text-[28px] md:text-[40px] font-600 whitespace-normal m-0">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data"/>
       <markdown-renderer :markdown="articleData.data.content"/>
