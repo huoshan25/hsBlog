@@ -98,7 +98,7 @@ onMounted(async () => {
   transition: transform .3s;
 }
 
-@media (max-width: 1407px) {
+@media (max-width: 895px) {
   .category-wrap {
     display: none;
   }

@@ -99,12 +99,9 @@ onMounted(() => {
 }
 
 
-@media (max-width: 1145px) {
+@media (max-width: 1213px) {
   .contents-right {
     display: none;
-  }
-  .contents-left {
-    width: 100%;
   }
 }
 </style>
