@@ -113,6 +113,13 @@ const headings = computed(() => {
   }
 }
 
+.anchor-wrapper.anchor-collapsed {
+  max-height: 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 :deep(.n-anchor-link__title) {
   white-space: nowrap;
   overflow: hidden;
