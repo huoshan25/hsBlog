@@ -6,6 +6,7 @@
   --theme-hover: black;
   --theme-border: #1e80ff;
   --theme-nav-a-hover: black;
+  --theme-bg-img: #ebebeb;
 }
 
 .dark {
@@ -16,6 +17,7 @@
   --theme-hover: #ffffff;
   --theme-border: #ffff;
   --theme-nav-a-hover: #ffff;
+  --theme-bg-img: #2c2c2c;
 }
 
 $primary: var(--theme-primary);

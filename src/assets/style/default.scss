@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: $body;
-  background-image: radial-gradient(#d9d9d9 1px, transparent 1px);
+  background-image: radial-gradient(var(--theme-bg-img) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
