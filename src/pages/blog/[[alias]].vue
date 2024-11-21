@@ -87,7 +87,7 @@ onMounted(() => {
   &-left {
     display: flex;
     flex-direction: column;
-    width: 720px;
+    max-width: 720px;
   }
 
   &-right {
@@ -98,10 +98,15 @@ onMounted(() => {
   }
 }
 
-
 @media (max-width: 1213px) {
   .contents-right {
     display: none;
+  }
+}
+
+@media (max-width: 895px) {
+  .contents-left {
+    width: 100%;
   }
 }
 </style>
