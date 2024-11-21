@@ -72,7 +72,7 @@ onMounted(() => {
     </div>
   </main>
 
-  <n-back-top :right="100"/>
+  <n-back-top/>
 </template>
 
 <style scoped lang="scss">
