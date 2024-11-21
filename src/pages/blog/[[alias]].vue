@@ -42,7 +42,7 @@ if (categoryData.value?.code === HttpStatus.OK) {
 
 useHead({
   title: titleName.value?.name,
-  titleTemplate: (titleChunk) => titleChunk == '火山博客' ? '' : `${titleChunk} - 火山博客`
+  titleTemplate: (titleChunk) => titleChunk  ? `${titleChunk} - 火山博客` : '火山博客'
 })
 
 onMounted(() => {
