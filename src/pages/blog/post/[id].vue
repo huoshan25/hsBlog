@@ -37,7 +37,7 @@ const togglePlayer = () => {
 
 <template>
   <div class="flex justify-center">
-    <div class="mt-[15px] bg-white py-[25px] w-full max-w-[900px] flex flex-col whitespace-normal">
+    <div class="mt-[15px] bg-white py-[25px] w-full max-w-[900px] flex flex-col whitespace-normal rounded-2xl">
       <h1 class="flex text-[28px] font-600 whitespace-normal m-0 px-[15px]">{{ articleData.data.title }}</h1>
       <author-info :articleData="articleData.data" class="px-[15px]"/>
       <markdown-renderer :markdown="articleData.data.content"/>
@@ -94,7 +94,7 @@ const togglePlayer = () => {
     <!-- 桌面端右侧内容 -->
     <div class="content-right hidden md:block ml-[24px]" :class="{ 'header-hidden': !isNavbarVisible }">
       <div class="fixed">
-        <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px]">
+        <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px] rounded-2xl">
           <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
             <div class="mb-[5px] aiPodcast">文章概要</div>
             <audio

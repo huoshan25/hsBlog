@@ -40,7 +40,7 @@ const headings = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white" v-if="hasHeadings">
+  <div class="bg-white rounded-2xl" v-if="hasHeadings">
     <client-only>
       <n-card hoverable>
         <template #header>
