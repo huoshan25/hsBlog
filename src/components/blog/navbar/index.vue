@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref, onMounted} from 'vue'
+import {useRouter} from 'vue-router'
 import {useNavigationMenu} from "~/components/blog/navbar/hook/useNavigationMenu";
 import SearchComponent from "~/components/blog/navbar/searchComponent.vue";
 import {useDark, useStorage, useToggle} from '@vueuse/core'
-import { ReorderFour } from '@vicons/ionicons5'
+import {ReorderFour} from '@vicons/ionicons5'
 
 const router = useRouter()
 
 /**默认首页路径*/
 const currentPath = ref('')
 
-const { getMenuOptions } = useNavigationMenu()
+const {getMenuOptions, isActiveRoute} = useNavigationMenu()
 
-const { scrollY } = useScrollWatcher()
+const {scrollY} = useScrollWatcher()
 
 const isNavbarVisible = computed(() => {
   return scrollY.value === 0
@@ -69,7 +69,6 @@ const handleUpdateTheme = () => {
 
 onMounted(() => {
   themeSwitch.value = isDark.value
-  currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
 })
 
 const dropdownOptions = computed(() => {
@@ -86,7 +85,6 @@ const getCurrentMenuTitle = computed(() => {
 })
 
 const handleSelect = (key: string) => {
-  currentPath.value = key
   navigateTo(key)
 }
 
@@ -101,7 +99,7 @@ const handleSelect = (key: string) => {
           <div class="logo-name m-l-5 text-size-21 font-550">火山博客</div>
         </div>
         <div class="header-container-item hover:color-black" v-for="{title, url} in getMenuOptions" :key="url">
-          <nuxt-link :to="url" @click="currentPath = url" :class="{ active: currentPath === url}"
+          <nuxt-link :to="url" :class="{ active: isActiveRoute(url) }"
                      class="cursor-pointer c-black dark:c-white">
             {{ title }}
           </nuxt-link>
@@ -127,7 +125,7 @@ const handleSelect = (key: string) => {
             :model-value="themeSwitch"
             @change="handleUpdateTheme"
         />
-        <SearchComponent />
+        <SearchComponent/>
       </div>
     </div>
   </header>

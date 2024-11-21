@@ -7,6 +7,8 @@ export interface NavigationMenu {
  * 导航栏菜单hook
  */
 export const useNavigationMenu = () => {
+  const staticPages = ['/blog/profile', '/blog/friendChains']
+
   const menuOptions = ref<NavigationMenu[]>(
     [
       {
@@ -23,10 +25,29 @@ export const useNavigationMenu = () => {
       },
     ]
   )
+  const router = useRouter()
+  const currentPath = ref(router.currentRoute.value.path)
+
+  watch(
+    () => router.currentRoute.value.path,
+    (newPath) => {
+      currentPath.value = newPath
+    }
+  )
+
+  const isActiveRoute = (url: string) => {
+    if (url === '/blog') {
+      return currentPath.value === '/blog' ||
+        (currentPath.value.startsWith('/blog/') &&
+          !staticPages.includes(currentPath.value))
+    }
+    return currentPath.value === url
+  }
 
   const getMenuOptions = computed(() => menuOptions.value)
 
   return {
-    getMenuOptions
+    getMenuOptions,
+    isActiveRoute
   }
 }
