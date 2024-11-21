@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormInst } from 'naive-ui'
-import {getProfileInfo, saveProfileInfo} from "~/api/admin/profileManage";
+import type {FormInst} from 'naive-ui'
+import {getProfileInfo, type ProfileInfoRes, saveProfileInfo} from "~/api/admin/profileManage";
 import {HttpStatus} from "~/enums/httpStatus";
 
 definePageMeta({
@@ -13,7 +13,40 @@ const loading = ref(false)
 
 const message = useMessage()
 
-const formData = ref()
+const formData = ref<ProfileInfoRes>({
+  name: '',
+  title: '',
+  description: '',
+  bio: [],
+  skills: [
+    {
+      name: '',
+      items: []
+    }
+  ],
+  projects: [
+    {
+      name: '',
+      description: '',
+      tech: [],
+      link: ''
+    }
+  ],
+  contacts: [
+    {
+      platform: '',
+      link: '',
+      icon: ''
+    }
+  ],
+  seo: {
+    description: '',
+    keywords: '',
+    ogDescription: '',
+    title: '',
+    twitterDescription: ''
+  }
+})
 
 /*获取个人信息数据*/
 const loadProfileInfo = async () => {
@@ -117,7 +150,7 @@ const handleSubmit = async () => {
     await formRef.value.validate()
     loading.value = true
     const res = await saveProfileInfo(formData.value)
-    if(res.code === HttpStatus.OK) {
+    if (res.code === HttpStatus.OK) {
       message.success('更新成功')
       await loadProfileInfo()
     }
