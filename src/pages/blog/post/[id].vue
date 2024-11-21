@@ -25,7 +25,7 @@ const {data: articleData} = await useAsyncData('post', () => getArticleDetails({
   },
 })
 
-useArticleSEO(articleData.value)
+useArticleSEO(articleData.value.data)
 
 const isPlayerExpanded = ref(false)
 
