@@ -87,7 +87,7 @@ onMounted(() => {
   &-left {
     display: flex;
     flex-direction: column;
-    max-width: 720px;
+    width: 720px;
   }
 
   &-right {
