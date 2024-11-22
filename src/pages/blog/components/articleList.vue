@@ -158,7 +158,7 @@ onUnmounted(() => {
         <n-virtual-list
             ref="virtualListRef"
             :items="articles"
-            :item-size="120"
+            :item-size="90"
             item-resizable
             class="animated-list"
         >
