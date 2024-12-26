@@ -1,42 +1,92 @@
 <script setup lang="ts">
-import {ChevronUp, ChevronDownSharp} from '@vicons/ionicons5'
+import { ChevronUp, ChevronDownSharp } from "@vicons/ionicons5";
 
 const props = defineProps({
   content: {
     type: String,
     required: true
   }
-})
+});
 
-const collapsed = ref(false)
+const collapsed = useState("toc-collapsed", () => false);
+const anchorWrapper = ref<HTMLElement | null>(null);
 
 const hasHeadings = computed(() => {
-  return headings.value.length > 0
-})
+  return headings.value.length > 0;
+});
 
 const headings = computed(() => {
-  const lines = props.content?.split('\n')
-  const result: any = []
-  let index = 0
+  const lines = props.content?.split("\n");
+  const result: any = [];
+  let index = 0;
 
   lines?.forEach(line => {
-    const match = line.match(/^(#{1,6})\s+(.+)$/)
+    const match = line.match(/^(#{1,6})\s+(.+)$/);
     if (match) {
-      const level = match[1].length
-      const title = match[2].trim()
-      const id = `heading-${index++}`
+      const level = match[1].length;
+      const title = match[2].trim();
+      const id = `heading-${index++}`;
 
       result.push({
         level,
         title,
         id
-      })
+      });
     }
-  })
+  });
 
-  return result
-})
+  return result;
+});
 
+/*获取当前可见的标题*/
+const getCurrentHeading = () => {
+  for (const heading of headings.value) {
+    const element = document.getElementById(heading.id);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      // 当标题进入视口顶部一定范围内时认为是当前标题
+      if (rect.top >= 0 && rect.top <= 150) {
+        return heading;
+      }
+    }
+  }
+  return null;
+};
+
+/*滚动侧边栏到当前标题位置*/
+const scrollTocToHeading = (headingId: string) => {
+  if (collapsed.value || !anchorWrapper.value) return;
+
+  const tocItem = anchorWrapper.value.querySelector(`a[href="#${headingId}"]`);
+  if (tocItem) {
+    const wrapperRect = anchorWrapper.value.getBoundingClientRect();
+    const itemRect = tocItem.getBoundingClientRect();
+
+    // 计算需要滚动的距离
+    const scrollTop = anchorWrapper.value.scrollTop + (itemRect.top - wrapperRect.top) - 50;
+
+    anchorWrapper.value.scrollTo({
+      top: scrollTop,
+      behavior: "smooth"
+    });
+  }
+};
+
+/*监听页面滚动*/
+const handleScroll = useDebounceFn(() => {
+  const currentHeading = getCurrentHeading();
+  if (currentHeading) {
+    scrollTocToHeading(currentHeading.id);
+  }
+}, 100);
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <template>
@@ -47,36 +97,28 @@ const headings = computed(() => {
           <div class="flex justify-between items-center">
             <span>目录</span>
             <n-button icon-placement="right" text @click.stop="collapsed = !collapsed">
-              {{ collapsed ? '展开' : '收起' }}
+              {{ collapsed ? "展开" : "收起" }}
               <template #icon>
-                <ChevronDownSharp v-if="collapsed"/>
-                <ChevronUp v-else/>
+                <ChevronDownSharp v-if="collapsed" />
+                <ChevronUp v-else />
               </template>
             </n-button>
           </div>
         </template>
 
-        <div class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
-            <n-anchor
-                :bound="150"
-                :top="88"
-                style="z-index: 1"
-                :ignore-gap="true"
-            >
-              <template v-for="heading in headings" :key="heading.id">
-                <n-anchor-link
-                    :title="heading.title"
-                    :href="`#${heading.id}`"
-                />
-              </template>
-            </n-anchor>
-          </div>
+        <div ref="anchorWrapper" class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
+          <n-anchor :bound="150" :top="88" style="z-index: 1" :ignore-gap="true">
+            <template v-for="heading in headings" :key="heading.id">
+              <n-anchor-link :title="heading.title" :href="`#${heading.id}`" />
+            </template>
+          </n-anchor>
+        </div>
       </n-card>
       <template #fallback>
         <div class="p-[15px]">
-          <common-skeleton text width="100%"/>
-          <common-skeleton text width="100%"/>
-          <common-skeleton text width="100%"/>
+          <common-skeleton text width="100%" />
+          <common-skeleton text width="100%" />
+          <common-skeleton text width="100%" />
         </div>
       </template>
     </client-only>
