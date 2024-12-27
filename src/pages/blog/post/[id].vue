@@ -1,92 +1,82 @@
 <script setup lang="ts">
-import {getArticleDetails} from "~/api/blog/post";
-import License from "./components/license.vue"
-import {useArticleSEO} from "~/pages/blog/post/components/useArticleSEO";
+import { getArticleDetails } from "~/api/blog/post";
+import License from "./components/license.vue";
+import { useArticleSEO } from "~/pages/blog/post/components/useArticleSEO";
 import AuthorInfo from "~/pages/blog/post/components/authorInfo.vue";
-import {HttpStatus} from "~/enums/httpStatus";
+import { HttpStatus } from "~/enums/httpStatus";
 
 definePageMeta({
-  layout: 'blog',
-})
+  layout: "blog"
+});
 
-const {scrollY} = useScrollWatcher()
+const { scrollY } = useScrollWatcher();
 
-const route = useRoute()
+const route = useRoute();
 
 const isNavbarVisible = computed(() => {
-  return scrollY.value === 0
-})
-const {data: articleData} = await useAsyncData('post', () => getArticleDetails({id: Number(route.params.id)}), {
+  return scrollY.value === 0;
+});
+const { data: articleData } = await useAsyncData("post", () => getArticleDetails({ id: Number(route.params.id) }), {
   default() {
-      return {
-        code: HttpStatus.INTERNAL_SERVER_ERROR,
-        data: []
-      }
-  },
-})
+    return {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      data: []
+    };
+  }
+});
 
-useArticleSEO(articleData.value.data)
+useArticleSEO(articleData.value.data);
 
-const isPlayerExpanded = ref(false)
+const isPlayerExpanded = ref(false);
 
 /*切换播放器展开状态*/
 const togglePlayer = () => {
-  isPlayerExpanded.value = !isPlayerExpanded.value
-}
+  isPlayerExpanded.value = !isPlayerExpanded.value;
+};
 </script>
 
 <template>
   <div class="flex justify-center">
     <div class="mt-[15px] bg-white py-[25px] w-full max-w-[900px] flex flex-col whitespace-normal rounded-2xl">
       <h1 class="flex text-[28px] font-600 whitespace-normal m-0 px-[15px]">{{ articleData.data.title }}</h1>
-      <author-info :articleData="articleData.data" class="px-[15px]"/>
-      <markdown-renderer :markdown="articleData.data.content"/>
+      <author-info :articleData="articleData.data" class="px-[15px]" />
+      <markdown-renderer :markdown="articleData.data.content" />
       <client-only>
         <!--许可证-->
-        <div class="flex justify-center">
-          <license/>
+        <div class="flex justify-center px-[15px]">
+          <license />
         </div>
         <template #fallback>
           <div class="p-[15px]">
-            <common-skeleton text width="50%"/>
-            <common-skeleton text width="100%"/>
+            <common-skeleton text width="50%" />
+            <common-skeleton text width="100%" />
           </div>
         </template>
       </client-only>
     </div>
 
     <!-- 移动端音频播放器 -->
-    <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
-         class="mobile-player md:hidden"
-         :class="{ 'expanded': isPlayerExpanded }">
+    <div
+      v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
+      class="mobile-player md:hidden"
+      :class="{ expanded: isPlayerExpanded }"
+    >
       <!-- 展开/收起按钮 -->
       <div class="player-toggle" @click="togglePlayer">
         <div class="flex-center w-[24px]">
-          <div class="aiPodcast">{{ isPlayerExpanded ? '收起' : 'AI播客' }}</div>
+          <div class="aiPodcast">{{ isPlayerExpanded ? "收起" : "AI播客" }}</div>
         </div>
       </div>
       <!-- 播放器内容 -->
       <div class="p-[15px] max-h-[80vh] overflow-y-auto">
         <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
           <div class="mb-[5px] aiPodcast">文章概要</div>
-          <audio
-              :src="articleData.data.short_audio_url"
-              controls
-              class="w-full mt-2"
-          >
-            您的浏览器不支持音频播放
-          </audio>
+          <audio :src="articleData.data.short_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
         </div>
 
         <div v-if="articleData.data.long_audio_url">
           <div class="mb-[5px] aiPodcast">AI播客</div>
-          <audio
-              :src="articleData.data.long_audio_url"
-              controls
-              class="w-full mt-2"
-          >
-            您的浏览器不支持音频播放
-          </audio>
+          <audio :src="articleData.data.long_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
         </div>
       </div>
     </div>
@@ -94,34 +84,25 @@ const togglePlayer = () => {
     <!-- 桌面端右侧内容 -->
     <div class="content-right hidden md:block ml-[24px]" :class="{ 'header-hidden': !isNavbarVisible }">
       <div class="fixed">
-        <div v-if="articleData.data.short_audio_url || articleData.data.long_audio_url" class="bg-white p-[15px] mb-[20px] rounded-2xl">
+        <div
+          v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
+          class="bg-white p-[15px] mb-[20px] rounded-2xl"
+        >
           <div v-if="articleData.data.short_audio_url" class="mb-[10px]">
             <div class="mb-[5px] aiPodcast">文章概要</div>
-            <audio
-                :src="articleData.data.short_audio_url"
-                controls
-                class="w-full mt-2"
-            >
-              您的浏览器不支持音频播放
-            </audio>
+            <audio :src="articleData.data.short_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
           </div>
 
           <div v-if="articleData.data.long_audio_url">
             <div class="mb-[5px] aiPodcast">AI播客</div>
-            <audio
-                :src="articleData.data.long_audio_url"
-                controls
-                class="w-full mt-2"
-            >
-              您的浏览器不支持音频播放
-            </audio>
+            <audio :src="articleData.data.long_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
           </div>
         </div>
-        <markdown-anchor class="w-[330px]" :content="articleData.data.content"/>
+        <markdown-anchor class="w-[330px]" :content="articleData.data.content" />
       </div>
     </div>
 
-    <markdown-ai-analyzer/>
+    <markdown-ai-analyzer />
   </div>
 </template>
 
@@ -138,7 +119,13 @@ const togglePlayer = () => {
 }
 
 .aiPodcast {
-  background: radial-gradient(495.98% 195.09% at 144.79% 10.71%, #ff8a01 0, #b051b9 22.37%, #672bff 45.54%, #06f 99.99%);
+  background: radial-gradient(
+    495.98% 195.09% at 144.79% 10.71%,
+    #ff8a01 0,
+    #b051b9 22.37%,
+    #672bff 45.54%,
+    #06f 99.99%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
