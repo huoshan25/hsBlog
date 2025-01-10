@@ -15,6 +15,24 @@ const hasHeadings = computed(() => {
   return headings.value.length > 0;
 });
 
+/**
+ * 处理标题文本，移除HTML标签和处理markdown链接
+ * @param title 标题文本
+ */
+const processTitle = (title: string) => {
+  // 处理HTML标签
+  let processedTitle = title.replace(/<[^>]+>/g, match => {
+    // 提取<a>标签中的文本内容
+    const textMatch = match.match(/>([^<]+)</);
+    return textMatch ? textMatch[1] : "";
+  });
+
+  // 处理markdown格式的链接 [text](url)
+  processedTitle = processedTitle.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+
+  return processedTitle.trim();
+};
+
 const headings = computed(() => {
   const lines = props.content?.split("\n");
   const result: any = [];
@@ -24,7 +42,8 @@ const headings = computed(() => {
     const match = line.match(/^(#{1,6})\s+(.+)$/);
     if (match) {
       const level = match[1].length;
-      const title = match[2].trim();
+      const rawTitle = match[2].trim();
+      const title = processTitle(rawTitle);
       const id = `heading-${index++}`;
 
       result.push({
