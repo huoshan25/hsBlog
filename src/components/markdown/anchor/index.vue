@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ChevronUp, ChevronDownSharp } from "@vicons/ionicons5";
 
+interface Heading {
+  level: number;
+  title: string;
+  id: string;
+}
+
 const props = defineProps({
   content: {
     type: String,
@@ -35,7 +41,7 @@ const processTitle = (title: string) => {
 
 const headings = computed(() => {
   const lines = props.content?.split("\n");
-  const result: any = [];
+  const result: Heading[] = [];
   let index = 0;
 
   lines?.forEach(line => {
@@ -91,6 +97,24 @@ const scrollTocToHeading = (headingId: string) => {
   }
 };
 
+/**
+ * 获取当前标题的子标题
+ * @param parentIndex 当前标题的索引
+ */
+const getSubHeadings = (parentIndex: number) => {
+  const parentLevel = headings.value[parentIndex].level;
+  const result = [];
+  let i = parentIndex + 1;
+
+  // 收集直到下一个相同或更高级别标题之前的所有子标题
+  while (i < headings.value.length && headings.value[i].level > parentLevel) {
+    result.push(headings.value[i]);
+    i++;
+  }
+
+  return result;
+};
+
 /*监听页面滚动*/
 const handleScroll = useDebounceFn(() => {
   const currentHeading = getCurrentHeading();
@@ -127,8 +151,21 @@ onUnmounted(() => {
 
         <div ref="anchorWrapper" class="anchor-wrapper" :class="{ 'anchor-collapsed': collapsed }">
           <n-anchor :bound="150" :top="88" style="z-index: 1" :ignore-gap="true">
-            <template v-for="heading in headings" :key="heading.id">
-              <n-anchor-link :title="heading.title" :href="`#${heading.id}`" />
+            <template v-for="(heading, index) in headings" :key="heading.id">
+              <n-anchor-link v-if="heading.level === 2" :title="heading.title" :href="`#${heading.id}`">
+                <!-- 递归渲染子标题 -->
+                <template v-if="index + 1 < headings.length">
+                  <n-anchor-link
+                    v-for="subHeading in getSubHeadings(index)"
+                    :key="subHeading.id"
+                    :title="subHeading.title"
+                    :href="`#${subHeading.id}`"
+                    :style="{
+                      paddingLeft: `${(subHeading.level - 2) * 20}px`
+                    }"
+                  />
+                </template>
+              </n-anchor-link>
             </template>
           </n-anchor>
         </div>
