@@ -110,6 +110,7 @@ onMounted(() => {});
 .mobile-category-list {
   display: none;
   background: white;
+  margin-bottom: 3px;
 }
 
 .category-container {
@@ -118,13 +119,22 @@ onMounted(() => {});
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
 
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
+  // 鼠标悬停或激活状态时显示滚动条
+  &:hover,
+  &:active {
+    &::-webkit-scrollbar {
+      display: block;
+      height: 2px;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 1px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 }
 
