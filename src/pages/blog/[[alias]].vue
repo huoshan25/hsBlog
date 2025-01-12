@@ -56,13 +56,7 @@ onMounted(() => {});
         <!-- 移动端菜单 -->
         <div class="mobile-category-list">
           <div class="category-container">
-            <nuxt-link
-              v-for="category in categoryList"
-              :key="category.id"
-              :to="category.alias"
-              class="category-item"
-              width="100px"
-            >
+            <nuxt-link v-for="category in categoryList" :key="category.id" :to="category.alias" class="category-item">
               {{ category.name }}
             </nuxt-link>
           </div>
