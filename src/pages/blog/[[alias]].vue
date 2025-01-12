@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import CategoryList, {type ICategory} from "~/components/blog/categoryList.vue";
-import {HttpStatus} from "~/enums/httpStatus";
-import {getAllCategories} from "~/api/blog/home";
+import CategoryList, { type ICategory } from "~/components/blog/categoryList.vue";
+import { HttpStatus } from "~/enums/httpStatus";
+import { getAllCategories } from "~/api/blog/home";
 import Personal from "~/pages/blog/components/personal.vue";
 import ArticleList from "~/pages/blog/components/articleList.vue";
-import calender from "./components/calendar.vue"
+import calender from "./components/calendar.vue";
 
-const route = useRoute()
+const route = useRoute();
 
 definePageMeta({
-  layout: 'blog',
+  layout: "blog"
 });
 
 /**文章分类*/
-const categoryList = ref()
+const categoryList = ref();
 
-const titleName = ref()
+const titleName = ref();
 
-const {data: categoryData} = await useAsyncData('categories', () => getAllCategories(), {
+const { data: categoryData } = await useAsyncData("categories", () => getAllCategories(), {
   default: () => {
     return {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       data: []
-    }
+    };
   }
-})
+});
 
 if (categoryData.value?.code === HttpStatus.OK) {
   categoryList.value = categoryData.value.data.map((item: ICategory) => {
@@ -32,47 +32,56 @@ if (categoryData.value?.code === HttpStatus.OK) {
       id: item.id,
       alias: `/blog/${item.alias}`,
       name: item.name,
-      icon: item.icon,
-    }
-  })
+      icon: item.icon
+    };
+  });
 
-  titleName.value = categoryList.value?.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`)
+  titleName.value = categoryList.value?.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`);
 }
-
 
 useHead({
   title: titleName.value?.name,
-  titleTemplate: (titleChunk) => titleChunk  ? `${titleChunk} - 火山博客` : '火山博客'
-})
+  titleTemplate: titleChunk => (titleChunk ? `${titleChunk} - 火山博客` : "火山博客")
+});
 
-onMounted(() => {
-
-})
-
+onMounted(() => {});
 </script>
 
 <template>
   <main class="main">
-    <category-list :categoryList="categoryList" @toCategoryl=""/>
-    <div v-show="false">屏幕小的导航栏</div>
+    <category-list :categoryList="categoryList" @toCategoryl="" />
     <!-- 类目内容 -->
     <div class="contents">
       <div class="contents-left">
+        <!-- 移动端菜单 -->
+        <div class="mobile-category-list">
+          <div class="category-container">
+            <nuxt-link
+              v-for="category in categoryList"
+              :key="category.id"
+              :to="category.alias"
+              class="category-item"
+              width="100px"
+            >
+              {{ category.name }}
+            </nuxt-link>
+          </div>
+        </div>
         <!-- 文章列表 -->
-        <article-list :categoryList="categoryList"/>
+        <article-list :categoryList="categoryList" />
       </div>
       <div class="contents-right">
         <!-- 个人 -->
-        <personal :categoryList="categoryList"/>
+        <personal :categoryList="categoryList" />
         <!-- 博客日历 -->
         <ClientOnly>
-          <calender/>
+          <calender />
         </ClientOnly>
       </div>
     </div>
   </main>
 
-  <n-back-top/>
+  <n-back-top />
 </template>
 
 <style scoped lang="scss">
@@ -98,6 +107,42 @@ onMounted(() => {
   }
 }
 
+.mobile-category-list {
+  display: none;
+  background: white;
+}
+
+.category-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+}
+
+.category-item {
+  padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    color: #1890ff;
+    background-color: rgba(24, 144, 255, 0.1);
+  }
+}
+
 @media (max-width: 1213px) {
   .contents-right {
     display: none;
@@ -107,6 +152,10 @@ onMounted(() => {
 @media (max-width: 895px) {
   .contents-left {
     width: 100%;
+  }
+
+  .mobile-category-list {
+    display: flex;
   }
 }
 </style>
