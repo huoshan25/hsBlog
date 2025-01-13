@@ -8,7 +8,7 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       NITRO_PORT: 3001,
-      NUXT_PUBLIC_API_BASE_URL: 'http://47.98.158.27:9001/api',
+      NUXT_PUBLIC_API_BASE_URL: 'https://hs-blog.top/api',
       NUXT_PUBLIC_SITE_URL: ''
     },
 
