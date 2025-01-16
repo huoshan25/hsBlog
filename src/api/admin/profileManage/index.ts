@@ -1,21 +1,19 @@
-import type {HttpRes} from "~/api/type";
-
 interface Skills {
-  name: string
-  items: {name: string}[]
+  name: string;
+  items: { name: string }[];
 }
 
 interface Projects {
   name: string;
-  description: string
-  tech: string[]
-  link: string
+  description: string;
+  tech: string[];
+  link: string;
 }
 
 interface Contacts {
-  platform: string
-  link: string,
-  icon: string
+  platform: string;
+  link: string;
+  icon: string;
 }
 
 export interface Seo {
@@ -29,26 +27,26 @@ export interface Seo {
 export interface ProfileInfoRes {
   name: string;
   title: string;
-  description: string
-  bio: string[]
-  skills: Skills[]
-  projects: Projects[]
-  contacts: Contacts[]
-  seo: Seo
+  description: string;
+  bio: string[];
+  skills: Skills[];
+  projects: Projects[];
+  contacts: Contacts[];
+  seo: Seo;
 }
 
-export interface SaveProfileInfoReq extends ProfileInfoRes{}
+export interface SaveProfileInfoReq extends ProfileInfoRes {}
 
 /**
  * 获取关于信息
  */
 export async function getProfileInfo() {
-  return await fetchRequest.get<HttpRes<ProfileInfoRes>>('/admin/profile');
+  return await fetchRequest.get<ProfileInfoRes>("/admin/profile");
 }
 
 /**
  * 保存关于信息
  */
 export async function saveProfileInfo(params: SaveProfileInfoReq) {
-  return await fetchRequest.put<HttpRes<null>>('/admin/profile', params);
+  return await fetchRequest.put<null>("/admin/profile", params);
 }

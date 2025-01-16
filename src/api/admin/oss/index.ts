@@ -1,5 +1,3 @@
-import type {HttpRes} from "~/api/type";
-
 export interface TemporarySignatureResponse {
   accessKeyId: string;
   accessKeySecret: string;
@@ -10,14 +8,14 @@ export interface TemporarySignatureResponse {
 
 export interface PictureUploadReq {
   /*图片文件*/
-  category_image: File,
+  category_image: File;
   /*文章UUID*/
-  articleUUID: string,
+  articleUUID: string;
 }
 
 /**
  * 上传文件 - 数据流
  */
 export async function pictureUpload(params: FormData) {
-  return await fetchRequest.post<HttpRes<{ fileUrl: string }>>('/admin/oss/ali/article-img', params);
+  return await fetchRequest.post<{ fileUrl: string }>("/admin/oss/ali/article-img", params);
 }

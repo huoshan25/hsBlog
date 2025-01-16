@@ -1,24 +1,24 @@
-import {useStorage} from '@vueuse/core';
-import type {AnalyzeCodeReq} from "~/api/blog/post/type";
+import { useStorage } from "@vueuse/core";
+import type { AnalyzeCodeReq } from "~/api/blog/post/type";
 
 /**
  * 文章详情
  * @param params
  */
 export async function getArticleDetails(params: { id: number }) {
-  return await fetchRequest.get<any>('/blog/article/details', params);
+  return await fetchRequest.get<any>("/blog/article/details", params);
 }
 
 /**
  * 代码分析
  * @param params
  */
-export async function analyzeCode (params: AnalyzeCodeReq) {
+export async function analyzeCode(params: AnalyzeCodeReq) {
   return await fetch(`${useRuntimeConfig().public.apiBaseUrl}/openai/analyze-code`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${useStorage('token', '').value}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${useStorage("token", "").value}`
     },
     body: JSON.stringify({
       code: params.code,
@@ -31,16 +31,13 @@ export async function analyzeCode (params: AnalyzeCodeReq) {
 /**
  * 语音合成
  */
-export async function synthesizeSpeech(params: {
-  text: string,
-  type?: 'normal' | 'dialogue'
-}) {
+export async function synthesizeSpeech(params: { text: string; type?: "normal" | "dialogue" }) {
   return await fetchRequest.post<{
     code: number;
     success: boolean;
     data: string;
     message: string;
-  }>('/tts/convert', params);
+  }>("/tts/convert", params);
 }
 
 /**
@@ -48,9 +45,9 @@ export async function synthesizeSpeech(params: {
  */
 export async function generateShortText(params: { content: string }) {
   return await fetchRequest.post<{
-    code: number
+    code: number;
     data: string;
-  }>('/openai/generate-short-content', params);
+  }>("/openai/generate-short-content", params);
 }
 
 /**
@@ -58,40 +55,28 @@ export async function generateShortText(params: { content: string }) {
  */
 export async function generateLongText(params: { content: string }) {
   return await fetchRequest.post<{
-    code: number
+    code: number;
     data: string;
-    type: 'dialogue';
-  }>('/openai/generate-long-content', params);
+    type: "dialogue";
+  }>("/openai/generate-long-content", params);
 }
 
 /**
  * 生成短文本音频
  */
-export async function generateShortAudio(params: {
-  content: string;
-  articleUUID: number;
-}) {
+export async function generateShortAudio(params: { content: string; articleUUID: number }) {
   return await fetchRequest.post<{
-    code: number;
-    data: {
-      url: string;
-      content: string;
-    }
-  }>('/openai/generate-short-audio', params);
+    url: string;
+    content: string;
+  }>("/openai/generate-short-audio", params);
 }
 
 /**
  * 生成对话音频
  */
-export async function generateLongAudio(params: {
-  content: string;
-  articleUUID: number;
-}) {
+export async function generateLongAudio(params: { content: string; articleUUID: number }) {
   return await fetchRequest.post<{
-    code: number;
-    data: {
-      url: string;
-      content: string;
-    }
-  }>('/openai/generate-long-audio', params);
+    url: string;
+    content: string;
+  }>("/openai/generate-long-audio", params);
 }
