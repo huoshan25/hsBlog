@@ -96,7 +96,8 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@unocss/nuxt",
     "@nuxt/content",
-    "@nuxtjs/seo"
+    "@nuxtjs/seo",
+    "nuxt-gtag"
   ],
 
   nitro: {
@@ -129,6 +130,14 @@ export default defineNuxtConfig({
     exclude: ["/admin/**", new RegExp("components")],
     /*包含的url，支持正则*/
     include: [new RegExp("^/blog(/.*)?$")]
+  },
+
+  /*谷歌分析*/
+  gtag: {
+    id: "G-EZRWZ4VQK3",
+    config: {
+      page_path: true // 自动跟踪路由变化
+    }
   },
 
   content: {
