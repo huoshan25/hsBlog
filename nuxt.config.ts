@@ -104,6 +104,19 @@ export default defineNuxtConfig({
     }
   },
 
+  /*站点地图配置*/
+  sitemap: {
+    sources: ["/api/sitemap"],
+    /*6小时缓存*/
+    cacheMaxAgeSeconds: 6 * 60 * 60,
+    /*用于爬虫抓取*/
+    autoLastmod: true,
+    /*过滤，支持正则*/
+    exclude: ["/admin/**", new RegExp("components")],
+    /*包含的url，支持正则*/
+    include: [new RegExp("^/blog(/.*)?$")]
+  },
+
   content: {
     highlight: {
       langs: ["json", "js", "ts", "html", "css", "vue", "shell", "mdc", "md", "yaml", "typescript", "javascript"]
