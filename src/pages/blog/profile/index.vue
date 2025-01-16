@@ -64,7 +64,7 @@ const copyEmail = () => {
   <main class="wrap">
     <section class="intro">
       <div class="avatar-container">
-        <nuxt-img size="120" src="/img/avatar.jpg" />
+        <nuxt-img size="120" src="/img/avatar.jpg" format="webp" />
       </div>
       <h1 class="title">{{ personalInfo.data.name }}</h1>
       <h2 class="subtitle">{{ personalInfo.data.title }}</h2>
@@ -170,13 +170,13 @@ const copyEmail = () => {
             rel="noopener noreferrer"
           >
             <template #icon>
-              <nuxt-img class="h-[22px]" :src="contact.icon" />
+              <nuxt-img class="h-[22px]" :src="contact.icon" format="webp" />
             </template>
             {{ contact.platform }}
           </n-button>
           <n-button @click="copyEmail" class="contact-btn">
             <template #icon>
-              <nuxt-img class="h-[20px]" src="/svg/copy.svg" />
+              <nuxt-img class="h-[20px]" src="/svg/copy.svg" format="webp" />
             </template>
             复制邮箱
           </n-button>

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import {EyeOutline, ThumbsUpOutline} from "@vicons/ionicons5";
-import {getArticle} from "~/api/blog/home";
-import type {ICategory} from "~/components/blog/categoryList.vue";
-import {HttpStatus} from "~/enums/httpStatus";
-import type {ArticleItem, ArticleRes} from "~/api/blog/home/type";
-import {ArticleType} from "~/api/admin/article/type";
-import {useUrlPreview} from "~/composables/tools/useUrlPreview";
+import { EyeOutline, ThumbsUpOutline } from "@vicons/ionicons5";
+import { getArticle } from "~/api/blog/home";
+import type { ICategory } from "~/components/blog/categoryList.vue";
+import { HttpStatus } from "~/enums/httpStatus";
+import type { ArticleItem, ArticleRes } from "~/api/blog/home/type";
+import { ArticleType } from "~/api/admin/article/type";
+import { useUrlPreview } from "~/composables/tools/useUrlPreview";
 
 const props = defineProps({
   categoryList: {
     type: Object,
     default() {
       return [];
-    },
-  },
+    }
+  }
 });
 
-const {parseUrl, getUrlPreview} = useUrlPreview()
+const { parseUrl, getUrlPreview } = useUrlPreview();
 
 const route = useRoute();
 
@@ -33,23 +33,19 @@ const numberOfLikes = ref(22);
 /*虚拟列表*/
 const virtualListRef = ref();
 
-aliasList.value = props.categoryList.find(
-    (item: ICategory) => {
-      if (route.params.alias === '') {
-        return props.categoryList[0]
-      } else {
-        return item.alias === `/blog/${route?.params?.alias}`
-      }
-    }
-);
+aliasList.value = props.categoryList.find((item: ICategory) => {
+  if (route.params.alias === "") {
+    return props.categoryList[0];
+  } else {
+    return item.alias === `/blog/${route?.params?.alias}`;
+  }
+});
 
 const urlPreviews = ref(new Map());
 
 // 预先获取所有外部链接的预览信息
 const preloadUrlPreviews = async (articlesList: ArticleItem[]) => {
-  const externalArticles = articlesList.filter(
-      article => article.type === ArticleType.EXTERNAL
-  );
+  const externalArticles = articlesList.filter(article => article.type === ArticleType.EXTERNAL);
 
   for (const article of externalArticles) {
     if (!urlPreviews.value.has(article.link_url)) {
@@ -73,7 +69,7 @@ const loadArticles = async () => {
       categoryId: aliasList.value.id,
       cursor: cursor.value,
       limit: 10,
-      date: calendar.value,
+      date: calendar.value
     });
 
     if (res.code === HttpStatus.OK) {
@@ -87,23 +83,23 @@ const loadArticles = async () => {
   } finally {
     loading.value = false;
   }
-}
+};
 
 const getPreview = (url: string) => {
   return urlPreviews.value.get(url);
-}
+};
 
 watch(
-    () => route.query.date,
-    (newDate) => {
-      cursor.value = null;
-      hasMore.value = true;
-      articles.value = [];
-      calendar.value = newDate as string || null;
+  () => route.query.date,
+  newDate => {
+    cursor.value = null;
+    hasMore.value = true;
+    articles.value = [];
+    calendar.value = (newDate as string) || null;
 
-      loadArticles();
-    },
-    {immediate: true}
+    loadArticles();
+  },
+  { immediate: true }
 );
 
 /**文章跳转*/
@@ -111,7 +107,7 @@ const goDetails = (article: ArticleItem) => {
   const url = article.type === ArticleType.ORIGINAL ? `/blog/post/${article.id}` : article.link_url;
   navigateTo(url, {
     open: {
-      target: "_blank",
+      target: "_blank"
     }
   });
 };
@@ -120,7 +116,7 @@ const goDetails = (article: ArticleItem) => {
 const goTabs = (tab: string) => {
   navigateTo(`/blog/tag/${tab}`, {
     open: {
-      target: "_blank",
+      target: "_blank"
     }
   });
 };
@@ -138,30 +134,26 @@ const handleScroll = async () => {
 
 onMounted(async () => {
   if (!aliasList.value) {
-    navigateTo('/blog');
+    navigateTo("/blog");
     return;
   }
   await loadArticles();
   // 添加全局滚动监听
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener("scroll", handleScroll);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 
 <template>
-  <div class="border-radius-0-6-6-6 shadow-[0_2px_5px_0_rgba(234,234,234,0.8)] bg-white flex justify-between flex-col h-[100%]">
+  <div
+    class="border-radius-0-6-6-6 shadow-[0_2px_5px_0_rgba(234,234,234,0.8)] bg-white flex justify-between flex-col h-[100%]"
+  >
     <client-only>
       <n-scrollbar @scroll="handleScroll">
-        <n-virtual-list
-            ref="virtualListRef"
-            :items="articles"
-            :item-size="90"
-            item-resizable
-            class="animated-list"
-        >
+        <n-virtual-list ref="virtualListRef" :items="articles" :item-size="90" item-resizable class="animated-list">
           <template #default="{ item }">
             <div v-if="item.type === ArticleType.ORIGINAL" class="entry-list animate-entry" @click="goDetails(item)">
               <n-ellipsis class="font-700 font-size-[17px] line-height-[24px] w-full mb-[3px]" :tooltip="false">
@@ -173,25 +165,25 @@ onUnmounted(() => {
               <div class="w-full flex justify-between">
                 <div class="flex justify-center items-center color-#8a919f">
                   {{ item.category_name }}
-                  <n-divider vertical/>
+                  <n-divider vertical />
                   <div class="flex justify-center items-center">
-                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
+                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline" />
                     {{ numberOfViews }}
                   </div>
                   <div style="margin-left: 15px" class="flex justify-center items-center">
-                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
+                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />
                     {{ numberOfLikes }}
                   </div>
                 </div>
                 <div class="entry-list-bottom-right">
                   <n-tag
-                      v-for="tag in item.tags"
-                      :key="tag.id + 'tag'"
-                      :bordered="false"
-                      style="margin-left: 6px"
-                      size="small"
-                      @click.stop="goTabs(tag.name)"
-                      class="hover:(text-[#1e80ff] cursor-pointer)"
+                    v-for="tag in item.tags"
+                    :key="tag.id + 'tag'"
+                    :bordered="false"
+                    style="margin-left: 6px"
+                    size="small"
+                    @click.stop="goTabs(tag.name)"
+                    class="hover:(text-[#1e80ff] cursor-pointer)"
                   >
                     {{ tag.name }}
                   </n-tag>
@@ -201,31 +193,36 @@ onUnmounted(() => {
             <div v-else class="entry-list" @click="goDetails(item)">
               <div class="lex justify-between w-full">
                 <div class="flex items-center">
-                  <nuxt-img src="/svg/outsideChain.svg" size="20" class="mr-[3px]"/>
+                  <nuxt-img src="/svg/outsideChain.svg" size="20" class="mr-[3px]" format="webp" />
                   <n-ellipsis class="font-700 font-size-[17px] line-heigth-[24px] w-full mb-[3px]" :tooltip="false">
                     {{ item.title }}
                   </n-ellipsis>
                 </div>
-                <n-ellipsis v-if="getPreview(item.link_url)?.description" class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f" :tooltip="false">
+                <n-ellipsis
+                  v-if="getPreview(item.link_url)?.description"
+                  class="w-full font-size-[13px] line-height-[22px] mb-[5px] color-#8a919f"
+                  :tooltip="false"
+                >
                   {{ getPreview(item.link_url)?.description }}
                 </n-ellipsis>
                 <div class="flex justify-between w-full">
-                    <div class="flex justify-center items-center color-#8a919f">
-                      {{ item.category_name }}
-                    </div>
-                    <div class="flex justify-center items-center">
-                      <nuxt-img
-                          v-if="getPreview(item.link_url)?.favicon"
-                          :src="getPreview(item.link_url)?.favicon"
-                          placeholder="/svg/websiteIcon.svg"
-                          alt="网站微标"
-                          class="h-[15px] mr-[5px]"
-                      />
-                      <span>
-                        {{ getPreview(item.link_url)?.siteName || parseUrl(item.link_url).domain }}
-                      </span>
-                    </div>
+                  <div class="flex justify-center items-center color-#8a919f">
+                    {{ item.category_name }}
                   </div>
+                  <div class="flex justify-center items-center">
+                    <nuxt-img
+                      v-if="getPreview(item.link_url)?.favicon"
+                      :src="getPreview(item.link_url)?.favicon"
+                      placeholder="/svg/websiteIcon.svg"
+                      alt="网站微标"
+                      class="h-[15px] mr-[5px]"
+                      format="webp"
+                    />
+                    <span>
+                      {{ getPreview(item.link_url)?.siteName || parseUrl(item.link_url).domain }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </template>
@@ -233,22 +230,22 @@ onUnmounted(() => {
       </n-scrollbar>
       <template #fallback>
         <div v-for="i in 2" :key="i + 'initialLoading'" class="entry-list">
-          <common-skeleton text :repeat="2"/>
+          <common-skeleton text :repeat="2" />
           <div class="w-full flex justify-between">
             <n-space>
-              <common-skeleton text width="60px"/>
-              <common-skeleton text width="40px"/>
-              <common-skeleton text width="40px"/>
+              <common-skeleton text width="60px" />
+              <common-skeleton text width="40px" />
+              <common-skeleton text width="40px" />
             </n-space>
             <n-space>
-              <common-skeleton text width="40px"/>
-              <common-skeleton text width="40px"/>
+              <common-skeleton text width="40px" />
+              <common-skeleton text width="40px" />
             </n-space>
           </div>
         </div>
       </template>
     </client-only>
-    <blog-no-more-data-divider :hasMore="loading"/>
+    <blog-no-more-data-divider :hasMore="loading" />
   </div>
 </template>
 
@@ -286,7 +283,7 @@ onUnmounted(() => {
   }
 
   &:hover {
-    background-color: #F7F8FA;
+    background-color: #f7f8fa;
   }
 }
 

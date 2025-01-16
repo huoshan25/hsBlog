@@ -1,13 +1,14 @@
 <script setup lang="ts">
-const router = useRouter()
+const router = useRouter();
 const props = defineProps({
   categoryList: {
     type: Object,
     default() {
       return {};
-    },
-  },
+    }
+  }
 });
+
 export interface ICategory {
   id?: number;
   alias?: string;
@@ -18,12 +19,11 @@ export interface ICategory {
 }
 
 /**分类路径*/
-const currentPath = ref('')
+const currentPath = ref("");
 
 onMounted(async () => {
-  currentPath.value = router.currentRoute.value.path === '/blog' ? '/blog/all' : router.currentRoute.value.path
-})
-
+  currentPath.value = router.currentRoute.value.path === "/blog" ? "/blog/all" : router.currentRoute.value.path;
+});
 </script>
 
 <template>
@@ -31,7 +31,7 @@ onMounted(async () => {
     <ul class="category-list">
       <li v-for="item in props.categoryList" :key="item.id">
         <nuxt-link :to="item.alias" active-class="active" :class="{ active: currentPath === item.alias }">
-          <nuxt-img :src="item.icon" h70 alt="category"/>
+          <nuxt-img :src="item.icon" class="h70px" alt="category" format="webp" />
           <span>{{ item.name }}</span>
         </nuxt-link>
       </li>
@@ -56,11 +56,11 @@ onMounted(async () => {
   position: relative;
   display: flex;
   align-items: center;
-  color: #4F6174;
+  color: #4f6174;
   font-weight: 500;
   margin-bottom: 5px;
   border-radius: 5px 0 0 5px;
-  transition: background .3s;
+  transition: background 0.3s;
 }
 
 .category-list li a.active,
@@ -85,7 +85,7 @@ onMounted(async () => {
   max-width: 25px;
   max-height: 25px;
   filter: grayscale(1);
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .category-list li a span {
@@ -95,7 +95,7 @@ onMounted(async () => {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
-  transition: transform .3s;
+  transition: transform 0.3s;
 }
 
 @media (max-width: 895px) {

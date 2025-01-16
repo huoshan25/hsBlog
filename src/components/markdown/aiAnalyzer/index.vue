@@ -1,131 +1,130 @@
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted} from 'vue'
-import {analyzeCode} from "~/api/blog/post";
-import {CalendarClearOutline, CloseOutline} from '@vicons/ionicons5'
+import { ref, onMounted, onUnmounted } from "vue";
+import { analyzeCode } from "~/api/blog/post";
+import { CalendarClearOutline, CloseOutline } from "@vicons/ionicons5";
 
-const {$aiMarkdown} = useNuxtApp()
+const { $aiMarkdown } = useNuxtApp();
 
-const isOpen = ref(false)
-const isLoading = ref(false)
-const error = ref('')
-const content = ref('')
+const isOpen = ref(false);
+const isLoading = ref(false);
+const error = ref("");
+const content = ref("");
 
-const contentRef = ref<HTMLElement | null>(null)
+const contentRef = ref<HTMLElement | null>(null);
 
-const abortController = ref<AbortController | null>(null)
+const abortController = ref<AbortController | null>(null);
 
 // 使用计算属性来渲染markdown
 const analysis = computed(() => {
-  return content.value ? $aiMarkdown.render(content.value) : ''
-})
+  return content.value ? $aiMarkdown.render(content.value) : "";
+});
 
 /*处理代码分析*/
 const handleAnalyzeCode = async (event: CustomEvent) => {
-  const { code, language } = event.detail
-  isOpen.value = true
-  isLoading.value = true
-  error.value = ''
-  content.value = ''
+  const { code, language } = event.detail;
+  isOpen.value = true;
+  isLoading.value = true;
+  error.value = "";
+  content.value = "";
 
-  abortController.value = new AbortController()
+  abortController.value = new AbortController();
 
   try {
     const response = await analyzeCode({
       code,
       language,
       signal: abortController.value.signal
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`HTTP错误!状态: ${response.status}`)
+      throw new Error(`HTTP错误!状态: ${response.status}`);
     }
 
-    const reader = response.body?.getReader()
+    const reader = response.body?.getReader();
     if (!reader) {
-      throw new Error('无法获取响应流')
+      throw new Error("无法获取响应流");
     }
 
-    const decoder = new TextDecoder()
+    const decoder = new TextDecoder();
 
     while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
+      const { done, value } = await reader.read();
+      if (done) break;
 
-      const chunk = decoder.decode(value)
+      const chunk = decoder.decode(value);
       const lines = chunk
-          .split('\n')
-          .filter(line => line.trim().startsWith('data: '))
-          .map(line => line.replace('data: ', ''))
+        .split("\n")
+        .filter(line => line.trim().startsWith("data: "))
+        .map(line => line.replace("data: ", ""));
 
       for (const line of lines) {
-        if (line.trim() === '[DONE]') continue
+        if (line.trim() === "[DONE]") continue;
         try {
-          const { content: newContent } = JSON.parse(line)
+          const { content: newContent } = JSON.parse(line);
           if (newContent) {
-            content.value += newContent
+            content.value += newContent;
           }
         } catch (e) {
-          console.error('解析流数据错误:', e)
+          console.error("解析流数据错误:", e);
         }
       }
     }
   } catch (err) {
-    console.error('分析错误:', err)
-    error.value = '代码分析失败，请稍后重试'
+    console.error("分析错误:", err);
+    error.value = "代码分析失败，请稍后重试";
   } finally {
-    isLoading.value = false
-    abortController.value = null
+    isLoading.value = false;
+    abortController.value = null;
   }
-}
-
+};
 
 const close = () => {
   if (abortController.value) {
-    abortController.value.abort()
-    abortController.value = null
+    abortController.value.abort();
+    abortController.value = null;
   }
-  isOpen.value = false
-}
+  isOpen.value = false;
+};
 
 const clearContent = () => {
-  content.value = ''
-}
+  content.value = "";
+};
 
-watch(isOpen, (newValue) => {
+watch(isOpen, newValue => {
   if (!newValue) {
     if (abortController.value) {
-      abortController.value.abort()
-      abortController.value = null
+      abortController.value.abort();
+      abortController.value = null;
     }
     setTimeout(() => {
-      content.value = ''
-      error.value = ''
-    }, 300)
+      content.value = "";
+      error.value = "";
+    }, 300);
   }
-})
+});
 
-const userScrolled = ref(false)
-const isNearBottom = ref(true)
+const userScrolled = ref(false);
+const isNearBottom = ref(true);
 
 // 检查是否接近底部
 const checkIfNearBottom = () => {
-  if (!contentRef.value) return true
+  if (!contentRef.value) return true;
 
-  const { scrollTop, scrollHeight, clientHeight } = contentRef.value
-  const scrollBottomThreshold = 100 // 距离底部100px认为是接近底部
-  return scrollHeight - (scrollTop + clientHeight) <= scrollBottomThreshold
-}
+  const { scrollTop, scrollHeight, clientHeight } = contentRef.value;
+  const scrollBottomThreshold = 100; // 距离底部100px认为是接近底部
+  return scrollHeight - (scrollTop + clientHeight) <= scrollBottomThreshold;
+};
 
 // 处理滚动事件
 const handleScroll = () => {
-  userScrolled.value = true
-  isNearBottom.value = checkIfNearBottom()
+  userScrolled.value = true;
+  isNearBottom.value = checkIfNearBottom();
 
   // 如果用户滚动到接近底部，重置userScrolled
   if (isNearBottom.value) {
-    userScrolled.value = false
+    userScrolled.value = false;
   }
-}
+};
 
 // 滚动到底部的函数
 const scrollToBottom = () => {
@@ -133,32 +132,32 @@ const scrollToBottom = () => {
     if (contentRef.value) {
       contentRef.value.scrollTo({
         top: contentRef.value.scrollHeight,
-        behavior: 'smooth'
-      })
+        behavior: "smooth"
+      });
     }
-  })
-}
+  });
+};
 
 // 监听content变化自动滚动
 watch(content, () => {
   // 只有当用户没有手动滚动或者本来就在底部时才自动滚动
   if (!userScrolled.value || isNearBottom.value) {
-    scrollToBottom()
+    scrollToBottom();
   }
-})
+});
 
 onMounted(() => {
-  window.addEventListener('analyze-code', handleAnalyzeCode as any)
-})
+  window.addEventListener("analyze-code", handleAnalyzeCode as any);
+});
 
 onUnmounted(() => {
   if (abortController.value) {
-    abortController.value.abort()
+    abortController.value.abort();
   }
-  userScrolled.value = false
-  isNearBottom.value = true
-  window.removeEventListener('analyze-code', handleAnalyzeCode as any)
-})
+  userScrolled.value = false;
+  isNearBottom.value = true;
+  window.removeEventListener("analyze-code", handleAnalyzeCode as any);
+});
 </script>
 
 <template>
@@ -167,7 +166,7 @@ onUnmounted(() => {
       <div class="ai-analyzer-header">
         <h3 class="flex items-center gap-3">
           AI代码解读 -
-          <nuxt-img class="ml-[2px]" src="/svg/deepseek.svg" size="40" alt="Deepseek Logo"/>
+          <nuxt-img class="ml-[2px]" src="/svg/deepseek.svg" size="40" alt="Deepseek Logo" format="webp" />
           deepseek
         </h3>
         <div class="flex">
@@ -176,7 +175,7 @@ onUnmounted(() => {
               <n-button text @click="clearContent">
                 <template #icon>
                   <n-icon size="10">
-                    <CalendarClearOutline/>
+                    <CalendarClearOutline />
                   </n-icon>
                 </template>
               </n-button>
@@ -186,7 +185,7 @@ onUnmounted(() => {
           <n-button class="ml-[10px]" text @click="close">
             <template #icon>
               <n-icon>
-                <CloseOutline/>
+                <CloseOutline />
               </n-icon>
             </template>
           </n-button>
@@ -195,16 +194,14 @@ onUnmounted(() => {
       <div class="bg-#F7F9FD h-[100%] overflow-auto" ref="contentRef" @scroll="handleScroll">
         <div class="ai-analyzer-content">
           <div v-if="isLoading && !content" class="loading">
-            <n-spin size="medium"/>
+            <n-spin size="medium" />
             <span>AI正在分析代码...</span>
           </div>
           <div v-else-if="error" class="error">
             {{ error }}
           </div>
           <div v-else-if="content" class="analysis markdown-body" v-html="analysis"></div>
-          <div v-else class="placeholder">
-            点击代码块中的"代码解读"按钮开始分析
-          </div>
+          <div v-else class="placeholder">点击代码块中的"代码解读"按钮开始分析</div>
         </div>
       </div>
     </div>
@@ -219,7 +216,9 @@ onUnmounted(() => {
   width: 80%;
   max-width: 450px;
   height: calc(100vh - 100px);
-  background-image: url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/086a891….svg), url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/img/bgc2.1e5526a.png), linear-gradient(173deg, #f4f9ff -24.94%, #edf1f9 103.15%);
+  background-image: url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/086a891….svg),
+    url(//lf-web-assets.juejin.cn/obj/juejin-web/xitu_juejin_web/img/bgc2.1e5526a.png),
+    linear-gradient(173deg, #f4f9ff -24.94%, #edf1f9 103.15%);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   transition: right 0.3s;
   z-index: 1000;
@@ -306,7 +305,11 @@ onUnmounted(() => {
 }
 
 @keyframes typing {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

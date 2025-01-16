@@ -225,7 +225,7 @@ onMounted(async () => {
       <n-form-item>
         <n-button type="primary" @click="handlePublish(ArticleStatus.PUBLISH)" class="mr10">
           <template #icon>
-            <nuxt-img src="/svg/publish.svg" class="h15"></nuxt-img>
+            <nuxt-img src="/svg/publish.svg" class="h15" format="webp" />
           </template>
           {{ props.currentRow.type === "add" ? "发布文章" : "更新文章" }}
         </n-button>

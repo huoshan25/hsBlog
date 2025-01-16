@@ -1,25 +1,20 @@
 <script setup lang="ts">
-import {ref, onMounted, h} from 'vue'
-import {InformationCircleOutline, HelpCircleOutline, ArchiveOutline} from "@vicons/ionicons5";
-import {HttpStatus} from "~/enums/httpStatus";
-import {
-  deleteCategory,
-  getAllCategories,
-  updateCategory,
-  createCategory, getCategory
-} from "~/api/admin/categories";
-import {createColumns} from "~/pages/admin/categoryManage/components/createColumns";
-import type {FormRules, FormItemRule} from 'naive-ui'
+import { ref, onMounted, h } from "vue";
+import { InformationCircleOutline, HelpCircleOutline, ArchiveOutline } from "@vicons/ionicons5";
+import { HttpStatus } from "~/enums/httpStatus";
+import { deleteCategory, getAllCategories, updateCategory, createCategory, getCategory } from "~/api/admin/categories";
+import { createColumns } from "~/pages/admin/categoryManage/components/createColumns";
+import type { FormRules, FormItemRule } from "naive-ui";
 
 definePageMeta({
-  layout: 'admin',
-})
-const message = useMessage()
-const dialog = useDialog()
+  layout: "admin"
+});
+const message = useMessage();
+const dialog = useDialog();
 
 export interface Row {
-  sort: number,
-  id: number,
+  sort: number;
+  id: number;
   icon: string;
   name: string;
   alias: string;
@@ -29,21 +24,21 @@ export interface Row {
   isEdit: boolean;
 }
 
-const total = ref(0)
+const total = ref(0);
 
 /**分页*/
 const pagination = {
   prefix() {
-    return `共 ${total.value} 条`
-  },
-}
+    return `共 ${total.value} 条`;
+  }
+};
 /**选中分类id*/
-const checkedRowKeysRef = ref<number[]>([])
+const checkedRowKeysRef = ref<number[]>([]);
 /**选中数据过滤*/
-const rowKey = (row: Row) => row.id
+const rowKey = (row: Row) => row.id;
 const handleCheck = (rowKeys: (string | number)[]) => {
-  checkedRowKeysRef.value = rowKeys as number[]
-}
+  checkedRowKeysRef.value = rowKeys as number[];
+};
 
 /**表格数据*/
 const tableData = ref<Row[]>([]);
@@ -51,256 +46,250 @@ const tableData = ref<Row[]>([]);
 /**删除分类*/
 const handleDeleteCategory = async (id?: number) => {
   dialog.warning({
-    title: '确定要永久删除吗？',
-    content: () => h('div', {style: {color: '#f0a020'}}, '分类将被永久删除，删除后不可恢复！'),
-    positiveText: '确定',
-    negativeText: '取消',
+    title: "确定要永久删除吗？",
+    content: () => h("div", { style: { color: "#f0a020" } }, "分类将被永久删除，删除后不可恢复！"),
+    positiveText: "确定",
+    negativeText: "取消",
     onPositiveClick: async () => {
-      const ids = id ? [id] : checkedRowKeysRef.value
-      const res = await deleteCategory({ids})
+      const ids = id ? [id] : checkedRowKeysRef.value;
+      const res = await deleteCategory({ ids });
       if (res.code === HttpStatus.OK) {
-        message.success('删除成功！')
-        await getList()
+        message.success("删除成功！");
+        await getList();
       }
     }
-  })
-}
+  });
+};
 
 /**新增/编辑分类*/
 const handleCategory = async (id: number | null, type: string) => {
-  categoryVisibility.value = !categoryVisibility.value
+  categoryVisibility.value = !categoryVisibility.value;
   // 重置表单状态
   form.value = {
     id: 0,
     sort: 0,
-    icon: '',
-    name: '',
-    alias: '',
-  }
-  imageUrl.value = ''
-  fileList.value = []
-  imageFile.value = null
+    icon: "",
+    name: "",
+    alias: ""
+  };
+  imageUrl.value = "";
+  fileList.value = [];
+  imageFile.value = null;
 
-  if (type === 'edit' && id) {
-    categoryDialogTitle.value = '编辑分类'
-    form.value.id = id
-    const res = await getCategory(id)
+  if (type === "edit" && id) {
+    categoryDialogTitle.value = "编辑分类";
+    form.value.id = id;
+    const res = await getCategory(id);
     if (res.code === HttpStatus.OK) {
-      form.value.sort = res.data.sort
-      form.value.name = res.data.name
-      form.value.alias = res.data.alias
-      fileList.value = [{
-        id: res.data.id,
-        name: `${res.data.icon.split('/').pop()}`, // 生成一个文件名
-        status: 'finished',
-        url: res.data.icon,
-        thumbnailUrl: res.data.icon // 缩略图URL
-      }]
-      imageUrl.value = res.data.icon
+      form.value.sort = res.data.sort;
+      form.value.name = res.data.name;
+      form.value.alias = res.data.alias;
+      fileList.value = [
+        {
+          id: res.data.id,
+          name: `${res.data.icon.split("/").pop()}`, // 生成一个文件名
+          status: "finished",
+          url: res.data.icon,
+          thumbnailUrl: res.data.icon // 缩略图URL
+        }
+      ];
+      imageUrl.value = res.data.icon;
     }
   } else {
-    categoryDialogTitle.value = '新增分类'
+    categoryDialogTitle.value = "新增分类";
   }
-}
+};
 
 /**分类弹窗*/
-const categoryVisibility = ref(false)
+const categoryVisibility = ref(false);
 
-const categoryDialogTitle = ref('')
+const categoryDialogTitle = ref("");
 
 const form = ref({
   id: 0,
   sort: 0,
-  icon: '',
-  name: '',
-  alias: '',
-})
+  icon: "",
+  name: "",
+  alias: ""
+});
 
-watch(categoryVisibility, (newVal) => {
+watch(categoryVisibility, newVal => {
   if (!newVal) {
     // 当模态框关闭时重置表单
-    if (!form.value.id) { // 如果不是编辑状态
+    if (!form.value.id) {
+      // 如果不是编辑状态
       form.value = {
         id: 0,
         sort: 0,
-        icon: '',
-        name: '',
-        alias: '',
-      }
-      imageUrl.value = ''
-      fileList.value = []
-      imageFile.value = null
+        icon: "",
+        name: "",
+        alias: ""
+      };
+      imageUrl.value = "";
+      fileList.value = [];
+      imageFile.value = null;
     }
   }
-})
+});
 
-const formRef = ref()
+const formRef = ref();
 
-const imageFile = ref<File | null>(null)
+const imageFile = ref<File | null>(null);
 
-const loading = ref(false)
+const loading = ref(false);
 
 const rules: any = {
   sort: {
     required: true,
-    message: '请输入排序',
-    trigger: 'blur',
-    type: 'number',
+    message: "请输入排序",
+    trigger: "blur",
+    type: "number"
   },
   icon: {
     required: true,
-    message: '请上传分类图标',
-    trigger: ['change', 'blur'],
+    message: "请上传分类图标",
+    trigger: ["change", "blur"],
     validator: (rule: FormItemRule, value: string) => {
       if (!imageFile.value && !(form.value.id && imageUrl.value)) {
-        return new Error('请上传分类图标')
+        return new Error("请上传分类图标");
       }
-      return true
+      return true;
     }
   },
   name: {
     required: true,
-    message: '请输入分类名称',
-    trigger: 'blur',
+    message: "请输入分类名称",
+    trigger: "blur"
   },
   alias: {
     required: true,
-    message: '请输入Alias',
-    trigger: 'blur',
+    message: "请输入Alias",
+    trigger: "blur"
   }
-}
+};
 
 /**不允许排序的值前后有空格*/
-const noSideSpace = (value: string) => !value.startsWith(' ') && !value.endsWith(' ')
+const noSideSpace = (value: string) => !value.startsWith(" ") && !value.endsWith(" ");
 
 /**列表*/
 const getList = async () => {
-  loading.value = true
-  const res = await getAllCategories()
+  loading.value = true;
+  const res = await getAllCategories();
   if (res.code === HttpStatus.OK) {
-    tableData.value = res.data
-    total.value = res.data.length
-    loading.value = false
+    tableData.value = res.data;
+    total.value = res.data.length;
+    loading.value = false;
   }
-}
+};
 
 const clearImagePreview = () => {
-  imageUrl.value = ''
-  fileList.value = []
-  imageFile.value = null
-}
+  imageUrl.value = "";
+  fileList.value = [];
+  imageFile.value = null;
+};
 
 const handleUploadChange = (options: any) => {
-  fileList.value = options.fileList
+  fileList.value = options.fileList;
   if (options.fileList.length === 0) {
-    clearImagePreview()
+    clearImagePreview();
   } else {
-    const file = options.fileList[0].file
-    imageFile.value = file
+    const file = options.fileList[0].file;
+    imageFile.value = file;
 
     // 预览图像
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string
-    }
-    reader.readAsDataURL(file)
+    const reader = new FileReader();
+    reader.onload = e => {
+      imageUrl.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   }
-}
+};
 
 /**提交*/
 const handleSubmit = async () => {
-  await formRef.value?.validate()
-  const formData = new FormData()
-  formData.append('name', form.value.name)
-  formData.append('alias', form.value.alias)
-  formData.append('sort', form.value.sort.toString())
+  await formRef.value?.validate();
+  const formData = new FormData();
+  formData.append("name", form.value.name);
+  formData.append("alias", form.value.alias);
+  formData.append("sort", form.value.sort.toString());
 
   if (imageFile.value) {
-    formData.append('category_image', imageFile.value)
+    formData.append("category_image", imageFile.value);
   }
 
   try {
     if (form.value.id) {
-      formData.append('id', form.value.id.toString())
-      await updateCategory(formData)
-      message.success('更新分类成功')
+      formData.append("id", form.value.id.toString());
+      await updateCategory(formData);
+      message.success("更新分类成功");
     } else {
-      await createCategory(formData)
-      message.success('添加分类成功')
+      await createCategory(formData);
+      message.success("添加分类成功");
     }
-    categoryVisibility.value = false
-    await getList()
+    categoryVisibility.value = false;
+    await getList();
   } catch (error) {
-    message.error('操作失败')
+    message.error("操作失败");
   }
-}
+};
 
-const columns = ref(createColumns(
-    {
-      handleCategory, handleDeleteCategory
-    }
-))
+const columns = ref(
+  createColumns({
+    handleCategory,
+    handleDeleteCategory
+  })
+);
 
 onMounted(async () => {
-  await getList()
-})
+  await getList();
+});
 
-const imageUrl = ref('')
-const fileList = ref<any>([])
-
+const imageUrl = ref("");
+const fileList = ref<any>([]);
 </script>
 
 <template>
-  <div class="form-container">
-  </div>
+  <div class="form-container"></div>
 
   <div m-b-15 flex>
     <n-button @click="handleDeleteCategory()" :disabled="checkedRowKeysRef.length == 0" size="small" m-r-15>
-      {{ checkedRowKeysRef.length > 0 ? `删除 ${checkedRowKeysRef.length} 项` : '删除' }}
+      {{ checkedRowKeysRef.length > 0 ? `删除 ${checkedRowKeysRef.length} 项` : "删除" }}
     </n-button>
     <n-button size="small" @click="handleCategory(null, 'add')" dashed>
       <template #icon>
-        <nuxt-img h-15 src="/svg/plusSign.svg"/>
+        <nuxt-img class="h-[15px]" src="/svg/plusSign.svg" format="webp" />
       </template>
       新增分类
     </n-button>
   </div>
 
   <n-spin :show="loading">
-    <template #description>
-      生活偶尔需要放慢下脚步...
-    </template>
+    <template #description> 生活偶尔需要放慢下脚步... </template>
     <n-data-table
-        :columns="columns"
-        :data="tableData"
-        :pagination="pagination"
-        :row-key="rowKey"
-        @update:checked-row-keys="handleCheck"
-        :bordered="false"
-        size="medium"
+      :columns="columns"
+      :data="tableData"
+      :pagination="pagination"
+      :row-key="rowKey"
+      @update:checked-row-keys="handleCheck"
+      :bordered="false"
+      size="medium"
     />
   </n-spin>
 
   <n-modal v-model:show="categoryVisibility">
     <n-card
-        class="w500px"
-        :title="categoryDialogTitle"
-        :segmented="{
-          content: true,
-        }"
+      class="w500px"
+      :title="categoryDialogTitle"
+      :segmented="{
+        content: true
+      }"
     >
-      <n-form
-          ref="formRef"
-          :model="form"
-          :rules="rules"
-          size="small"
-          require-mark-placement="left"
-      >
+      <n-form ref="formRef" :model="form" :rules="rules" size="small" require-mark-placement="left">
         <n-form-item label="分类图标" path="icon">
           <div style="width: 100%">
             <div flex items-center color-gray m-b-6>
               <n-icon m-r-3>
-                <InformationCircleOutline/>
+                <InformationCircleOutline />
               </n-icon>
               你可以在
               <nuxt-link class="mx-[4px]" to="https://www.iconfont.cn" color-blue target="_blank">
@@ -309,21 +298,21 @@ const fileList = ref<any>([])
               搜索和下载喜欢的图标。
             </div>
             <n-upload
-                accept="image/*"
-                :max="1"
-                :default-file-list="fileList"
-                @change="handleUploadChange"
-                :show-file-list="true"
+              accept="image/*"
+              :max="1"
+              :default-file-list="fileList"
+              @change="handleUploadChange"
+              :show-file-list="true"
             >
               <n-button>选择图片</n-button>
             </n-upload>
             <div v-if="imageUrl" class="image-preview">
-              <img :src="imageUrl" alt="预览图片"/>
+              <img :src="imageUrl" alt="预览图片" />
             </div>
           </div>
         </n-form-item>
         <n-form-item label="分类名称" path="name">
-          <n-input v-model:value="form.name" placeholder="请输入名称"/>
+          <n-input v-model:value="form.name" placeholder="请输入名称" />
         </n-form-item>
         <n-form-item path="alias">
           <template #label>
@@ -332,17 +321,17 @@ const fileList = ref<any>([])
               <n-tooltip trigger="hover">
                 <template #trigger>
                   <n-icon color-gray m-l-3>
-                    <HelpCircleOutline/>
+                    <HelpCircleOutline />
                   </n-icon>
                 </template>
                 分类别名，如：NuxtJs，将作为URL的一部分
               </n-tooltip>
             </div>
           </template>
-          <n-input v-model:value="form.alias" placeholder="请输入Alias"/>
+          <n-input v-model:value="form.alias" placeholder="请输入Alias" />
         </n-form-item>
         <n-form-item label="排序" path="sort">
-          <n-input-number v-model:value="form.sort" w-140 :allow-input="noSideSpace" placeholder="请输入排序"/>
+          <n-input-number v-model:value="form.sort" w-140 :allow-input="noSideSpace" placeholder="请输入排序" />
         </n-form-item>
       </n-form>
       <template #action>
