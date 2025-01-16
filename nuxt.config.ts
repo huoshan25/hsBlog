@@ -139,12 +139,7 @@ export default defineNuxtConfig({
 
   plugins: [],
 
-  css: [
-    "~/assets/style/default.scss",
-    "highlight.js/styles/atom-one-dark.css",
-    "mavon-editor/dist/css/index.css",
-    "~/assets/style/global.scss"
-  ],
+  css: ["~/assets/style/default.scss", "highlight.js/styles/atom-one-dark.css", "mavon-editor/dist/css/index.css"],
 
   srcDir: "src/",
 
