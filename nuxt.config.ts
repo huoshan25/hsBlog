@@ -4,6 +4,10 @@ import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 
 export default defineNuxtConfig({
+  site: {
+    url: "https://hs-blog.top"
+  },
+
   devServer: {
     host: "127.0.0.1", // 项目运行的ip
     port: 8800 // 项目运行的端口号
@@ -101,7 +105,17 @@ export default defineNuxtConfig({
       "/api/proxy/**": {
         proxy: "https://hs-blog.top/api/**"
       }
+    },
+
+    /*生成robots.txt*/
+    prerender: {
+      routes: ["/robots.txt"]
     }
+  },
+
+  /*robots.txt过滤配置*/
+  robots: {
+    disallow: ["/admin"]
   },
 
   /*站点地图配置*/
