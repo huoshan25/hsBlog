@@ -113,7 +113,7 @@ const handleSelect = (key: string) => {
       </div>
       <div class="flex items-center">
         <common-theme-switch-button
-          class="mr-[10px]"
+          class="mr10px"
           size="small"
           :model-value="themeSwitch"
           @change="handleUpdateTheme"
