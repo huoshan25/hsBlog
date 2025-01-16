@@ -37,10 +37,11 @@ if (categoryData.value?.code === HttpStatus.OK) {
   });
 
   titleName.value = categoryList.value?.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`);
+  console.log(titleName.value, " titleName.value");
 }
 
 useHead({
-  title: titleName.value?.name,
+  title: titleName.value?.name || null,
   titleTemplate: titleChunk => (titleChunk ? `${titleChunk} - 火山博客` : "火山博客")
 });
 
