@@ -50,13 +50,14 @@
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.3.1",
+    "@nuxtjs/seo": "^2.0.3",
     "@unocss/eslint-config": "^0.61.0",
     "@unocss/nuxt": "^0.61.0",
     "@vicons/ionicons5": "^0.12.0",
     "prettier": "^3.4.2",
     "sass": "^1.77.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.7.3",
     "unocss": "^0.61.2",
-    "vue-tsc": "^2.0.26"
+    "vue-tsc": "^2.2.0"
   }
 }
