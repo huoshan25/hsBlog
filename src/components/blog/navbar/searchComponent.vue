@@ -38,7 +38,7 @@ const handleSearch = () => {
           @input="handleInput"
           @keyup="handleKeyUp"
         />
-        <n-button :color="inputStyle.btColor" @click="handleSearch">
+        <n-button :color="inputStyle.btColor" @click="handleSearch" aria-label="搜索">
           <template #icon>
             <n-icon :color="inputStyle.iconColor">
               <SearchOutline />
