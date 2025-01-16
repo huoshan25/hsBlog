@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import {getUserInfo} from "~/api/blog/home";
-import {HttpStatus} from "~/enums/httpStatus";
-import {getTagsList} from "~/api/blog/tag";
+import { getUserInfo } from "~/api/blog/home";
+import { HttpStatus } from "~/enums/httpStatus";
+import { getTagsList } from "~/api/blog/tag";
 
 const props = defineProps({
   categoryList: {
     type: Object,
     default() {
       return {};
-    },
-  },
+    }
+  }
 });
 
 /**个人模块信息*/
-let personal = reactive<any>({})
-const { data: userInfo} = await useAsyncData('userInfo', () => getUserInfo())
+let personal = reactive<any>({});
+const { data: userInfo } = await useAsyncData("userInfo", () => getUserInfo());
 if (userInfo.value?.code === HttpStatus.OK) {
-  personal = userInfo.value.data
+  personal = userInfo.value.data;
 }
 
-const {data: tagsData} = await useAsyncData('tags', () => getTagsList())
+const { data: tagsData } = await useAsyncData("tags", () => getTagsList());
 if (tagsData.value?.code === HttpStatus.OK) {
-  personal.tagTotal = tagsData.value.data.tag_total
-  personal.articlesTotal = tagsData.value.data.article_total
+  personal.tagTotal = tagsData.value.data.tag_total;
+  personal.articlesTotal = tagsData.value.data.article_total;
 }
 </script>
 
 <template>
   <div class="personal">
     <div class="personal-contents">
-      <div class="top-backgroundImage" :style="{backgroundImage: `url(${personal?.avatarBackgroundImage})`}"></div>
+      <div class="top-backgroundImage" :style="{ backgroundImage: `url(${personal?.avatarBackgroundImage})` }"></div>
       <div class="personal-introduced">
-        <img class="personal-introduced-avatar" :src="personal?.avatar" alt="avatar">
+        <nuxt-img class="personal-introduced-avatar" :src="personal?.avatar" alt="avatar" width="65px" height="65px" />
       </div>
       <div class="personal-introduced-name">{{ personal?.name }}</div>
       <div class="personal-introduced-description">{{ personal?.description }}</div>
@@ -39,20 +39,20 @@ if (tagsData.value?.code === HttpStatus.OK) {
     <div class="personal-bottom">
       <div class="personal-bottom-item">
         <div style="text-align: center; font-weight: 600; font-size: 16px">文章</div>
-        <div style="text-align: center; color: #212529;">
-          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.articlesTotal"/>
+        <div style="text-align: center; color: #212529">
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.articlesTotal" />
         </div>
       </div>
       <div class="personal-bottom-item">
         <div style="text-align: center; font-weight: 600; font-size: 16px">分类</div>
         <div style="text-align: center">
-          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="props.categoryList.length"/>
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="props.categoryList.length" />
         </div>
       </div>
       <div class="personal-bottom-item">
         <div style="text-align: center; font-weight: 600; font-size: 16px">标签</div>
         <div style="text-align: center">
-          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.tagTotal"/>
+          <n-number-animation ref="numberAnimationInstRef" :from="0" :to="personal?.tagTotal" />
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@ if (tagsData.value?.code === HttpStatus.OK) {
         position: absolute;
         bottom: 0;
         left: 0;
-        background: linear-gradient(to top, #fff, transparent)
+        background: linear-gradient(to top, #fff, transparent);
       }
     }
 
@@ -103,10 +103,10 @@ if (tagsData.value?.code === HttpStatus.OK) {
         position: absolute;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
-        border: rgba(255, 255, 255, .4) 4px solid;
+        border: rgba(255, 255, 255, 0.4) 4px solid;
         width: 59px;
         height: 59px;
-        border-radius: 50%
+        border-radius: 50%;
       }
     }
 

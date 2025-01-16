@@ -94,7 +94,7 @@ const handleSelect = (key: string) => {
     <div class="header-container">
       <div class="flex items-center c-black dark:c-white">
         <div class="flex items-center py-[10px] mr-[5px] cursor-pointer" @click="router.push('/blog')">
-          <img class="h-[30px]" src="~/assets/svg/logo.svg" alt="logo" />
+          <nuxt-img height="25px" width="25px" src="svg/logo.svg" alt="logo" />
           <div class="logo-name m-l-5 text-size-21 font-550">火山博客</div>
         </div>
         <div class="header-container-item hover:color-black" v-for="{ title, url } in getMenuOptions" :key="url">

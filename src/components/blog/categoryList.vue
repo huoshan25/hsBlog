@@ -31,7 +31,7 @@ onMounted(async () => {
     <ul class="category-list">
       <li v-for="item in props.categoryList" :key="item.id">
         <nuxt-link :to="item.alias" active-class="active" :class="{ active: currentPath === item.alias }">
-          <nuxt-img :src="item.icon" class="h70px" alt="category" format="webp" />
+          <nuxt-img :src="item.icon" alt="category" format="webp" width="25px" height="25px" />
           <span>{{ item.name }}</span>
         </nuxt-link>
       </li>
