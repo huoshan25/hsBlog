@@ -37,7 +37,6 @@ if (categoryData.value?.code === HttpStatus.OK) {
   });
 
   titleName.value = categoryList.value?.find((item: ICategory) => item.alias === `/blog/${route?.params?.alias}`);
-  console.log(titleName.value, " titleName.value");
 }
 
 useHead({
