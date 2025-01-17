@@ -37,6 +37,20 @@ export default defineNuxtConfig({
       link: [
         { rel: "icon", type: "image/x-icon", href: "/logo.ico" },
         { rel: "stylesheet", href: "https://chinese-fonts-cdn.deno.dev/packages/syst/dist/SourceHanSerifCN/result.css" }
+      ],
+      script: [
+        {
+          /*百度统计*/
+          innerHTML: `
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?73dfc38c6cae731310bcde2dff1708d7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+            })();
+          `
+        }
       ]
     }
   },
