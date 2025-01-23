@@ -91,7 +91,6 @@ export default defineNuxtConfig({
       apiBaseUrl: "",
       /*网站域名*/
       siteUrl: ""
-      // gtagId: G-XXXXXX,
     }
   },
 

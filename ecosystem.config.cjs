@@ -9,7 +9,7 @@ module.exports = {
       NODE_ENV: 'production',
       NITRO_PORT: 3001,
       NUXT_PUBLIC_API_BASE_URL: 'https://hs-blog.top/api',
-      NUXT_PUBLIC_SITE_URL: ''
+      NUXT_PUBLIC_SITE_URL: 'https://hs-blog.top'
     },
 
     // 进程配置
