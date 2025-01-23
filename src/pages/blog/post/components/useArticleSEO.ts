@@ -140,7 +140,7 @@ export const useArticleSEO = (article: ArticleDetails) => {
             name: "火山博客",
             logo: {
               "@type": "ImageObject",
-              url: `${config.public.siteUrl}/logo.png`
+              url: `${config.public.siteUrl}/svg/logo.svg`
             }
           },
           mainEntityOfPage: {
