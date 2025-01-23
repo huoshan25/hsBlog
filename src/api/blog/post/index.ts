@@ -1,12 +1,12 @@
 import { useStorage } from "@vueuse/core";
-import type { AnalyzeCodeReq } from "~/api/blog/post/type";
+import type { AnalyzeCodeReq, ArticleDetails } from "~/api/blog/post/type";
 
 /**
  * 文章详情
  * @param params
  */
 export async function getArticleDetails(params: { id: number }) {
-  return await fetchRequest.get<any>("/blog/article/details", params);
+  return await fetchRequest.get<ArticleDetails>("/blog/article/details", params);
 }
 
 /**

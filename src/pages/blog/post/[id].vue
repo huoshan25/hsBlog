@@ -4,6 +4,7 @@ import License from "./components/license.vue";
 import { useArticleSEO } from "~/pages/blog/post/components/useArticleSEO";
 import AuthorInfo from "~/pages/blog/post/components/authorInfo.vue";
 import { HttpStatus } from "~/enums/httpStatus";
+import type { ArticleDetails } from "~/api/blog/post/type";
 
 definePageMeta({
   layout: "blog"
@@ -20,7 +21,7 @@ const { data: articleData } = await useAsyncData("post", () => getArticleDetails
   default() {
     return {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
-      data: []
+      data: {} as ArticleDetails
     };
   }
 });
