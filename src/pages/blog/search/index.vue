@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import ArticleList from "./components/articleList.vue";
 import TagList from "~/pages/blog/search/components/tagList.vue";
-import {useTabs} from "~/pages/blog/search/components/useTabs";
-import {SearchDimension} from "~/pages/blog/search/components/enum";
+import { useTabs } from "~/pages/blog/search/components/useTabs";
+import { SearchDimension } from "~/pages/blog/search/components/enum";
 
 definePageMeta({
-  layout: 'blog',
+  layout: "blog"
 });
 
-const { scrollY } = useScrollWatcher()
+const { scrollY } = useScrollWatcher();
 
-const { currentTab, handleUpdateValue } = useTabs()
+const { currentTab, handleUpdateValue } = useTabs();
 
 const isNavbarVisible = computed(() => {
-  return scrollY.value === 0
-})
+  return scrollY.value === 0;
+});
 </script>
 
 <template>
@@ -22,28 +22,27 @@ const isNavbarVisible = computed(() => {
     <header class="w-[100vw] header-container" :class="{ 'header-hidden': !isNavbarVisible }">
       <div class="w-[900px] p-[5px]">
         <n-tabs v-model:value="currentTab" type="line" animated @update:value="handleUpdateValue">
-          <n-tab-pane :name="SearchDimension.SYNTHESIS" tab="综合"/>
-          <n-tab-pane :name="SearchDimension.ARTICLE" tab="文章"/>
-          <n-tab-pane :name="SearchDimension.TAG" tab="标签"/>
+          <n-tab-pane :name="SearchDimension.SYNTHESIS" tab="综合" />
+          <n-tab-pane :name="SearchDimension.ARTICLE" tab="文章" />
+          <n-tab-pane :name="SearchDimension.TAG" tab="标签" />
         </n-tabs>
       </div>
     </header>
 
     <div class="contents">
       <!-- 文章列表 -->
-      <article-list v-if="currentTab !== SearchDimension.TAG"/>
+      <article-list v-if="currentTab !== SearchDimension.TAG" />
       <!-- 标签列表 -->
-      <tag-list v-else/>
+      <tag-list v-else />
     </div>
   </div>
-
 </template>
 
 <style scoped lang="scss">
 .main {
   display: flex;
   justify-content: center;
-  width: 100vw;
+  width: 100%;
 }
 
 .header-container {
@@ -77,5 +76,4 @@ const isNavbarVisible = computed(() => {
 :deep(.n-tabs-bar) {
   display: none;
 }
-
 </style>
