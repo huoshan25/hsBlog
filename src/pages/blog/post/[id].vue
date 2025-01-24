@@ -83,9 +83,9 @@ const togglePlayer = () => {
     </div>
 
     <!-- 桌面端右侧内容 -->
-    <div class="content-right hidden md:block ml-[24px] w-[330px]" :class="{ 'header-hidden': !isNavbarVisible }">
-      <!-- pc端AI播客模块 -->
-      <div>
+    <div class="content-right hidden md:block ml-[24px]" :class="{ 'header-hidden': !isNavbarVisible }">
+      <div class="fixed w-[--sidebar-width]">
+        <!-- pc端AI播客模块 -->
         <div
           v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
           class="bg-white p-[15px] mb-[20px] rounded-2xl"
@@ -100,6 +100,7 @@ const togglePlayer = () => {
             <audio :src="articleData.data.long_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
           </div>
         </div>
+        <!-- 文章目录 -->
         <markdown-anchor :content="articleData.data.content" />
       </div>
     </div>
@@ -110,7 +111,8 @@ const togglePlayer = () => {
 
 <style scoped lang="scss">
 .content-right {
-  width: 330px;
+  --sidebar-width: 330px;
+  width: var(--sidebar-width);
   position: relative;
   transition: top 0.2s ease-in-out;
   top: 15px;
