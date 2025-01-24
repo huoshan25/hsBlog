@@ -8,8 +8,6 @@ export const useArticleSEO = (article: ArticleDetails) => {
   const config = useRuntimeConfig();
   const route = useRoute();
 
-  console.log(`${config.public.siteUrl}${route.path}`, "`${config.public.siteUrl}${route.path}`");
-
   useHead({
     title: article.title,
     titleTemplate: title => `${title} - 火山博客`,
