@@ -83,8 +83,9 @@ const togglePlayer = () => {
     </div>
 
     <!-- 桌面端右侧内容 -->
-    <div class="content-right hidden md:block ml-[24px]" :class="{ 'header-hidden': !isNavbarVisible }">
-      <div class="fixed">
+    <div class="content-right hidden md:block ml-[24px] w-[330px]" :class="{ 'header-hidden': !isNavbarVisible }">
+      <!-- pc端AI播客模块 -->
+      <div>
         <div
           v-if="articleData.data.short_audio_url || articleData.data.long_audio_url"
           class="bg-white p-[15px] mb-[20px] rounded-2xl"
@@ -99,7 +100,7 @@ const togglePlayer = () => {
             <audio :src="articleData.data.long_audio_url" controls class="w-full mt-2">您的浏览器不支持音频播放</audio>
           </div>
         </div>
-        <markdown-anchor class="w-[330px]" :content="articleData.data.content" />
+        <markdown-anchor :content="articleData.data.content" />
       </div>
     </div>
 
