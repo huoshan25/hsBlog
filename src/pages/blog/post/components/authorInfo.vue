@@ -1,34 +1,30 @@
 <script setup lang="ts">
-import {EyeOutline, TimeOutline} from "@vicons/ionicons5";
-import {useTimeFormat} from "~/composables/tools/useTimeFormat";
+import { EyeOutline, TimeOutline } from "@vicons/ionicons5";
+import { useTimeFormat } from "~/composables/tools/useTimeFormat";
+import { useReadingTime } from "~/composables/tools/useReadingTime";
+import type { ArticleDetails } from "~/api/blog/post/type";
 
-const props = defineProps({
-  articleData: {
-    type: Object,
-    default() {
-      return {};
-    },
-  }
-})
+const props = defineProps<{
+  articleData: ArticleDetails;
+}>();
 
-const {minutes} = useReadingTime()
+/*发布时间*/
+const getPublishTime = (time: string) => {
+  return time ? useTimeFormat(time).split(" ")[0] : "";
+};
 
 /*阅读时间*/
-const readingTime = computed(() =>
-    props.articleData.publish_time ? useTimeFormat(props.articleData.publish_time).split(' ')[0] : ''
-)
+const readingTime = useReadingTime(props.articleData.content).minutes;
 </script>
 
 <template>
   <div class="color-#8a919f flex items-center mt-[20px]">
-    <div class="mr-[15px]">{{ readingTime }}</div>
-    <n-icon :component="EyeOutline" class="mr-[5px]"/>
+    <div class="mr-[15px]">{{ getPublishTime(props.articleData.publish_time) }}</div>
+    <n-icon :component="EyeOutline" class="mr-[5px]" />
     <span class="mr-[15px]">1,006</span>
-    <n-icon :component="TimeOutline" class="mr-[5px]"/>
-    <span>阅读时间{{ minutes }}分钟</span>
+    <n-icon :component="TimeOutline" class="mr-[5px]" />
+    <span>阅读时间{{ readingTime }}分钟</span>
   </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

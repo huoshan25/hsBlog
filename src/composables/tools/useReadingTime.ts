@@ -1,74 +1,75 @@
+interface WordCount {
+  total: number;
+  chinese: number;
+  english: number;
+  code: number;
+}
+
+interface ReadingTimeResult {
+  /*阅读所需时间（分钟）*/
+  minutes: number;
+  words: WordCount;
+}
+
 /**
- * 阅读时长计算
+ * 计算文章需要的阅读时间
+ * @param content 文章内容
+ * @returns ReadingTimeResult 计算结果，包含阅读时间和字数统计
  */
-export const useReadingTime = () => {
-  const minutes = ref(0)
-  const startTime = ref(0)
-  const totalTime = ref(0)
-  const isReading = ref(false)
-  let idleTimer: NodeJS.Timeout
+export const useReadingTime = (content: string): ReadingTimeResult => {
+  /*中文阅读速度：300字/分钟*/
+  const CHINESE_WORDS_PER_MINUTE = 300;
+  /*英文阅读速度：200词/分钟*/
+  const ENGLISH_WORDS_PER_MINUTE = 200;
+  /*代码阅读速度：150词/分钟*/
+  const CODE_WORDS_PER_MINUTE = 150;
 
-  // 开始阅读
-  const startReading = () => {
-    if (!isReading.value) {
-      startTime.value = Date.now()
-      isReading.value = true
-    }
+  if (!content) {
+    return {
+      minutes: 0,
+      words: {
+        total: 0,
+        chinese: 0,
+        english: 0,
+        code: 0
+      }
+    };
   }
 
-  // 暂停阅读
-  const pauseReading = () => {
-    if (isReading.value) {
-      totalTime.value += Date.now() - startTime.value
-      isReading.value = false
-      updateMinutes()
-    }
-  }
+  /*提取代码块内容*/
+  const codeBlocks = content.match(/```[\s\S]*?```/g) || [];
+  /*计算代码的字数*/
+  const codeLength = codeBlocks.reduce((acc, block) => {
+    return acc + block.split(/\s+/).length;
+  }, 0);
 
-  // 更新分钟数
-  const updateMinutes = () => {
-    minutes.value = Math.floor(totalTime.value / 60000)
-  }
+  /*移除代码块后的文本*/
+  let cleanText = content.replace(/```[\s\S]*?```/g, "");
 
-  // 重置空闲计时器
-  const resetIdleTimer = () => {
-    clearTimeout(idleTimer)
-    idleTimer = setTimeout(() => {
-      pauseReading()
-    }, 30000) // 30秒无操作暂停计时
-  }
+  /*统计中文字符*/
+  const chineseChars = (cleanText.match(/[\u4e00-\u9fff]/g) || []).length;
 
-  // 页面可见性变化处理
-  const handleVisibility = () => {
-    if (document.hidden) {
-      pauseReading()
-    } else {
-      startReading()
-    }
-  }
+  /*统计英文单词（简单处理）*/
+  const englishWords = cleanText
+    .replace(/[\u4e00-\u9fff]/g, "")
+    .split(/\s+/)
+    .filter(word => word.length > 0).length;
 
-  // 用户交互处理
-  const handleInteraction = () => {
-    startReading()
-    resetIdleTimer()
-  }
+  // 计算总阅读时间（分钟）
+  const timeForChinese = chineseChars / CHINESE_WORDS_PER_MINUTE;
+  const timeForEnglish = englishWords / ENGLISH_WORDS_PER_MINUTE;
+  const timeForCode = codeLength / CODE_WORDS_PER_MINUTE;
 
-  onMounted(() => {
-    document.addEventListener('visibilitychange', handleVisibility)
-    document.addEventListener('scroll', handleInteraction)
-    document.addEventListener('mousemove', handleInteraction)
-    startReading() // 初始化时开始计时
-  })
-
-  onUnmounted(() => {
-    document.removeEventListener('visibilitychange', handleVisibility)
-    document.removeEventListener('scroll', handleInteraction)
-    document.removeEventListener('mousemove', handleInteraction)
-    clearTimeout(idleTimer)
-    pauseReading()
-  })
+  /*总时间*/
+  const totalTimeInMinutes = timeForChinese + timeForEnglish + timeForCode;
 
   return {
-    minutes: readonly(minutes)
-  }
-}
+    minutes: Math.ceil(totalTimeInMinutes),
+    words: {
+      total: chineseChars + englishWords + codeLength,
+      chinese: chineseChars,
+      english: englishWords,
+      code: codeLength
+    }
+  };
+};
