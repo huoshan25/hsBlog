@@ -73,7 +73,7 @@ const loadArticles = async () => {
     });
 
     if (res.code === HttpStatus.OK) {
-      const response = res.data as ArticleRes;
+      const response = res.data;
       articles.value.push(...response.list);
       cursor.value = response.cursor;
       hasMore.value = response.hasMore;
