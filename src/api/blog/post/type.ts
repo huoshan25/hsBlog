@@ -37,7 +37,7 @@ export interface ArticleDetails {
   /*文章状态*/
   status: ArticleStatus;
   /*文章标签*/
-  tags: string[];
+  tags: { id: number; name: string}[];
   /*文章标题*/
   title: string;
   /*文章类型*/

@@ -7,6 +7,7 @@ import type { ArticleDetails } from "~/api/blog/post/type";
 export const useArticleSEO = (article: ArticleDetails) => {
   const config = useRuntimeConfig();
   const route = useRoute();
+  const tagsList = article.tags.map(tag => tag.name);
 
   useHead({
     title: article.title,
@@ -21,7 +22,7 @@ export const useArticleSEO = (article: ArticleDetails) => {
       {
         "data-n-head": "ssr",
         name: "keywords",
-        content: [article.tags, "博客", "技术文章"].flat().filter(Boolean).join(",")
+        content: [...tagsList, "博客", "技术文章"].flat().filter(Boolean).join(",")
       },
       {
         "data-n-head": "ssr",
