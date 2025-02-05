@@ -83,4 +83,21 @@ export const codeBlockStyles = `
    .copy-analyze-btn:hover {
     color: #2080f0;
   }
+  
+  .screenshot-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    border: none;
+    background: none;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+  .screenshot-btn:hover {
+    color: #2080f0;
+  }
 `
