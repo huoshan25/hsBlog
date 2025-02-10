@@ -19,6 +19,8 @@ export interface ArticleItem {
   type: ArticleType;
   /*转载文章url*/
   link_url: string;
+  /*文章浏览量*/
+  view_count: number;
 }
 
 export interface ArticleRes {

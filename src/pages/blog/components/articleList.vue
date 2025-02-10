@@ -27,7 +27,6 @@ const articles = ref<ArticleItem[]>([]);
 const aliasList = ref<ICategory>({});
 const calendar = ref<string | null>(null);
 
-const numberOfViews = ref(22);
 const numberOfLikes = ref(22);
 
 /*虚拟列表*/
@@ -168,12 +167,12 @@ onUnmounted(() => {
                   <n-divider vertical />
                   <div class="flex justify-center items-center">
                     <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline" />
-                    {{ numberOfViews }}
+                    {{ item.view_count }}
                   </div>
-                  <div style="margin-left: 15px" class="flex justify-center items-center">
-                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />
-                    {{ numberOfLikes }}
-                  </div>
+<!--                  <div style="margin-left: 15px" class="flex justify-center items-center">-->
+<!--                    <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline" />-->
+<!--                    {{ numberOfLikes }}-->
+<!--                  </div>-->
                 </div>
                 <div class="entry-list-bottom-right">
                   <n-tag

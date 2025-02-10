@@ -80,3 +80,9 @@ export async function generateLongAudio(params: { content: string; articleUUID: 
     content: string;
   }>("/openai/generate-long-audio", params);
 }
+
+/*文章浏览量+1*/
+export async function addArticleViewCount(params: { id: number }) {
+  return await fetchRequest.get("/blog/article/view-count", params);
+}
+

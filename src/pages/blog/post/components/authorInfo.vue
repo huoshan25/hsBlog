@@ -21,7 +21,7 @@ const readingTime = useReadingTime(props.articleData.content).minutes;
   <div class="color-#8a919f flex items-center mt-[20px]">
     <div class="mr-[15px]">{{ getPublishTime(props.articleData.publish_time) }}</div>
     <n-icon :component="EyeOutline" class="mr-[5px]" />
-    <span class="mr-[15px]">1,006</span>
+    <span class="mr-[15px]">{{ articleData.view_count}}</span>
     <n-icon :component="TimeOutline" class="mr-[5px]" />
     <span>阅读时间{{ readingTime }}分钟</span>
   </div>

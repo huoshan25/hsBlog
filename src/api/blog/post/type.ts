@@ -44,4 +44,6 @@ export interface ArticleDetails {
   type: ArticleType;
   /*更新时间*/
   update_time: string;
+  /*文章浏览量*/
+  view_count: number;
 }

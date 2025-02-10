@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getArticleDetails } from "~/api/blog/post";
+import { addArticleViewCount, getArticleDetails } from "~/api/blog/post";
 import License from "./components/license.vue";
 import { useArticleSEO } from "~/pages/blog/post/components/useArticleSEO";
 import AuthorInfo from "~/pages/blog/post/components/authorInfo.vue";
@@ -34,6 +34,15 @@ const isPlayerExpanded = ref(false);
 const togglePlayer = () => {
   isPlayerExpanded.value = !isPlayerExpanded.value;
 };
+
+/*文章浏览量+1*/
+const handelAddArticleViewCount = async () => {
+  await addArticleViewCount({ id: Number(route.params.id) });
+};
+
+onMounted(() => {
+  handelAddArticleViewCount();
+});
 </script>
 
 <template>
