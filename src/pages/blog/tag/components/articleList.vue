@@ -23,7 +23,6 @@ interface EntryInfo {
 /**文章列表骨架屏*/
 const entryListSkeleton = ref(false)
 
-const numberOfViews = ref(22)
 const numberOfLikes = ref(22)
 
 /*对应分类*/
@@ -59,7 +58,7 @@ onMounted(() => {
         {{ item.title }}
       </n-ellipsis>
       <n-ellipsis class="entry-list-content" :tooltip="false">
-        {{ item.content }}
+        {{ item.description }}
       </n-ellipsis>
       <div class="entry-list-bottom">
         <div class="entry-list-bottom-left">
@@ -71,12 +70,12 @@ onMounted(() => {
           <n-divider vertical/>
           <div class="entry-list-bottom-left-item">
             <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="EyeOutline"/>
-            {{ numberOfViews }}
+            {{ item.view_count }}
           </div>
-          <div style="margin-left: 15px" class="entry-list-bottom-left-item">
-            <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>
-            {{ numberOfLikes }}
-          </div>
+<!--          <div style="margin-left: 15px" class="entry-list-bottom-left-item">-->
+<!--            <n-icon size="15" style="margin-right: 4px" color="#8a919f" :component="ThumbsUpOutline"/>-->
+<!--            {{ numberOfLikes }}-->
+<!--          </div>-->
         </div>
         <div class="entry-list-bottom-right">
           <n-tag :bordered="false" style="margin-left: 6px" size="small" v-for="tag in item.tags" :key="tag.id + 'tag'"

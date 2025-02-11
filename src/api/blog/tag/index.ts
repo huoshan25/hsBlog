@@ -1,3 +1,5 @@
+import type {ArticleReq, TagsAllRes, TagsListRes, TagsQueryArticleRes} from "~/api/blog/tag/type";
+
 export interface TagsList {
   id: number;
   name: string;
@@ -8,21 +10,21 @@ export interface TagsList {
  * 查询全部标签
  */
 export async function getTagsAll() {
-  return await fetchRequest.get<any>("/blog/tag");
+  return await fetchRequest.get<TagsAllRes>("/blog/tag");
 }
 
 /**
  * 文章标签(获取发布文章数量)
  */
 export async function getTagsList() {
-  return await fetchRequest.get<any>("/blog/article/tags");
+  return await fetchRequest.get<TagsListRes>("/blog/article/tags");
 }
 
 /**
  * 标签查询文章
  */
-export async function getArticle(params?: any) {
-  return await fetchRequest.get<any>("/blog/tag/articles", params);
+export async function getTagsQueryArticle(params?: ArticleReq) {
+  return await fetchRequest.get<TagsQueryArticleRes[]>("/blog/tag/articles", params);
 }
 
 /**

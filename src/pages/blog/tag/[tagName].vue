@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import {getArticle, getTagsAll} from "~/api/blog/tag";
+import {getTagsQueryArticle, getTagsAll} from "~/api/blog/tag";
 import {HttpStatus} from "~/enums/httpStatus";
 import {SearchDimension} from "~/pages/blog/search/components/enum";
 import ArticleList from "./components/articleList.vue";
+import type {TagsAllRes, TagsList, TagsQueryArticleRes} from "~/api/blog/tag/type";
 
 definePageMeta({
   layout: 'blog',
   middleware: async (to) => {
     const res = await getTagsAll()
     if(res.code === HttpStatus.OK) {
-      useState('tagsInfo', () => res)
+      useState('tagsInfo', () => res.data)
       const tagName = to.params.tagName as string;
-      if (res.data && !res.data.list.some((tag: any) => tag.name === tagName)) {
+      if (res.data && !res.data.list.some((tag: TagsList) => tag.name === tagName)) {
         return showError({statusCode: HttpStatus.FORBIDDEN})
       }
     }
@@ -20,9 +21,9 @@ definePageMeta({
 
 const route = useRoute()
 const router = useRouter()
-const tagsInfo = useState<any>('tagsInfo')
+const tagsInfo = useState<TagsAllRes>('tagsInfo')
 
-const articleList = ref()
+const articleList = ref<TagsQueryArticleRes[]>([])
 
 /**
  * tabs更新回调
@@ -41,13 +42,14 @@ const handleUpdateValue = (tabSValue: SearchDimension) => {
 
 const getArticleList = async () => {
   const params = {
-    tagName: route.params?.tagName,
+    tagName: route.params?.tagName as string,
     limit: 10,
     page: 1,
   }
-  const res = await getArticle(params)
+  const res = await getTagsQueryArticle(params)
   if (res.code === HttpStatus.OK) {
     articleList.value = res.data
+    console.log(articleList,'articleList')
   }
 }
 
@@ -62,7 +64,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col items-center justify-center py-[40px] bg-[#f8f9fa] color-#666">
     <h1 class="m-[0]"> {{ $route.params?.tagName }}</h1>
-    <div>{{ tagsInfo.data.total }} 文章</div>
+    <div>{{ articleList.length }} 文章</div>
   </div>
 
   <div class="flex">
