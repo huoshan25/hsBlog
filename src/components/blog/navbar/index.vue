@@ -112,12 +112,12 @@ const handleSelect = (key: string) => {
         </n-dropdown>
       </div>
       <div class="flex items-center">
-        <common-theme-switch-button
-          class="mr10px"
-          size="small"
-          :model-value="themeSwitch"
-          @change="handleUpdateTheme"
-        />
+<!--        <common-theme-switch-button-->
+<!--          class="mr10px"-->
+<!--          size="small"-->
+<!--          :model-value="themeSwitch"-->
+<!--          @change="handleUpdateTheme"-->
+<!--        />-->
         <SearchComponent />
       </div>
     </div>
