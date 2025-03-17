@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import {zhCN, dateZhCN} from 'naive-ui'
-import {consoleLogInfo} from "~/composables/logInfo";
+import { zhCN, dateZhCN } from "naive-ui";
+import { consoleLogInfo } from "~/composables/logInfo";
 
 /*主题色覆盖*/
-const {themeOverrides} = useThemeOverrides()
+const { themeOverrides } = useThemeOverrides();
 
 onMounted(() => {
-  consoleLogInfo()
-})
+  consoleLogInfo();
+});
+
+useHead({
+  script: [
+    {
+      id: "chat302-plugin",
+      src: "https://dash.302.ai/js/integrate.min.js",
+      type: "text/javascript",
+      "data-host": "302.ai",
+      "data-name": "hsblog-docs",
+      "data-code": "4412"
+    }
+  ]
+});
 </script>
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
@@ -15,11 +28,11 @@ onMounted(() => {
       <n-message-provider>
         <n-modal-provider>
           <div class="flex flex-col h-[100vh]">
-            <blog-navbar/>
+            <blog-navbar />
             <div class="mt-[70px] flex-auto">
               <slot></slot>
             </div>
-            <blog-footer/>
+            <blog-footer />
           </div>
         </n-modal-provider>
       </n-message-provider>
@@ -27,6 +40,4 @@ onMounted(() => {
   </n-config-provider>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
