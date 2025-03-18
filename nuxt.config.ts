@@ -103,9 +103,7 @@ export default defineNuxtConfig({
 
   modules: [
     "nuxtjs-naive-ui",
-    "@varlet/nuxt",
     "@vueuse/nuxt",
-    "@unocss/nuxt",
     "@nuxt/image",
     "@unocss/nuxt",
     "@nuxt/content",
@@ -114,6 +112,8 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
+    logLevel: 'error',
+
     /*接口代理配置*/
     routeRules: {
       "/api/proxy/**": {
