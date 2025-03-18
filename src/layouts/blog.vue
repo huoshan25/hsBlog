@@ -7,6 +7,7 @@ const { themeOverrides } = useThemeOverrides();
 
 onMounted(() => {
   consoleLogInfo();
+  removeGlobalMarginPadding()
 });
 
 useHead({
@@ -17,7 +18,6 @@ useHead({
       type: "text/javascript",
       "data-host": "302.ai",
       "data-name": "hsblog-docs",
-      "data-code": "4412"
     }
   ]
 });
