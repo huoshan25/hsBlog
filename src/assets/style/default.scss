@@ -60,3 +60,8 @@ pre > code > span {
   bottom: 20px !important;
   right: 20px !important;
 }
+
+/**覆盖302知识库原本样式 - 聊天窗口*/
+.view-chat {
+  position: fixed !important;
+}
