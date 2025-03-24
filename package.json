@@ -31,8 +31,6 @@
     "html2canvas": "^1.4.1",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
-    "markdown-it-container": "^4.0.0",
-    "markdown-it-toc-done-right": "^4.2.0",
     "mavon-editor": "^3.0.1",
     "naive-ui": "^2.38.2",
     "nuxt": "3.12.4",
