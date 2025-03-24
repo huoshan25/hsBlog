@@ -32,7 +32,7 @@ const handleSearch = () => {
           maxlength="64"
           :on-focus="onFocusInput"
           :on-blur="onBlurInput"
-          :style="{ width: inputStyle.width, transition: 'width .1s linear 0s' }"
+          :style="{ width: inputStyle.width, transition: inputStyle.transition }"
           :placeholder="searchPlaceholder"
           v-model:value="searchInput"
           @input="handleInput"

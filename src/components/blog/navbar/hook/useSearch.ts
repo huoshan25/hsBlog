@@ -24,7 +24,8 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
   const inputStyle = ref({
     width: "150px",
     btColor: "#f2f3f5",
-    iconColor: "#515767"
+    iconColor: "#515767",
+    transition: "width 0.3s ease"
   });
 
   /*下拉框内容*/
@@ -39,13 +40,16 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
   /**聚焦*/
   const onFocusInput = () => {
     searchPlaceholder.value = "搜索文章/标签";
-    if (window.innerWidth <= 768) {
-      inputStyle.value.width = "100%";
-    } else {
-      inputStyle.value.width = "300px";
-    }
-    inputStyle.value.btColor = "#e8f0fd";
-    inputStyle.value.iconColor = "#1e80ff";
+
+    setTimeout(() => {
+      if (window.innerWidth <= 768) {
+        inputStyle.value.width = "calc(100vw - 150px)";
+      } else {
+        inputStyle.value.width = "300px";
+      }
+      inputStyle.value.btColor = "#e8f0fd";
+      inputStyle.value.iconColor = "#1e80ff";
+    }, 10);
     showDropdown.value = true;
   };
 
