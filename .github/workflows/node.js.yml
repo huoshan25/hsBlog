@@ -28,17 +28,6 @@ jobs:
           pnpm install
           pnpm run build
           ls -la .output
-          
-
-      - name: 删除旧构建文件
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          script: |
-            rm -rf /www/wwwroot/web/hsBlog/.output   
 
       - name: 部署到服务器
         uses: appleboy/scp-action@master
