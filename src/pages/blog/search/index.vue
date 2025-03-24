@@ -19,8 +19,8 @@ const isNavbarVisible = computed(() => {
 
 <template>
   <div class="main">
-    <header class="w-[100vw] header-container" :class="{ 'header-hidden': !isNavbarVisible }">
-      <div class="w-[900px] p-[5px]">
+    <header class="w-full header-container" :class="{ 'header-hidden': !isNavbarVisible }">
+      <div class="tab-wrapper">
         <n-tabs v-model:value="currentTab" type="line" animated @update:value="handleUpdateValue">
           <n-tab-pane :name="SearchDimension.SYNTHESIS" tab="综合" />
           <n-tab-pane :name="SearchDimension.ARTICLE" tab="文章" />
@@ -60,8 +60,15 @@ const isNavbarVisible = computed(() => {
   }
 }
 
+.tab-wrapper {
+  width: 100%;
+  max-width: 900px;
+  padding: 5px;
+}
+
 .contents {
-  width: 920px;
+  width: 100%;
+  max-width: 920px;
   display: flex;
   background-color: white;
   flex-direction: column;
@@ -75,5 +82,11 @@ const isNavbarVisible = computed(() => {
 :deep(.n-tab-pane),
 :deep(.n-tabs-bar) {
   display: none;
+}
+
+@media (max-width: 767px) {
+  .tab-wrapper {
+    padding: 5px 10px;
+  }
 }
 </style>
