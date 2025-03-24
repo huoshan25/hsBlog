@@ -11,14 +11,15 @@ import { getArticleQuerySelect } from "~/api/blog/home";
  */
 export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (item: string) => void) => {
   const router = useRouter();
+  const route = useRoute();
 
-  /*搜索输入*/
-  const searchInput = ref("");
-  /*模糊查询结果*/
+  /**搜索输入*/
+  const searchInput = ref<string>((route.query?.keyword as string) || "");
+  /**模糊查询结果*/
   const fuzzyResults = ref<string[]>([]);
-  /*是否显示下拉框*/
+  /**是否显示下拉框*/
   const showDropdown = ref(false);
-  /*输入框提示内容*/
+  /**输入框提示内容*/
   const searchPlaceholder = ref("搜索火山博客");
   /**搜索样式*/
   const inputStyle = ref({
@@ -28,7 +29,7 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
     transition: "width 0.3s ease"
   });
 
-  /*下拉框内容*/
+  /**下拉框内容*/
   const dropdownContent = computed(() => {
     if (searchInput.value) {
       return fuzzyResults.value;
@@ -76,7 +77,7 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
     }
   };
 
-  /*执行搜索*/
+  /**执行搜索*/
   const performSearch = async () => {
     if (searchInput.value) {
       addSearchHistory(searchInput.value);
@@ -88,7 +89,6 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
         }
       });
     }
-    searchInput.value = "";
     showDropdown.value = false;
   };
 
@@ -99,7 +99,7 @@ export const useSearch = (getSearchHistory: () => string[], addSearchHistory: (i
     }
   };
 
-  /*选择项*/
+  /**选择项*/
   const selectItem = (title: string) => {
     searchInput.value = title;
     performSearch();
