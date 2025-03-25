@@ -16,7 +16,7 @@ module.exports = {
     instances: 1,                           // 实例数量
     autorestart: true,                      // 自动重启
     watch: false,                           // 文件变化监控
-    max_memory_restart: '5',               // 内存超限重启
+    max_memory_restart: '4',               // 内存超限重启
 
     // 日志配置
     error_file: 'logs/err.log',            // 错误日志路径
