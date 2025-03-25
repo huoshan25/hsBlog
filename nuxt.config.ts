@@ -62,7 +62,7 @@ export default defineNuxtConfig({
     // 产品页面按需生成，后台自动重新验证
     // '/products/**': { swr: 3600 },
     // 博客文章按需生成，直到下一次部署前持续有效
-    "/blog/post/**": { isr: true },
+    // "/blog/post/**": { isr: true },
     // 管理仪表板仅在客户端渲染
     "/admin/**": { ssr: false },
     // 在API路由上添加cors头
@@ -102,7 +102,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
-    "nuxtjs-naive-ui",
     "@vueuse/nuxt",
     "@nuxt/image",
     "@unocss/nuxt",
